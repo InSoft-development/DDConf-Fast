@@ -1,0 +1,116 @@
+@font-face{
+    font-family: Archiv;
+    src:url('fonts/Archivo-Italic-VariableFont_wdth,wght.ttf');
+}
+
+body{
+    width: 100%;
+    /* min-width: 1280px; */
+    /* width: 1280px; */
+    /* height: 1080px; */
+}
+/* html{
+    font-size: calc-between-width(1600, 16, 1920, 19.2);
+} */
+/* /////////////////////// Страница регистрации //////////////////// */
+.pass{
+    cursor: pointer;
+}
+.mb-3{
+    position: relative;
+    .pass{
+        position: absolute;
+        right: 20px;
+        top: 37px;     
+        }
+    }
+    #toggle{
+        position: absolute;
+        top: 51px;
+        transform: translateY(-50%);
+        right: 20px;
+        background: url(/imag/eye.svg);
+        background-size: cover;
+        width:16px;
+        height: 16px;
+        cursor: pointer;
+
+    }
+  
+    #toggle.hide{        
+        background: url(/imag/eye-slash.svg);
+        background-size: cover; 
+    }
+    /* ////////////////// Home page /////////////////////// */
+    .dash{
+        position: relative;
+        
+       height: 113px;
+       background: rgb(224, 224, 242) ; 
+    }
+    .grop{
+        position: absolute;
+        width: 445.54px;
+        height: 49px;
+        left: 80px;
+        right: 754.46px;
+        top: 32px;
+        bottom: 32px;
+        /* Автолейаут */
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0px; 
+    }
+    .dash_b{
+        width: 217px;
+        height: 49px;
+        color: rgb(52, 58, 64);
+       
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 48px;
+        letter-spacing: -2%;
+        text-align: left;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        padding: 0px;  
+    }
+    .burger{
+        position: static;
+        width: 32px;
+        height: 32px;
+        flex: none;
+        order: 0;
+        flex-grow: 0;
+        margin: 0px 33px;
+    }
+    
+/* .container {
+  margin: 0 auto;
+  max-width: 1000px;
+} */
+
+
+/* .container_1{
+    max-width: 2048px;
+    margin: 0px auto;
+    padding: 0px 15px;
+}
+@media (max-width:2048px){
+    .container_1{
+        max-width: 1900px;
+    }
+}
+@media (max-width:992px){
+    .container_1{
+        max-width: 750px;
+    }
+}
+@media (max-width:767px){
+    .container_1{
+        max-width: none;
+    }
+} */
