@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/bootstrap.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    {% block head %}{% endblock %}
+    <!-- {% block head %}{% endblock %} -->
     <title>dd-conf</title>
 </head>
 <body>
@@ -34,7 +34,7 @@
                       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body" style=" width: 150px;height: 251px;padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;margin-left: 140px; margin-top: 141px;">
-                        <p><a class="link-offset-2 link-underline link-underline-opacity-0" href="http://127.0.0.1:8000/pages/Protokol_MEK_104_J">МЭК 104</a></p>
+                        <p><a class="link-offset-2 link-underline link-underline-opacity-0" href="http://127.0.0.1:8000/pages/Protokol_MEK_104">МЭК 104</a></p>
                         <p><a class="link-offset-2 link-underline link-underline-opacity-0" href="#" style="width: 150px; height: 32px;">OPC UA</a></p>
                         <p style=" margin-top: 133px;"><a class="link-offset-2 link-underline link-underline-opacity-0" href="#" style="width: 150px; height: 32px;">Настройки</a></p>
                     </div>
@@ -50,7 +50,9 @@
       
       <ul class="list-group list-group-horizontal" style="margin-top: 59px; margin-left: 95px; width: 840px; height: 38px;">
         <div style="width: 115px; height: 24px; font-size: 20px; font-weight: 700; margin-right: 34px;">ПАК ОПТИ:</div>
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">номер устройства</div>        
+        {%for PAC in PAC_OPTI %}
+        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{PAC.name}}</div>  
+        {% endfor%}      
       </ul>
 
       <ul class="list-group list-group-horizontal" style="margin-top: 6px; margin-left: 95px; width: 840px; height: 38px;">
@@ -96,6 +98,9 @@
       
 </div>
 
+<p>
+  {{name}}
+</p>
 
 
      
@@ -115,7 +120,7 @@
 <script src="../static/js/bootstrap.bundle.min.js"></script>  
 
 <div id="content">
-  {% block content %}{% endblock %}
+  <!-- {% block content %}{% endblock %} -->
 </div>
 </body>
 </html>
