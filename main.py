@@ -48,10 +48,10 @@ templates = Jinja2Templates(directory="templates")
 #                   "License":"12321","pac_num":"12345",
 #                   "network":[{"id":"1", "addr":"10.23.23.123", "macaddr":"00:1b:63:84:45:e6", "status": "1"}, {"id":"2", "addr":"127.0.0.1", "DHCP":"no", "status": "0"}]}
 
-dashboard_data = [{"active_protocols":{"DD104":"/pages/dd104", "OPC UA":"/pages/something", "SomeBullshit":"/pages/suckmydick"},
+dashboard_data = {"active_protocols":{"DD104":"/pages/dd104", "OPC UA":"/pages/something", "SomeBullshit":"/pages/suckmydick"},
                   "license":"12321", "pac_num":"123123",
                   "network":[{"id":"1", "addr":"10.23.23.123", "macaddr":"eb:1a:b0:b1:cc", "status": "1"},
-                             {"id":"2", "addr":"127.0.0.1", "macaddr":"eb:1a:b0:b1:c1", "status": "0"}]}] # 0 = down, 1 = up
+                             {"id":"2", "addr":"127.0.0.1", "macaddr":"eb:1a:b0:b1:c1", "status": "0"}]} # 0 = down, 1 = up
 
 @app.get('/')
 async def name(request: Request):

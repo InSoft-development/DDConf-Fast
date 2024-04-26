@@ -184,12 +184,12 @@ function restart5(){
     document.getElementById("STP5").innerHTML = " ";
 }
 // //////////////////////////////// Кнопка открыть log ///////////////////////////////////////////
-const btnlog = document.querySelector('.btnlog');
+// const btnlog = document.querySelector('.btnlog');
 
-btnlog.addEventListener('click', ()=>{
-    btnlog.style.backgroundColor = 'rgb(196, 196, 196)';
-    btnlog.style.boxShadow = '0 0 5px rgb(196, 196, 196)';
-})
+// btnlog.addEventListener('click', ()=>{
+//     btnlog.style.backgroundColor = 'rgb(196, 196, 196)';
+//     btnlog.style.boxShadow = '0 0 5px rgb(196, 196, 196)';
+// })
 // .......... Функция открытия поля логов по нажатию кнопки "Открыть log" ................
 function openlog(){
     let log = `
@@ -366,3 +366,4 @@ function zmet11(){
     document.getElementById("met11").innerHTML = met11;
 }
 
+// ///////////////////// ФОРМА АВТОРИЗАЦИИ /////////////////////////////////
