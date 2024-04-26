@@ -55,7 +55,9 @@
     <div class="col">
       <ul class="list-group list-group-horizontal" style="margin-top: 59px; margin-left: 95px; width: 840px; height: 38px;">
         <div style="width: 185px; height: 24px; font-size: 20px; font-weight: 700; margin-right: 29px;">Рабочий профиль:</div>
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">Название профиля</div>
+        {% for RABPROF in RABPROF %}
+        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{RABPROF.name}}</div>
+        {% endfor %}
         <div>
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 313px; background:rgb(40, 167, 69); width: 105px; height: 38px;">Профиль</button> 
         
