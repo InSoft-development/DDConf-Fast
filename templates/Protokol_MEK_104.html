@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/style.css">
-    {% block head %}{% endblock %}
+   
     <title>dd-conf</title>
 </head>
 <body>
@@ -55,9 +55,9 @@
     <div class="col">
       <ul class="list-group list-group-horizontal" style="margin-top: 59px; margin-left: 95px; width: 840px; height: 38px;">
         <div style="width: 185px; height: 24px; font-size: 20px; font-weight: 700; margin-right: 29px;">Рабочий профиль:</div>
-        {% for RABPROF in RABPROF %}
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{RABPROF.name}}</div>
-        {% endfor %}
+        
+        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{dashboard_data.pac_num}}</div>
+       
         <div>
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 313px; background:rgb(40, 167, 69); width: 105px; height: 38px;">Профиль</button> 
         
@@ -65,7 +65,10 @@
       </ul>
 <!-- </div> -->
 
-      <div style="width: 865px; height: 288px;  margin-left: 95px; margin-top:42px;">
+
+
+
+      <div style="width: 865px; height: 288px;  margin-left: 95px; margin-top:42px; overflow: auto;">
         <table class="table caption-top">
           
             <thead>
@@ -77,18 +80,31 @@
                 <th scope="col">Действия</th>
               </tr>
             </thead>
-            <tbody>
-              <tr style="height: 48px;">
-                <th scope="row" style="padding-left: 40px; padding-top: 15px;">1</th>         
             
-                <td style="padding-top: 15px;">10.30.44.15:23678 </td>
-                <td style="color: rgb(196, 196, 196);padding-top: 15px;">нет резерва</td>
+           {% for DD104 in DD104 %}
+            <tbody>
+                
+              <tr style="height: 48px;">
+              
+                <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{DD104.num}}</th>         
+               
+
+                
+                <td style="padding-top: 15px;">{{DD104.ipport}}</td>
+                
+
+               
+                <td style="color: rgb(196, 196, 196);padding-top: 15px;">{{DD104.rezport}}</td>
+              
+
+              
 
                 <td>
-                  <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;"></span>        
+                  <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;">{{DD104.status}}</span>        
                   <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
                   <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span>
                 </td>
+             
 
                 <td style="width: 117px; height: 24px;">
                   <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="width: 117px; height: 24px; padding-top: 9px;" >
@@ -109,8 +125,10 @@
                   </div>
                 </td>
               </tr>
+         
+        
 <!-- ///////////////////////////////  2 строка ////////////////////////////////////////// -->
-              <tr style="background: rgb(242, 242, 242); height: 48px;">
+              <!-- <tr style="background: rgb(242, 242, 242); height: 48px;">
                 <th scope="row"  style="padding-left: 40px; padding-top: 15px;">2</th>
                 <td style="padding-top: 15px;">10.30.44.15:23678 </td>
                 <td style="color: rgb(196, 196, 196); padding-top: 15px;">нет резерва</td>
@@ -138,10 +156,10 @@
                 </div>
                 
                 </td>
-              </tr>
+              </tr> -->
 
 <!-- ///////////////////////////////  3 строка /////////////////////////////////////////// -->
-<tr style=" height: 48px;">
+<!-- <tr style=" height: 48px;">
   <th scope="row"  style="padding-left: 40px; padding-top: 15px;">3</th>
   <td style="padding-top: 15px;">10.30.44.15:23678</td>
   <td style=" padding-top: 15px;">10.30.44.15:23678</td>
@@ -169,10 +187,10 @@
   </div>
   
   </td>
-</tr>
+</tr> -->
 
 <!-- //////////////////////////////// 4 строка /////////////////////////////////////////////  -->
-<tr style="background: rgb(242, 242, 242); height: 48px;">
+<!-- <tr style="background: rgb(242, 242, 242); height: 48px;">
   <th scope="row"  style="padding-left: 40px; padding-top: 15px;">4</th>
   <td style="padding-top: 15px;">10.30.44.15:23678</td>
   <td style=" padding-top: 15px;">10.30.44.15:23678</td>
@@ -200,13 +218,13 @@
   </div>
   
   </td>
-</tr>
+</tr> -->
 
        
 
 <!-- ////////////////////////////// 5 строка //////////////////////////////////////////////////// -->
 
-<tr style=" height: 48px;">
+<!-- <tr style=" height: 48px;">
   <th scope="row"  style="padding-left: 40px; padding-top: 15px;">5</th>
   <td style="padding-top: 15px;">10.30.44.15:23678</td>
   <td style=" padding-top: 15px;">10.30.44.15:23678</td>
@@ -234,8 +252,10 @@
   </div>
   
   </td>
-</tr>
+</tr> -->
 </tbody>
+{% endfor%}
+
 </table>
   
       </div>      
@@ -351,7 +371,24 @@
    
 
       
+ <!-- <table>
+  <tr>
+    <th>dog name</th>
+    <th>dog type</th>
+  </tr>
+  {% for dog in dogs %}
+  <tr>
+    <td>
+      {{dog.name}}
+    </td>
+    <td>
+      {{dog.type}}
+    </td>
+  </tr>
+  {% endfor %}
 
+
+ </table> -->
 
 
 
@@ -367,8 +404,6 @@
   <script src="../static/js/main.js"></script>
   <script src="../static/js/bootstrap.bundle.min.js"></script> 
 
-    <div id="content">
-      {% block content %}{% endblock %}
-    </div>
+
 </body>
 </html>
