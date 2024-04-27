@@ -1,12 +1,46 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <header></header>
-    <main></main>
-    <footer></footer>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>dd-conf</title>
+</head>
+<body>
+    <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+        <div class="row">
+            
+        
+        <form action="/login" method="POST">
+            
+            <div class=" d-flex justify-content-center align-items-center" style="margin: 24px 0px;">            
+                <h1 style="margin: 12px 0px;">Вход</h1>
+            </div>
+        
+            <div class="mb-3" style="width:360px;">
+                <label class="form-label">Имя пользователя</label>
+                <input id="name" type="login" class="form-control" placeholder="имя">
+            </div>
+
+
+            <div class="mb-3" style="width:360px;">
+                <label for="exampleInputPassword1" class="form-label">Пароль </label>
+                <input id="password" type="password" class="form-control" placeholder="пароль" required id="exampleInputPassword1">
+                <div class="pass" id="toggle" onclick="showHide()"></div>          
+            </div>
+        
+          
+            <button id="submit" type="submit" class="btn btn-primary" style="width: 360px; padding: 6px 12px 6px 12px;">Войти</button>   
+        
+        </form>
+    </div>
+    </div>
+    
+
+
+<!-- ///////////////// JS ////////////////////// -->    
+<script src="../static/js/main.js"></script>
+<script src="../static/js/bootstrap.bundle.min.js"></script>  
+</body>
 </html>
