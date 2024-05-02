@@ -47,7 +47,19 @@
     </div>
 
 
-      <!-- <div class="container"> -->
+
+
+    <!-- {% for i in list1 %}
+  
+  {% if i["status"] %}
+    <div> {{ i["main"] }} </div>
+  {% endif %}
+  
+{% endfor %} -->
+
+
+     
+        
         
 
 <div class="container" style="max-width: 2048px;">
@@ -63,6 +75,8 @@
         
         </div>        
       </ul>
+
+      
 <!-- </div> -->
 
 
@@ -81,26 +95,34 @@
               </tr>
             </thead>
             
-           {% for DD104 in DD104 %}
+          
             <tbody>
-                
+            
+             {% for i in dd104_data.active_ld.processes %}
               <tr style="height: 48px;">
               
-                <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{DD104.num}}</th>         
+                <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{i["id"]}}</th>         
                
 
                 
-                <td style="padding-top: 15px;">{{DD104.ipport}}</td>
+                <td style="padding-top: 15px;">{{i["main"]}}</td>
                 
 
-               
-                <td style="color: rgb(196, 196, 196);padding-top: 15px;">{{DD104.rezport}}</td>
+             {% if i ["second_"]%}
+                <td style="color: rgb(196, 196, 196);padding-top: 15px;"> {{i["second_"]}}</td>
+                {% else %}
+                <td style="color: rgb(14, 13, 13);padding-top: 15px;"> {{i["second"]}}</td>
+              {% endif %} 
               
+             
 
               
-
+              
                 <td>
-                  <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;">{{DD104.status}}</span>        
+                 
+                  
+                  <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;"></span>
+                       
                   <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
                   <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span>
                 </td>
@@ -109,7 +131,7 @@
                 <td style="width: 117px; height: 24px;">
                   <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="width: 117px; height: 24px; padding-top: 9px;" >
                    
-                      <div type="button" onclick="start1()"  style="width: 24px; height: 24px;">
+                      <div type="button" id="str1" onclick="start1()"  style="width: 24px; height: 24px;">
                       <img src="{{url_for('static', path='/imag/play.svg')}}"  alt="" style="width: 24px; height: 24px;">
                       </div>
                       <div type="button" onclick="stop1()"  style="width: 24px; height: 24px;">
@@ -125,6 +147,9 @@
                   </div>
                 </td>
               </tr>
+             
+              {% endfor %}
+       
          
         
 <!-- ///////////////////////////////  2 строка ////////////////////////////////////////// -->
@@ -254,7 +279,7 @@
   </td>
 </tr> -->
 </tbody>
-{% endfor%}
+
 
 </table>
   

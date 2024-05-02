@@ -47,142 +47,142 @@ function restart1(){
     document.getElementById("STP1").innerHTML = " ";
 }
 // .................................................. 2 строка .............................................................
-function start2(){
-    let play2 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
-    </div>    
-    `;
-    document.getElementById("play2").innerHTML = play2;
-    document.getElementById("STP2").innerHTML = " ";
-    document.getElementById("RES2").innerHTML = " ";
-}
-function stop2(){
-    let STP2 =`
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
-    </div>  
-    `;
-    document.getElementById("STP2").innerHTML = STP2;
-    document.getElementById("play2").innerHTML = " ";
-    document.getElementById("RES2").innerHTML = " ";
-}
-function restart2(){
-    let RES2 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
-    </div>   
-    `;
-    document.getElementById("RES2").innerHTML = RES2;
-    document.getElementById("play2").innerHTML = " ";
-    document.getElementById("STP2").innerHTML = " ";
-}
+// function start2(){
+//     let play2 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
+//     </div>    
+//     `;
+//     document.getElementById("play2").innerHTML = play2;
+//     document.getElementById("STP2").innerHTML = " ";
+//     document.getElementById("RES2").innerHTML = " ";
+// }
+// function stop2(){
+//     let STP2 =`
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
+//     </div>  
+//     `;
+//     document.getElementById("STP2").innerHTML = STP2;
+//     document.getElementById("play2").innerHTML = " ";
+//     document.getElementById("RES2").innerHTML = " ";
+// }
+// function restart2(){
+//     let RES2 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
+//     </div>   
+//     `;
+//     document.getElementById("RES2").innerHTML = RES2;
+//     document.getElementById("play2").innerHTML = " ";
+//     document.getElementById("STP2").innerHTML = " ";
+// }
 
 // .................................................. 3 строка .............................................................
-function start3(){
-    let play3 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
-    </div>    
-    `;
-    document.getElementById("play3").innerHTML = play3;
-    document.getElementById("STP3").innerHTML = " ";
-    document.getElementById("RES3").innerHTML = " ";
-}
-function stop3(){
-    let STP3 =`
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
-    </div>  
-    `;
-    document.getElementById("STP3").innerHTML = STP3;
-    document.getElementById("play3").innerHTML = " ";
-    document.getElementById("RES3").innerHTML = " ";
-}
-function restart3(){
-    let RES3 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
-    </div>   
-    `;
-    document.getElementById("RES3").innerHTML = RES3;
-    document.getElementById("play3").innerHTML = " ";
-    document.getElementById("STP3").innerHTML = " ";
-}
+// function start3(){
+//     let play3 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
+//     </div>    
+//     `;
+//     document.getElementById("play3").innerHTML = play3;
+//     document.getElementById("STP3").innerHTML = " ";
+//     document.getElementById("RES3").innerHTML = " ";
+// }
+// function stop3(){
+//     let STP3 =`
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
+//     </div>  
+//     `;
+//     document.getElementById("STP3").innerHTML = STP3;
+//     document.getElementById("play3").innerHTML = " ";
+//     document.getElementById("RES3").innerHTML = " ";
+// }
+// function restart3(){
+//     let RES3 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
+//     </div>   
+//     `;
+//     document.getElementById("RES3").innerHTML = RES3;
+//     document.getElementById("play3").innerHTML = " ";
+//     document.getElementById("STP3").innerHTML = " ";
+// }
 // .................................. 4 строка ...................................................
-function start4(){
-    let play4 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
-    </div>    
-    `;
-    document.getElementById("play4").innerHTML = play4;
-    document.getElementById("STP4").innerHTML = " ";
-    document.getElementById("RES4").innerHTML = " ";
-}
-function stop4(){
-    let STP4 =`
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
-    </div>  
-    `;
-    document.getElementById("STP4").innerHTML = STP4;
-    document.getElementById("play4").innerHTML = " ";
-    document.getElementById("RES4").innerHTML = " ";
-}
-function restart4(){
-    let RES4 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
-    </div>   
-    `;
-    document.getElementById("RES4").innerHTML = RES4;
-    document.getElementById("play4").innerHTML = " ";
-    document.getElementById("STP4").innerHTML = " ";
-}
+// function start4(){
+//     let play4 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
+//     </div>    
+//     `;
+//     document.getElementById("play4").innerHTML = play4;
+//     document.getElementById("STP4").innerHTML = " ";
+//     document.getElementById("RES4").innerHTML = " ";
+// }
+// function stop4(){
+//     let STP4 =`
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
+//     </div>  
+//     `;
+//     document.getElementById("STP4").innerHTML = STP4;
+//     document.getElementById("play4").innerHTML = " ";
+//     document.getElementById("RES4").innerHTML = " ";
+// }
+// function restart4(){
+//     let RES4 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
+//     </div>   
+//     `;
+//     document.getElementById("RES4").innerHTML = RES4;
+//     document.getElementById("play4").innerHTML = " ";
+//     document.getElementById("STP4").innerHTML = " ";
+// }
 // ...................................... 5 строка ......................................
-function start5(){
-    let play5 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
-    </div>    
-    `;
-    document.getElementById("play5").innerHTML = play5;
-    document.getElementById("STP5").innerHTML = " ";
-    document.getElementById("RES5").innerHTML = " ";
-}
-function stop5(){
-    let STP5 =`
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
-    </div>  
-    `;
-    document.getElementById("STP5").innerHTML = STP5;
-    document.getElementById("play5").innerHTML = " ";
-    document.getElementById("RES5").innerHTML = " ";
-}
-function restart5(){
-    let RES5 = `
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
-    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
-    <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
-    </div>   
-    `;
-    document.getElementById("RES5").innerHTML = RES5;
-    document.getElementById("play5").innerHTML = " ";
-    document.getElementById("STP5").innerHTML = " ";
-}
+// function start5(){
+//     let play5 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
+//     </div>    
+//     `;
+//     document.getElementById("play5").innerHTML = play5;
+//     document.getElementById("STP5").innerHTML = " ";
+//     document.getElementById("RES5").innerHTML = " ";
+// }
+// function stop5(){
+//     let STP5 =`
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
+//     </div>  
+//     `;
+//     document.getElementById("STP5").innerHTML = STP5;
+//     document.getElementById("play5").innerHTML = " ";
+//     document.getElementById("RES5").innerHTML = " ";
+// }
+// function restart5(){
+//     let RES5 = `
+//     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+//     <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
+//     <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
+//     </div>   
+//     `;
+//     document.getElementById("RES5").innerHTML = RES5;
+//     document.getElementById("play5").innerHTML = " ";
+//     document.getElementById("STP5").innerHTML = " ";
+// }
 // //////////////////////////////// Кнопка открыть log ///////////////////////////////////////////
 // const btnlog = document.querySelector('.btnlog');
 
