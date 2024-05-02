@@ -1,5 +1,5 @@
-from typing import Union
-from fastapi import FastAPI, Depends, Request, HTTPException, status
+from typing import Union, Annotated
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
 from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.responses import RedirectResponse, PlainTextResponse
@@ -14,12 +14,21 @@ import sqlite3
 
 app = FastAPI()
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
 
 # dd104_data = {"active_ld":{"id":"3", "processes":[{"id":"1", "main":"10.23.23.123:54678", "second":"10.23.23.123:54677", "status":"Running"}, {"id":"2", "main":"10.23.23.123:54679", "second":"-", "status":"Stopped"}, {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]}, "loadouts":[{"id":"1", "processes":[{"id":"1", "main":"10.23.23.202:54678", "second":"10.23.23.202:54677", "status":"Running"}, {"id":"2", "main":"10.23.23.202:54679", "second":"-", "status":"Stopped"}, {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]}, {"id":"2", "processes":[{"id":"1", "main":"10.23.23.13:54678", "second":"10.23.23.13:54677", "status":"Running"}, {"id":"2", "main":"10.23.23.13:54679", "second":"-", "status":"Stopped"}, {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]}, {"id":"3", "processes":[{"id":"1", "main":"10.23.23.123:54678", "second":"10.23.23.123:54677", "status":"Running"}, {"id":"3", "main":"10.23.23.123:54679", "second":"-", "status":"Stopped"}, {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]}]}
+
+
+
+
+def read_auth():
+	with Path('./.auth/auth.conf').open().read_text() as F:
+		
 
 @app.get("/")
 async def name(request: Request):
@@ -31,6 +40,16 @@ async def name(request: Request):
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
+
 @app.get("/dashboard/")
 def render_dash():
 	pass
+
+
+@app.post("/token ")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+	userdata = read_auth();
+	if userdata['uname'] == form_data.username and userdata['pass'] == form_data.password:
+		return {"access_token":userdata['uname'], "token_type":"bearer"}
+	else:
+		raise HTTPException(status_code=400, detail="Incorrect username or password")
