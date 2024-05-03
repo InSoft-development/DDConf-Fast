@@ -17,5 +17,5 @@ dd104_data:
 
 | field | datatype | contains | comment |
 | :---: | :---: | :---: | :---: |
-| active_ld | dict | id: {str}, processes:{list: {dict: {id:{str}, main:{str}, second:{str}, status:{str}}}} | active loadout data and statuses |
-| loadouts | list of dicts | id: {str}, processes:{list: {dict: {id:{str}, main:{str}, second:{str}}}} | other loadouts' data |
+| active_ld | dict | id: {int}, processes:{list: {dict: {id:{int}, main:{str}, second:{str}, status:{int}}}} | active loadout data and statuses |
+| loadouts | list of dicts | id: {int}, processes:{list: {dict: {id:{int}, main:{str}, second:{str}}}} | other loadouts' data |
