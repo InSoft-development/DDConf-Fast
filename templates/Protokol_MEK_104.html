@@ -109,11 +109,11 @@
               <tr style="background: rgb(242, 242, 242);height: 48px;">
               {% endif %}
               
-                <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{i["id"]}}</th>         
+                <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{id}}</th>         
                
 
                 
-                <td style="padding-top: 15px;">{{i["main"]}}</td>
+                <td style="padding-top: 15px;">{{get_processes(get_active_ld())[id]["main"]}}</td>
                 
 
               {% if not get_processes(get_active_ld())[id]["second"] %}
