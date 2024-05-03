@@ -68,7 +68,7 @@
       <ul class="list-group list-group-horizontal" style="margin-top: 59px; margin-left: 95px; width: 840px; height: 38px;">
         <div style="width: 185px; height: 24px; font-size: 20px; font-weight: 700; margin-right: 29px;">Рабочий профиль:</div>
         
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{dashboard_data.pac_num}}</div>
+        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{dd104_data["active_ld"]["id"]}}</div>
        
         <div>
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 313px; background:rgb(40, 167, 69); width: 105px; height: 38px;">Профиль</button> 
@@ -130,7 +130,13 @@
                     <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
                     </div> 
                 </span>
+
+                <!-- <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
+                <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span> -->
+
                 {% else %}
+                
+                
                 {% endif %}
 
 
@@ -141,7 +147,12 @@
                     <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
                     </div>  
                   </span>
+
+                
+                  
                 {% else %}
+
+                
                 {% endif %}
 
                 {% if i["status"] == 2 %}
@@ -151,8 +162,12 @@
                     <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
                     </div> 
                 </span>
+               
+                
 
                 {% else %}
+            
+                
                 {% endif %}
 
                 {% if i["status"] == -1 %}
@@ -163,6 +178,10 @@
                     </div> 
                 </span>
                 {% else %}
+
+                <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
+                
+                <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span>
                 {% endif %}
 
 
@@ -204,7 +223,7 @@
                       <img src="{{url_for('static', path='/imag/arrow-counterclockwise.svg')}}" alt="" style="width: 24px; height: 24px;">
                       </div>
                       <div type="button" onclick="zmet1()" style="width: 24px; height: 24px;">
-                      <img src="{{url_for('static', path='/imag/file-earmark.svg')}}" onclick='this.src="imag/file-earmark_G.svg"' alt="" style="width: 24px; height: 24px;">
+                      <img src="{{url_for('static', path='/imag/file-earmark.svg')}}" onclick='this.src="{{url_for('static', path='/imag/file-earmark_G.svg')}}"' alt="" style="width: 24px; height: 24px;">
                       </div>               
 
                   </div>
@@ -405,8 +424,19 @@
                   </tr>
                 </thead>
                 <tbody id="newcol">
+                  {% for i in dd104_data.active_ld.loadouts %}
+                  {% if i["id"] % 2 %}
                   <tr id="roww"  style="height: 48px;">
-                    <th scope="row" style="padding-left: 40px; padding-top: 15px;">1</th>         
+                    {% else %}
+                    <tr id="roww" style="height: 48px; background: rgb(242, 242, 242)"></tr>
+                    {% endif %}
+
+                    <!-- background: rgb(242, 242, 242) -->
+                    
+                   
+
+
+                    <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{i["id"]}}</th>         
                 
                     <td style="padding-top: 15px;">10.30.44.15:23678 </td>
                     <td style="color: rgb(196, 196, 196);padding-top: 15px;">нет резерва</td>
@@ -424,7 +454,9 @@
                           </div>           
                           </div>
                     </td>
-                  </tr>               
+                  </tr> 
+                  {% endfor %}
+                          
                   </tbody>
             </table>
 
