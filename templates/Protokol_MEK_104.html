@@ -98,8 +98,8 @@
           
             <tbody>
             
-            {{ procs = get_processes(get_active_ld()) }}
-            {% for id in range(0, len(procs)) %}
+            
+            {% for id in range(0, len(get_processes(get_active_ld()))) %}
 
               {% if id % 2 %}
 
@@ -116,15 +116,15 @@
                 <td style="padding-top: 15px;">{{i["main"]}}</td>
                 
 
-              {% if not procs[id]["second"] %}
+              {% if not get_processes(get_active_ld())[id]["second"] %}
                 <td style="color: rgb(196, 196, 196);padding-top: 15px;"> нет резерва</td>
               {% else %}
-                <td style="color: rgb(14, 13, 13);padding-top: 15px;"> {{procs[id]["second"]}}</td>
+                <td style="color: rgb(14, 13, 13);padding-top: 15px;"> {{get_processes(get_active_ld())[id]["second"]}}</td>
               {% endif %} 
 
 
               <td>
-                {% if procs[id]["status"] == 1 %}
+                {% if get_processes(get_active_ld())[id]["status"] == 1 %}
                   <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
@@ -135,7 +135,7 @@
                 <!-- <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
                 <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span> -->
 
-                {% elif procs[id]["status"] == 0 %}
+                {% elif get_processes(get_active_ld())[id]["status"] == 0 %}
                   <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
@@ -145,7 +145,7 @@
 
                 
                   
-                {% elif procs[id]["status"] == 2 %}
+                {% elif get_processes(get_active_ld())[id]["status"] == 2 %}
                   <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
@@ -155,7 +155,7 @@
                
                 
 
-                {% elif procs[id]["status"] == -1 %}
+                {% elif get_processes(get_active_ld())[id]["status"] == -1 %}
                   <span  style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(244, 13, 13); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(244, 13, 13); margin-top: 9px;"></div>
