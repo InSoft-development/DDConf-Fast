@@ -98,8 +98,15 @@
           
             <tbody>
             
-             {% for i in dd104_data.active_ld.processes %}
-              <tr style="height: 48px;">
+            {% for i in dd104_data.active_ld.processes %}
+
+              {% if i["id"] % 2 %}
+
+                <tr style="height: 48px;">
+              {% else %}
+
+              <tr style="background: rgb(242, 242, 242);height: 48px;">
+              {% endif %}
               
                 <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{i["id"]}}</th>         
                
@@ -108,24 +115,80 @@
                 <td style="padding-top: 15px;">{{i["main"]}}</td>
                 
 
-             {% if i ["second_"]%}
-                <td style="color: rgb(196, 196, 196);padding-top: 15px;"> {{i["second_"]}}</td>
+             {% if not i["second"] %}
+                <td style="color: rgb(196, 196, 196);padding-top: 15px;"> нет резерва</td>
                 {% else %}
                 <td style="color: rgb(14, 13, 13);padding-top: 15px;"> {{i["second"]}}</td>
               {% endif %} 
+
+
+              <td>
+                {% if i["status"] == 1 %}
+                <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;">
+                  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+                    <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
+                    <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
+                    </div> 
+                </span>
+                {% else %}
+                {% endif %}
+
+
+                {% if i["status"] == 0 %}
+                <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;">
+                  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+                    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
+                    <div style="margin-top: 0px;margin-left: 8px;">остановлен</div>
+                    </div>  
+                  </span>
+                {% else %}
+                {% endif %}
+
+                {% if i["status"] == 2 %}
+                <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;">
+                  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+                    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
+                    <div style="margin-top: 0px;margin-left: 8px;">запускается</div>
+                    </div> 
+                </span>
+
+                {% else %}
+                {% endif %}
+
+                {% if i["status"] == -1 %}
+                <span  style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(244, 13, 13); font-size: 16px; font-weight: 400; position: relative;">
+                  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
+                    <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(244, 13, 13); margin-top: 9px;"></div>
+                    <div style="margin-top: 0px;margin-left: 8px;">failed</div>
+                    </div> 
+                </span>
+                {% else %}
+                {% endif %}
+
+
+              </td>
+
+            
               
              
 
+            
               
-              
-                <td>
-                 
+                <!-- <td>
+             
+                    
+                  <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;">
+                    <div style="margin-top: 0px;margin-left: 8px;">запущен</div>
+                  </span>
                   
-                  <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;"></span>
-                       
-                  <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
+                         
+                  <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;">
+                    <div style="margin-top: 0px;margin-left: 8px;">остановлен</div></span>
+                  
                   <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span>
-                </td>
+               
+                
+                </td> -->
              
 
                 <td style="width: 117px; height: 24px;">
@@ -146,6 +209,7 @@
 
                   </div>
                 </td>
+              </tr>
               </tr>
              
               {% endfor %}

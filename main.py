@@ -60,10 +60,10 @@ DD104 = [{"num":"1","ipport":"10.30.44.15:23678678678","rezport":"norez","status
 # 
 
 dd104_data = {"active_ld":
-               {"id":"3", "processes":[{"id":"1", "main":"10.23.23.123:54678", "second":"10.23.23.123:54677", "status":"Running"},
-                                       {"id":"2", "main":"10.23.23.123:54679", "second_":"нет резерва", "status":"Stopped"},
-                                       {"id":"3", "main":"sosat@kusat", "second_":"нет резерва", "status":"Failed"},
-                                       {"id":"4", "main":"sosat@kusatt", "second":"10.23.23.123:54680", "status":"Failed"}]},
+               {"id":"3", "processes":[{"id":1, "main":"10.23.23.123:54678", "second":"10.23.23.123:54677", "status":1},
+                                       {"id":2, "main":"10.23.23.123:54679", "second":"", "status":0},
+                                       {"id":3, "main":"sosat@kusat", "second":"", "status":2},
+                                       {"id":4, "main":"sosat@kusatt", "second":"10.23.23.123:54680", "status":-1}]},
                            "loadouts":[{"id":"1", "processes":[{"id":"1", "main":"10.23.23.202:54678", "second":"10.23.23.202:54677", "status":"Running"},
                                                                {"id":"2", "main":"10.23.23.202:54679", "second":"-", "status":"Stopped"},
                                                                {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]},
