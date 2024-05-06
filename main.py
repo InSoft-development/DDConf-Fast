@@ -1,72 +1,75 @@
-from typing import Union
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
-from pages.router import router as router_pages
-#from fastapi.templating import Jinja2Templates as J2T
+from typing import Union, Annotated
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
+from typing import Annotated
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import RedirectResponse, PlainTextResponse
+from fastapi.templating import Jinja2Templates 
+from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from router.pages import router as router_pages
+import sqlite3
 
+import pages.dd104 as dd104
+import pages.dashboard as dashboard
 # env = Environment(
-#     loader=FileSystemLoader('.'),
+#     loader=FileSystemLoader('./templates'),
 #     autoescape=select_autoescape(['html', 'xml'])
 # )
 
 app = FastAPI()
+app.include_router(router_pages)
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+BASE_DIR = pathlib.Path(__file__).parent
+templates = Jinja2Templates(directory=[
+    BASE_DIR / "templates",
+])
+
+origins = [
+    # "http://127.0.0.1:8080",
+    # "https://127.0.0.1",
+    # "http://localhost",
+    # "http://localhost:8080",
+    '*'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
-# PAC = [{"name":"Номер протокола"}] # ПАК ОПТИ:
-# LIC = [{"name":"Номер лицензии"}]  # Лицензия:
-# PROT = [{"name": "МЭК 104", "page":"pages/Protokol_MEK_104"},
-#         {"name": "OPC UA"},
-#         {"name": "OPC UA"},
-#         {"name": "МЭК 104"},
-#         {"name": "МЭК 104"},
-#         {"name": "МЭК 104"},
-#         {"name": "МЭК 104"}] # Протоколы
-
-# SETINTERF = [{"namber_row":"1.","ip":"10.44.55.56","adres":"00:1b:63:84:45:e6","text":"Up, configured"},
-#              {"namber_row":"2.","ip":"-","adres":"00:1b:63:84:45:e7","textt":"Down"},
-#              {"namber_row":"3.","ip":" 10.44.55.57","adres":"00:1b:63:84:45:e8","text":"Up, configured"},
-#              {"namber_row":"4.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"5.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"6.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"7.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"8.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"9.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"10.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"11.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"12.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","text":"Up, configured"},
-#              {"namber_row":"13.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"14.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"}          
-#              ]
-
-# RABPROF = [{"name":"Название профиляzz"}]
 
 
-# dashboard_data = {"active_protocols":[{"DD104":"/pages/dd104"}, {"OPC UA":"/pages/something"}, {"SomeBullshit":"/pages/suckmydick"}],
-#                   "License":"12321","pac_num":"12345",
-#                   "network":[{"id":"1", "addr":"10.23.23.123", "macaddr":"00:1b:63:84:45:e6", "status": "1"}, {"id":"2", "addr":"127.0.0.1", "DHCP":"no", "status": "0"}]}
+#TODO
+def read_auth():
+	with Path('./.auth/auth.conf').open().read_text() as F:
+		pass
 
-dashboard_data = {"active_protocols":{"DD104":"/pages/dd104", "OPC UA":"/pages/something", "SomeBullshit":"/pages/suckmydick"},
-                  "license":"12321", "pac_num":"123123",
-                  "network":[{"id":"1", "addr":"10.23.23.123", "macaddr":"eb:1a:b0:b1:cc", "status": "1"},
-                             {"id":"2", "addr":"127.0.0.1", "macaddr":"eb:1a:b0:b1:c1", "status": "0"}]} # 0 = down, 1 = up
-
-@app.get('/')
+@app.get("/")
 async def name(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
-
-    
-
-
-
-app.include_router(router_pages)
-# @app.get("/")
-# def read_root():``
-#     return {"Hello": "World"}
+	# dashboard_data = dd104.get_processes(1)
+	return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
 
 
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):
 #     return {"item_id": item_id, "q": q}
+
+@app.get("/dd104/")
+async def render_104(request: Request):
+	data = {}
+	data["active"] = {"name":dd104.get_active_ld(), "proc_data" : dd104.get_processes(get_active_ld()), "stat_list":[]}
+	data["loadout_names"] = dd104.list_loadouts()
+	for i in range(0, len(data["active"][dd104.get_active_ld()])):
+		data["active"]["stat_list"].append(dd104.get_status(i))
+	
+	print(f"/dd104/: {data}")
+	
+	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": data})
+
