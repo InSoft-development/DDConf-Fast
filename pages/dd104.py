@@ -1,6 +1,7 @@
 import syslog, subprocess, time, tarfile
 from shutil import move, copy2, unpack_archive, make_archive
 from pathlib import Path
+from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 
@@ -33,7 +34,7 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 #TODO
 def get_status(PID: int) -> int:
 	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
-	return 1 
+	return randrange(-2, 3)
 
 #TODO
 def get_processes(LD_ID: str) -> list:
@@ -48,6 +49,7 @@ def get_active_ld() -> str:
 #TODO
 def list_ld() -> list:
 	# lists loadout IDs !!!
+	
 	return ["a", "b", "ne b"]
 
 #TODO
