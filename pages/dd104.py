@@ -32,15 +32,15 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 		raise RuntimeError(msg)
 
 
-def read_from_file(_path: str) -> dict:
-	# returns {"paircount":<0..2>, "pairs":[<str>, <str>], "comment":<str>}
-	data = {"paircount":None, "pairs":[], "comment":None}
-	try:
-		lines = Path(_path).read_text().strip().split('\n')
-		for line in lines:
-			
-	except Exception as e:
-		
+# def read_from_file(_path: str) -> dict:
+# 	# returns {"paircount":<0..2>, "pairs":[<str>, <str>], "comment":<str>}
+# 	data = {"paircount":None, "pairs":[], "comment":None}
+# 	try:
+# 		lines = Path(_path).read_text().strip().split('\n')
+# 		for line in lines:
+# 			
+# 	except Exception as e:
+# 		
 
 
 #TODO
