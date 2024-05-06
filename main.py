@@ -1,21 +1,20 @@
-from typing import Union
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
-from pages.router import router as router_pages
-#from fastapi.templating import Jinja2Templates as J2T
+from typing import Union, Annotated
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
+from typing import Annotated
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import RedirectResponse, PlainTextResponse
+from fastapi.templating import Jinja2Templates 
+from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from router.pages import router as router_pages
+import sqlite3
+
 import pages.dd104 as dd104
-
-env = Environment(
-    loader=FileSystemLoader('./templates'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
-
-
-
-
+import pages.dashboard as dashboard
+# env = Environment(
+#     loader=FileSystemLoader('./templates'),
+#     autoescape=select_autoescape(['html', 'xml'])
+# )
 
 app = FastAPI()
 app.include_router(router_pages)
@@ -45,56 +44,32 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
 
 
-#return render_template('Protokol_MEK_104', get_active_ld=get_active_ld)
+#TODO
+def read_auth():
+	with Path('./.auth/auth.conf').open().read_text() as F:
+		pass
 
-@app.get('/')
+@app.get("/")
 async def name(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
-
-@app.get('/dd104/')
-async def dd104_render(request: Request):
-    return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request})
-    # return render_template('Protokol_MEK_104', get_active_ld=get_active_ld)
-
-
-
-
-
-
-
-
-
-
-
-    
-# @app.get('/')
-# async def name(request: Request):
-#     return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "rabprof":rabprof})
-
-
-app.include_router(router_pages)
-# @app.get("/")
-# def read_root():``
-#     return {"Hello": "World"}
+	# dashboard_data = dd104.get_processes(1)
+	return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
 
 
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):
 #     return {"item_id": item_id, "q": q}
-# ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# dd104_data = {"active_ld":
-#               {"id":"3", "processes":[{"id":"1", "main":"10.23.23.123:54678", "second":"10.23.23.123:54677", "status":"Running"},
-#                                       {"id":"2", "main":"10.23.23.123:54679", "second":"-", "status":"Stopped"},
-#                                       {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]},
-#                           "loadouts":[{"id":"1", "processes":[{"id":"1", "main":"10.23.23.202:54678", "second":"10.23.23.202:54677", "status":"Running"},
-#                                                               {"id":"2", "main":"10.23.23.202:54679", "second":"-", "status":"Stopped"},
-#                                                               {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]},
-#                                                               {"id":"2", "processes":[{"id":"1", "main":"10.23.23.13:54678", "second":"10.23.23.13:54677", "status":"Running"},
-#                                                                                       {"id":"2", "main":"10.23.23.13:54679", "second":"-", "status":"Stopped"},
-#                                                                                       {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]},
-#                                                               {"id":"3", "processes":[{"id":"1", "main":"10.23.23.123:54678", "second":"10.23.23.123:54677", "status":"Running"},
-#                                                                                       {"id":"3", "main":"10.23.23.123:54679", "second":"-", "status":"Stopped"},
-#                                                                                       {"id":"3", "main":"sosat@kusat", "second":"-", "status":"Failed"}]}]}
+
+@app.get("/dd104/")
+async def render_104(request: Request):
+	data = {}
+	data["active"] = {"name":dd104.get_active_ld(), "proc_data" : dd104.get_processes(get_active_ld()), "stat_list":[]}
+	data["loadout_names"] = dd104.list_loadouts()
+	for i in range(0, len(data["active"][dd104.get_active_ld()])):
+		data["active"]["stat_list"].append(dd104.get_status(i))
+	
+	print(f"/dd104/: {data}")
+	
+	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": data})
+
