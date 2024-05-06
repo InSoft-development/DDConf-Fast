@@ -66,7 +66,7 @@ async def name(request: Request):
 async def render_104(request: Request):
 	data = {}
 	data["active"] = {"name":dd104.get_active_ld(), "proc_data" : dd104.get_processes(dd104.get_active_ld()), "stat_list":[]}
-	data["loadout_names"] = dd104.list_loadouts()
+	data["loadout_names"] = dd104.list_ld()
 	for i in range(0, len(data["active"][dd104.get_active_ld()])):
 		data["active"]["stat_list"].append(dd104.get_status(i))
 	
