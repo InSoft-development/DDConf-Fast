@@ -69,5 +69,7 @@ async def render_104(request: Request):
 	for i in range(0, len(data["active"][dd104.get_active_ld()])):
 		data["active"]["stat_list"].append(dd104.get_status(i))
 	
+	print(f"/dd104/: {data}")
+	
 	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": data)
 
