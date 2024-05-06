@@ -31,20 +31,35 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		raise RuntimeError(msg)
 
+
+def read_from_file(_path: str) -> dict:
+	# returns {"paircount":<0..2>, "pairs":[<str>, <str>], "comment":<str>}
+	data = {"paircount":None, "pairs":[], "comment":None}
+	try:
+		lines = Path(_path).read_text().strip().split('\n')
+		for line in lines:
+			
+	except Exception as e:
+		
+
+
 #TODO
 def get_status(PID: int) -> int:
 	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
 	return randrange(-2, 3)
+
 
 #TODO
 def get_processes(LD_ID: str) -> list:
 	# will return a list of dicts with fields "main", "secondary", "comment" 
 	return [{"main":"1.2.3.4", "second":"", "comment":"asdf"}, {"main":"3.4.5.6", "second":"2.3.4.5", "comment":"fdsa"}]
 
+
 #TODO
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
 	return "placeholder"
+
 
 #TODO
 def list_ld() -> list:
@@ -52,15 +67,18 @@ def list_ld() -> list:
 	
 	return ["a", "b", "ne b"]
 
+
 #TODO
 def stop(PID: int) -> int:
 	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
 	return 1
 
+
 #TODO
 def start(PID: int) -> int:
 	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
 	return 1
+
 
 #TODO
 def restart(PID: int) -> int:

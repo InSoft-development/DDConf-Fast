@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
-import sqlite3
+import sqlite3, json
 
 from pages.router import router as router_pages
 import pages.dd104 as dd104
@@ -72,5 +72,5 @@ async def render_104(request: Request):
 	
 	print(f"/dd104/: {data}")
 	
-	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": data})
+	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": json.dumps(data)})
 
