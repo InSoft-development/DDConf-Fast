@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/bootstrap.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    {% block head %}{% endblock %}
+    <!-- {% block head %}{% endblock %} -->
     <title>dd-conf</title>
 </head>
 <body>
@@ -34,7 +34,7 @@
                       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body" style=" width: 150px;height: 251px;padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;margin-left: 140px; margin-top: 141px;">
-                        <p><a class="link-offset-2 link-underline link-underline-opacity-0" href="http://127.0.0.1:8000/pages/Protokol_MEK_104_J">МЭК 104</a></p>
+                        <p><a class="link-offset-2 link-underline link-underline-opacity-0" href="http:/pages/Protokol_MEK_104">МЭК 104</a></p>
                         <p><a class="link-offset-2 link-underline link-underline-opacity-0" href="#" style="width: 150px; height: 32px;">OPC UA</a></p>
                         <p style=" margin-top: 133px;"><a class="link-offset-2 link-underline link-underline-opacity-0" href="#" style="width: 150px; height: 32px;">Настройки</a></p>
                     </div>
@@ -50,31 +50,51 @@
       
       <ul class="list-group list-group-horizontal" style="margin-top: 59px; margin-left: 95px; width: 840px; height: 38px;">
         <div style="width: 115px; height: 24px; font-size: 20px; font-weight: 700; margin-right: 34px;">ПАК ОПТИ:</div>
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">номер устройства</div>        
+    
+        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{dashboard_data.pac_num}}</div>  
+        
       </ul>
 
       <ul class="list-group list-group-horizontal" style="margin-top: 6px; margin-left: 95px; width: 840px; height: 38px;">
         <div style="width: 115px; height: 24px; font-size: 20px; font-weight: 700; margin-right: 34px;">Лицензия:</div>
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">номер лицензии</div>        
+        
+        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">{{dashboard_data.license}}</div>
+      
       </ul>
+      
 
-      <ul class="list-group list-group-flush" style="width: 840px; height: 107px; margin-left: 95px; margin-top: 27px;">
+      <ul class="list-group list-group-flush" style="width: 840px; margin-left: 95px; margin-top: 27px;">
+       
         <div style="width: 121px; height: 24px; font-size: 20px; font-weight: 700;">Протоколы:</div>
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125); margin-top: 16px; margin-left: 17px;">МЭК 104</div>
-        <div style="width: 208px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125); margin-top: 12px; margin-left: 17px;">OPC UA</div>
+        {% for key, value in dashboard_data["active_protocols"].items() %} 
+        <div style="width: 208px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125); margin-top: 16px; margin-left: 17px;">
+        {{key}}
+        </div>
+       {% endfor %}
+        
         
       </ul>
-
+ 
 <div style="margin-top: 20px; margin-left: 95px;">
-      <div style="width: 121px; height: 24px; font-size: 20px; font-weight: 700;">Протоколы:</div>
-
+      <div style="width: 300px; height: 24px; font-size: 20px; font-weight: 700;">Сетевые интерфейсы:</div>
+    
       <ul class="list-group list-group-horizontal">
-        <div style="margin-top: 16px; margin-left: 17px; font-size: 21px; font-weight: 400; color: rgb(13, 110, 253);">1.</div>
-        <div style="margin-top: 16px; margin-left: 10px; width: 150px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">10.44.55.56</div>
-        <div style="margin-top: 16px; margin-left: 0px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">00:1b:63:84:45:e6</div>
-        <div style="margin-top: 16px; margin-left: 17px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400; color:  rgb(25, 135, 84)">Up, configured</div>
+        
+        <div style="margin-top: 16px; margin-left: 17px; font-size: 21px; font-weight: 400; color: rgb(13, 110, 253);">{{dashboard_data.network}}</div>
+        <div style="margin-top: 16px; margin-left: 30px; width: 160px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">dashboard_data.addr</div>
+        <div style="margin-top: 16px; margin-left: 0px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);"></div>
+        <div style="margin-top: 16px; margin-left: 17px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400; color:  rgb(25, 135, 84);">up, </div>
+        <div style="margin-top: 0px; margin-left: 0px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400; color:  rgb(108, 117, 125);">down</div>
+       
+        
       </ul>
-      <ul class="list-group list-group-horizontal-sm">
+    
+
+  
+
+
+
+      <!-- <ul class="list-group list-group-horizontal-sm">
         <div style="margin-top: 12px; margin-left: 17px; font-size: 21px; font-weight: 400;color: rgb(13, 110, 253);">2.</div>
         <div style="margin-top: 12px; margin-left: 10px; width: 150px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">-</div>
         <div style="margin-top: 12px; margin-left: 0px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);" >00:1b:63:84:45:e7</div>
@@ -91,7 +111,7 @@
         <div style="margin-top: 12px; margin-left: 10px; width: 150px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">10.44.55.58</div>
         <div style="margin-top: 12px; margin-left: 0px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400; color: rgb(108, 117, 125);">00:1b:63:84:45:e9</div>
         <div style="margin-top: 12px; margin-left: 17px;  width: 188px; height: 24px; font-size: 21px; font-weight: 400;color: rgb(108, 117, 125);">Down</div>
-      </ul>
+      </ul> -->
 
       
 </div>
@@ -115,7 +135,7 @@
 <script src="../static/js/bootstrap.bundle.min.js"></script>  
 
 <div id="content">
-  {% block content %}{% endblock %}
+  <!-- {% block content %}{% endblock %} -->
 </div>
 </body>
 </html>
