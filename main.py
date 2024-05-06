@@ -13,10 +13,7 @@ env = Environment(
     autoescape=select_autoescape(['html', 'xml'])
 )
 
-env.globals['get_active_ld'] = dd104.get_active_ld
-env.globals['list_ld'] = dd104.list_ld
-env.globals['get_status'] = dd104.get_status
-env.globals['get_processes'] = dd104.get_processes
+
 
 
 
