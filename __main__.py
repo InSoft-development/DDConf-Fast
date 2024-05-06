@@ -64,12 +64,12 @@ async def name(request: Request):
 @app.get("/dd104/")
 async def render_104(request: Request):
 	data = {}
-	data["active"] = {dd104.get_active_ld() : dd104.get_processes(get_active_ld()), "stat_list":[]}
+	data["active"] = {"name":dd104.get_active_ld(), "proc_data" : dd104.get_processes(get_active_ld()), "stat_list":[]}
 	data["loadout_names"] = dd104.list_loadouts()
 	for i in range(0, len(data["active"][dd104.get_active_ld()])):
 		data["active"]["stat_list"].append(dd104.get_status(i))
 	
 	print(f"/dd104/: {data}")
 	
-	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": data)
+	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": data})
 
