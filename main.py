@@ -20,7 +20,7 @@ app = FastAPI()
 app.include_router(router_pages)
 # oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-BASE_DIR = pathlib.Path(__file__).parent
+BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=[
     BASE_DIR / "templates",
 ])
