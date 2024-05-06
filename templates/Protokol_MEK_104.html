@@ -99,32 +99,32 @@
             <tbody>
             
             
-            {% for id in range(0, len(get_processes(get_active_ld()))) %}
+            
 
-              {% if id % 2 %}
+          
 
-                <tr style="height: 48px;">
-              {% else %}
+              <tr style="height: 48px;">
+            
 
               <tr style="background: rgb(242, 242, 242);height: 48px;">
-              {% endif %}
+        
               
-                <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{id}}</th>         
+              <th scope="row" style="padding-left: 40px; padding-top: 15px;"></th>         
                
 
                 
-                <td style="padding-top: 15px;">{{get_processes(get_active_ld())[id]["main"]}}</td>
+              <td style="padding-top: 15px;"></td>
                 
 
-              {% if not get_processes(get_active_ld())[id]["second"] %}
+           
                 <td style="color: rgb(196, 196, 196);padding-top: 15px;"> нет резерва</td>
-              {% else %}
-                <td style="color: rgb(14, 13, 13);padding-top: 15px;"> {{get_processes(get_active_ld())[id]["second"]}}</td>
-              {% endif %} 
+            
+                <td style="color: rgb(14, 13, 13);padding-top: 15px;"></td>
+          
 
 
               <td>
-                {% if get_processes(get_active_ld())[id]["status"] == 1 %}
+             
                   <span id="play1" style="bottom: 5px; width: 109px; height: 24px;  color:rgb(19, 121, 91); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:#13795b; margin-top: 9px;"></div>
@@ -135,7 +135,7 @@
                 <!-- <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
                 <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span> -->
 
-                {% elif get_processes(get_active_ld())[id]["status"] == 0 %}
+               
                   <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(253, 126, 20); margin-top: 9px;"></div>
@@ -145,7 +145,7 @@
 
                 
                   
-                {% elif get_processes(get_active_ld())[id]["status"] == 2 %}
+               
                   <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(10, 162, 192); margin-top: 9px;"></div>
@@ -155,19 +155,19 @@
                
                 
 
-                {% elif get_processes(get_active_ld())[id]["status"] == -1 %}
+            
                   <span  style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(244, 13, 13); font-size: 16px; font-weight: 400; position: relative;">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="margin-top:12px;width: 109px; height: 24px;">
                       <div style="width: 8px; height: 8px; border-radius: 100%;background:rgb(244, 13, 13); margin-top: 9px;"></div>
                       <div style="margin-top: 0px;margin-left: 8px;">failed</div>
                       </div> 
                   </span>
-                {% else %}
+            
 
                   <span id="STP1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(253, 126, 20); font-size: 16px; font-weight: 400; position: relative;"></span>
                   
                   <span id="RES1" style="bottom: 5px; width: 109px; height: 24px; padding-top: 9px; color:rgb(10, 162, 192); font-size: 16px; font-weight: 400; position: relative;"></span>
-                {% endif %}
+               
 
 
               </td>
@@ -216,7 +216,7 @@
               </tr>
               </tr>
              
-              {% endfor %}
+             
        
          
         
@@ -420,7 +420,7 @@
                    
 
 
-                    <th scope="row" style="padding-left: 40px; padding-top: 15px;">{{i["id"]}}</th>         
+                    <th scope="row" style="padding-left: 40px; padding-top: 15px;"></th>         
                 
                     <td style="padding-top: 15px;">10.30.44.15:23678 </td>
                     <td style="color: rgb(196, 196, 196);padding-top: 15px;">нет резерва</td>
@@ -496,6 +496,25 @@
 
 
  </table> -->
+ <h1>users</h1>
+ <ul></ul>
+
+ 
+ <script>
+  fetch('http://127.0.0.1:8000/dd104')
+  .then(res =>{
+      return res.json();
+  })
+  .then(data => {
+     data.forEach(user => {
+      const aaa = `<li>${user.name}</li>`;
+      document.querySelector('ul').insertAdjacentHTML('beforeend', aaa);
+
+     });
+  })
+  .catch(error => console.log(error));
+
+</script>
 
 
 
