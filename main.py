@@ -54,7 +54,7 @@ def read_auth():
 
 @app.get("/")
 async def name(request: Request):
-	# dashboard_data = dd104.get_processes(1)
+	dashboard_data = dd104.get_processes(dd104.get_active_ld())
 	return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
 
 
