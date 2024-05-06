@@ -1,6 +1,7 @@
 from typing import Union, Annotated
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates 
 from fastapi.middleware.cors import CORSMiddleware
