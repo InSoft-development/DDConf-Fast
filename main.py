@@ -1,14 +1,15 @@
 from typing import Union, Annotated
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
-from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates 
 from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from pages.router.pages import router as router_pages
+from pathlib import Path
 import sqlite3
 
+from pages.router import router as router_pages
 import pages.dd104 as dd104
 import pages.dashboard as dashboard
 # env = Environment(
@@ -20,7 +21,7 @@ app = FastAPI()
 app.include_router(router_pages)
 # oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-BASE_DIR = pathlib.Path(__file__).parent
+BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=[
     BASE_DIR / "templates",
 ])
@@ -53,7 +54,7 @@ def read_auth():
 
 @app.get("/")
 async def name(request: Request):
-	# dashboard_data = dd104.get_processes(1)
+	dashboard_data = dd104.get_processes(dd104.get_active_ld())
 	return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
 
 
@@ -64,9 +65,9 @@ async def name(request: Request):
 @app.get("/dd104/")
 async def render_104(request: Request):
 	data = {}
-	data["active"] = {"name":dd104.get_active_ld(), "proc_data" : dd104.get_processes(get_active_ld()), "stat_list":[]}
-	data["loadout_names"] = dd104.list_loadouts()
-	for i in range(0, len(data["active"][dd104.get_active_ld()])):
+	data["active"] = {"name":dd104.get_active_ld(), "proc_data" : dd104.get_processes(dd104.get_active_ld()), "stat_list":[]}
+	data["loadout_names"] = dd104.list_ld()
+	for i in range(0, len(data["active"]["proc_data"])):
 		data["active"]["stat_list"].append(dd104.get_status(i))
 	
 	print(f"/dd104/: {data}")
