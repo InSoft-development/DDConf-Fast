@@ -6,9 +6,9 @@ from fastapi.responses import RedirectResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates 
 from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from router.pages import router as router_pages
 import sqlite3
 
+from pages.router import router as router_pages
 import pages.dd104 as dd104
 import pages.dashboard as dashboard
 # env = Environment(
