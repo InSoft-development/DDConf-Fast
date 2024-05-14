@@ -10,16 +10,18 @@ from pathlib import Path
 import sqlite3, json
 
 from pages.router import router as router_pages
-import pages.dd104 as dd104
-import pages.dashboard as dashboard
+import pages.dd104 as DD104
+import pages.dashboard as Dashboard
+import pages.login as Login
 # env = Environment(
 #     loader=FileSystemLoader('./templates'),
 #     autoescape=select_autoescape(['html', 'xml'])
 # )
 
+pwd_context = Login.pwd_context
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 app = FastAPI()
 app.include_router(router_pages)
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=[
@@ -46,15 +48,13 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-
-#TODO
-def read_auth():
-	with Path('./.auth/auth.conf').open().read_text() as F:
-		pass
+@app.post("/token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
+	return Login.login_for_access_token(form_data)
 
 @app.get("/")
 async def name(request: Request):
-	dashboard_data = dd104.get_processes(dd104.get_active_ld())
+	dashboard_data = DD104.get_processes(DD104.get_active_ld())
 	return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
 
 
@@ -65,10 +65,10 @@ async def name(request: Request):
 @app.get("/dd104/")
 async def render_104(request: Request):
 	data = {}
-	data["active"] = {"name":dd104.get_active_ld(), "proc_data" : dd104.get_processes(dd104.get_active_ld()), "stat_list":[]}
-	data["loadout_names"] = dd104.list_ld()
+	data["active"] = {"name":DD104.get_active_ld(), "proc_data" : DD104.get_processes(DD104.get_active_ld()), "stat_list":[]}
+	data["loadout_names"] = DD104.list_ld()
 	for i in range(0, len(data["active"]["proc_data"])):
-		data["active"]["stat_list"].append(dd104.get_status(i))
+		data["active"]["stat_list"].append(DD104.get_status(i))
 	
 	print(f"/dd104/: {data}")
 	

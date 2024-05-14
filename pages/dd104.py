@@ -31,16 +31,61 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		raise RuntimeError(msg)
 
-
-# def read_from_file(_path: str) -> dict:
-# 	# returns {"paircount":<0..2>, "pairs":[<str>, <str>], "comment":<str>}
-# 	data = {"paircount":None, "pairs":[], "comment":None}
-# 	try:
-# 		lines = Path(_path).read_text().strip().split('\n')
-# 		for line in lines:
-# 			
-# 	except Exception as e:
-# 		
+#TODO
+def read_from_file(_path: str) -> dict:
+	# returns {"paircount":<0..2>, "pairs":[<str>, <str>], "comment":<str>}
+	data = {"paircount":None, "pairs":[{},{}], "comment":None}
+	mode = _mode.lower()
+	try:
+		lines = [ x.strip() for x in Path(_path).read_text().split('\n') if not x == '']
+	except FileNotFoundError:
+		return {'count':-1}
+	
+	if len(lines)>1:
+		block = 0
+		IND = 0
+		for line in lines:
+			if line[0]=='#' and 'comment' in line:
+				data['comment'] = line.strip().split('comment: ')[1]
+			if 'receiver' in line:
+				block = 1
+			elif 'server' in line:
+				block = 2
+				IND = lines.index(line)
+				break
+			# else:
+			# 	if block == 2:
+			# 		if mode == 'rx':
+			# 			if 'address' in line and not line[0] == '#':
+			# 				data['old_addr'] = line.split('=')[1].strip()
+			# 			elif 'port' in line and not line[0] == '#':
+			# 				data['old_port'] = line.split('=')[1].strip()
+			# 			elif 'queuesize' in line and not line[0] == '#':
+			# 				data['old_queuesize'] = line.split('=')[1].strip()
+			# 			elif 'mode' in line and not line[0] == '#':
+			# 				data['old_mode'] = line.split('=')[1].strip()
+		for i in range(IND, len(lines)):
+			if "address" in lines[i] and not "#" == lines[i].strip()[0]:
+				if lines[i].split("address")[1].split("=")[0]:
+					if lines[i].split("address")[1].split("=")[0] == '1':
+						data["pairs"][0]['address'] = lines[i].split('=')[1]
+					elif lines[i].split("address")[1].split("=")[0] == '2':
+						data["pairs"][1]['address'] = lines[i].split('=')[1]
+				else:
+					data["pairs"][0]['address'] = lines[i].split('=')[1]
+				
+		
+		
+		# if mode == 'tx':
+		# 	#the 3 is for savename, savetime and recv
+		# 	data['count'] = (len(data.keys()) - 3) //2
+		# else:
+		# 	data['count'] = 1
+		
+		return data
+	else:
+		return {'count':1, 'old_savename':'', 'old_savetime':'', 'old_recv_addr':''}
+		
 
 
 #TODO
