@@ -19,7 +19,7 @@ import pages.login as Login
 # )
 
 pwd_context = Login.pwd_context
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = Login.oauth2_scheme
 app = FastAPI()
 app.include_router(router_pages)
 
