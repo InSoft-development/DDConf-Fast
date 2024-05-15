@@ -30,6 +30,8 @@ def read_auth_data() -> dict:
 		if "uname=" in line:
 			data["username"] = line.split("uname=")[1]
 	
+	data['admin']['disabled'] = False
+	
 	return {data["username"] : data}
 
 
@@ -57,7 +59,7 @@ class UserInDB(User):
 
 
 def verify_password(plain_password, hashed_password):
-	return pwd_context.verify(plain_password, read_auth_data()['pwd'])
+	return pwd_context.verify(plain_password, read_auth_data()['admin']['password'])
 
 
 def get_password_hash(password):
