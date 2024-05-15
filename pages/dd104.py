@@ -131,7 +131,8 @@ def get_processes(LD_ID: str) -> list:
 #TODO
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
-	return "placeholder"
+	return (Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
+	# return "placeholder"
 
 
 #TODO
