@@ -1,4 +1,4 @@
-import syslog, subprocess, time, tarfile
+import syslog, subprocess, time, tarfile, json
 from shutil import move, copy2, unpack_archive, make_archive
 from pathlib import Path
 from random import randrange
@@ -88,7 +88,7 @@ def read_from_file(_path: str) -> dict:
 		
 
 
-#TODO
+
 def get_status(PID: int) -> int:
 	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
 	try:
@@ -119,11 +119,13 @@ def get_status(PID: int) -> int:
 def get_processes(LD_ID: str) -> list:
 	# will return a list of dicts with fields "main", "secondary", "comment" 
 	loadouts = [x for x in listdir(LOADOUTDIR) if (LOADOUTDIR/x).is_file() and (LOADOUTDIR/x).name.split('.')[-1] == 'loadout']
-	if (LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout') in loadouts:
-		
+	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
+	if ID in loadouts:
+		data = json.loads((Path(LOADOUTDIR)/ID).read_text())
+		return data
 	else:
 		return None
-	return [{"main":"1.2.3.4", "second":"", "comment":"asdf"}, {"main":"3.4.5.6", "second":"2.3.4.5", "comment":"fdsa"}]
+	# return [{"main":"1.2.3.4", "second":"", "comment":"asdf"}, {"main":"3.4.5.6", "second":"2.3.4.5", "comment":"fdsa"}]
 
 
 #TODO
