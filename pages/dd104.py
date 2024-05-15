@@ -115,10 +115,10 @@ def get_status(PID: int) -> int:
 	# return randrange(-2, 3)
 
 
-#TODO
+#TODO test
 def get_processes(LD_ID: str) -> list:
 	# will return a list of dicts with fields "main", "secondary", "comment" 
-	loadouts = [x for x in listdir(LOADOUTDIR) if (LOADOUTDIR/x).is_file() and (LOADOUTDIR/x).name.split('.')[-1] == 'loadout']
+	loadouts = [x for x in listdir(LOADOUTDIR) if (Path(LOADOUTDIR)/x).is_file() and (Path(LOADOUTDIR)/x).name.split('.')[-1] == 'loadout']
 	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
 	if ID in loadouts:
 		data = json.loads((Path(LOADOUTDIR)/ID).read_text())
@@ -128,18 +128,18 @@ def get_processes(LD_ID: str) -> list:
 	# return [{"main":"1.2.3.4", "second":"", "comment":"asdf"}, {"main":"3.4.5.6", "second":"2.3.4.5", "comment":"fdsa"}]
 
 
-#TODO
+#TODO test
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
 	return (Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
 	# return "placeholder"
 
 
-#TODO
+#TODO test
 def list_ld() -> list:
 	# lists loadout IDs !!!
-	
-	return ["a", "b", "ne b"]
+	return [x for x in listdir(LOADOUTDIR) if (Path(LOADOUTDIR)/x).is_file() and (Path(LOADOUTDIR)/x).name.split('.')[-1] == 'loadout' and (Path(LOADOUTDIR)/x).name != ".ACTIVE.loadout"]
+	# return ["a", "b", "ne b"]
 
 
 #TODO
