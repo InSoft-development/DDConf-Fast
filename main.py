@@ -1,4 +1,5 @@
 from typing import Union, Annotated
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
@@ -7,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
+from pydantic import BaseModel
 import sqlite3, json
 
 from pages.router import router as router_pages
@@ -18,9 +20,26 @@ import pages.login as Login
 #     autoescape=select_autoescape(['html', 'xml'])
 # )
 
+
+class ProcessOperationTicket(BaseModel): #POT hehe
+	PID: int
+	OP: str
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+	# startup
+	pass
+	yield
+	# shutdown
+	pass
+
+
+
 pwd_context = Login.pwd_context
 oauth2_scheme = Login.oauth2_scheme
-app = FastAPI(docs_url=None, redoc_url=None)
+
+app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
 app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
@@ -57,7 +76,6 @@ async def name(request: Request):
 	dashboard_data = DD104.get_processes(DD104.get_active_ld())
 	return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
 
-
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):
 #     return {"item_id": item_id, "q": q}
@@ -70,7 +88,18 @@ async def render_104(request: Request):
 	for i in range(0, len(data["active"]["proc_data"])):
 		data["active"]["stat_list"].append(DD104.get_status(i))
 	
+	if not data["active"]["stat_list"]:
+		data["active"]["stat_list"] = None
+	
 	print(f"/dd104/: {data}")
 	
 	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": json.dumps(data)})
 
+
+@app.post("/dd104/processhandle/")
+async def dd104_process_handler(Ticket: ProcessOperationTicket):
+	try:
+		return DD104.process_handle(Ticket.PID, Ticket.OP)
+	except Exception as e:
+		syslog.syslog(syslog.LOG_ERR, f"main.dd104_process_handler: Error: {str(e)}")
+		return -2
