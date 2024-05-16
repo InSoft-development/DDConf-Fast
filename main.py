@@ -20,7 +20,7 @@ import pages.login as Login
 
 pwd_context = Login.pwd_context
 oauth2_scheme = Login.oauth2_scheme
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
