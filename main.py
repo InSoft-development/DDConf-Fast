@@ -15,15 +15,14 @@ from pages.router import router as router_pages
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 import pages.login as Login
+import models as Models
 # env = Environment(
 #     loader=FileSystemLoader('./templates'),
 #     autoescape=select_autoescape(['html', 'xml'])
 # )
 
 
-class ProcessOperationTicket(BaseModel): #POT hehe
-	PID: int
-	OP: str
+
 
 
 @asynccontextmanager
@@ -97,7 +96,7 @@ async def render_104(request: Request):
 
 
 @app.post("/dd104/processhandle/")
-async def dd104_process_handler(Ticket: ProcessOperationTicket):
+async def dd104_process_handler(Ticket: Models.ProcessOperationTicket):
 	try:
 		return DD104.process_handle(Ticket.PID, Ticket.OP)
 	except Exception as e:
