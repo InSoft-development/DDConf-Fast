@@ -43,23 +43,23 @@ app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=[
-    BASE_DIR / "templates",
+	BASE_DIR / "templates",
 ])
 
 origins = [
-    # "http://127.0.0.1:8080",
-    # "https://127.0.0.1",
-    # "http://localhost",
-    # "http://localhost:8080",
-    '*'
+	# "http://127.0.0.1:8080",
+	# "https://127.0.0.1",
+	# "http://localhost",
+	# "http://localhost:8080",
+	'*'
 ]
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+	CORSMiddleware,
+	allow_origins=origins,
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"],
 )
 
 
