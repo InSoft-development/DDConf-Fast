@@ -84,11 +84,11 @@ async def render_104(request: Request):
 	data = {}
 	data["active"] = {"name":DD104.get_active_ld(), "proc_data" : DD104.get_processes(DD104.get_active_ld()), "stat_list":[]}
 	data["loadout_names"] = DD104.list_ld()
-	for i in range(0, len(data["active"]["proc_data"])):
-		data["active"]["stat_list"].append(DD104.get_status(i))
+	for i in data["active"]["proc_data"]:
+		i["status"] = DD104.get_status(i)
 	
-	if not data["active"]["stat_list"]:
-		data["active"]["stat_list"] = None
+	# if not data["active"]["stat_list"]:
+	# 	data["active"]["stat_list"] = None
 	
 	print(f"/dd104/: {data}")
 	
