@@ -155,49 +155,6 @@ def process_handle(PID:int, OP:str) -> int:
 		syslog.syslog(syslog.LOG_WARNING, f"dd104.{OP}: {str(e)}")
 		return -2
 
-#TODO
-def stop(PID: int) -> int:
-	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
-	try:
-		std = subprocess.run(f'systemctl stop {"dd104client" if _mode == "tx" else "dd104server"}{PID}.service'.split(), text=True, capture_output=True)
-		if std.stderr:
-			raise RuntimeError(std.stderr)
-		return get_status(PID)
-	except RuntimeError:
-		return -1
-	except Exception as e:
-		syslog.syslog(syslog.LOG_WARNING, f"dd104.stop: {str(e)}")
-		return -2
 
-
-
-#TODO
-def start(PID: int) -> int:
-	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
-	try:
-		std = subprocess.run(f'systemctl start {"dd104client" if _mode == "tx" else "dd104server"}{PID}.service'.split(), text=True, capture_output=True)
-		if std.stderr:
-			raise RuntimeError(std.stderr)
-		return get_status(PID)
-	except RuntimeError:
-		return -1
-	except Exception as e:
-		syslog.syslog(syslog.LOG_WARNING, f"dd104.start: {str(e)}")
-		return -2
-
-
-#TODO
-def restart(PID: int) -> int:
-	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
-	try:
-		std = subprocess.run(f'systemctl restart {"dd104client" if _mode == "tx" else "dd104server"}{PID}.service'.split(), text=True, capture_output=True)
-		if std.stderr:
-			raise RuntimeError(std.stderr)
-		return get_status(PID)
-	except RuntimeError:
-		return -1
-	except Exception as e:
-		syslog.syslog(syslog.LOG_WARNING, f"dd104.restart: {str(e)}")
-		return -2
 
 
