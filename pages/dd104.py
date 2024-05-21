@@ -7,9 +7,11 @@ from os import W_OK, R_OK, access, makedirs, listdir
 
 # Globals
 _mode = 'tx'
-INIDIR = '/etc/dd/dd104/configs/'
-ARCDIR = '/etc/dd/dd104/archive.d/'
-LOADOUTDIR = '/etc/dd/dd104/loadouts.d/'
+class DEFAULTS:
+	recvaddr = "192.168.100.10"
+	DEFAULTS.INIDIR = '/etc/dd/dd104/configs/'
+	DEFAULTS.ARCDIR = '/etc/dd/dd104/archive.d/'
+	DEFAULTS.LOADOUTDIR = '/etc/dd/dd104/loadouts.d/'
 # /Globals
 
 def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
@@ -31,62 +33,27 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		raise RuntimeError(msg)
 
-#TODO
-def read_from_file(_path: str) -> dict:
-	# returns {"paircount":<0..2>, "pairs":[<str>, <str>], "comment":<str>}
-	data = {"paircount":None, "pairs":[{},{}], "comment":None}
-	mode = _mode.lower()
-	try:
-		lines = [ x.strip() for x in Path(_path).read_text().split('\n') if not x == '']
-	except FileNotFoundError:
-		return {'count':-1}
-	
-	if len(lines)>1:
-		block = 0
-		IND = 0
-		for line in lines:
-			if line[0]=='#' and 'comment' in line:
-				data['comment'] = line.strip().split('comment: ')[1]
-			if 'receiver' in line:
-				block = 1
-			elif 'server' in line:
-				block = 2
-				IND = lines.index(line)
-				break
-			# else:
-			# 	if block == 2:
-			# 		if mode == 'rx':
-			# 			if 'address' in line and not line[0] == '#':
-			# 				data['old_addr'] = line.split('=')[1].strip()
-			# 			elif 'port' in line and not line[0] == '#':
-			# 				data['old_port'] = line.split('=')[1].strip()
-			# 			elif 'queuesize' in line and not line[0] == '#':
-			# 				data['old_queuesize'] = line.split('=')[1].strip()
-			# 			elif 'mode' in line and not line[0] == '#':
-			# 				data['old_mode'] = line.split('=')[1].strip()
-		for i in range(IND, len(lines)):
-			if "address" in lines[i] and not "#" == lines[i].strip()[0]:
-				if lines[i].split("address")[1].split("=")[0]:
-					if lines[i].split("address")[1].split("=")[0] == '1':
-						data["pairs"][0]['address'] = lines[i].split('=')[1]
-					elif lines[i].split("address")[1].split("=")[0] == '2':
-						data["pairs"][1]['address'] = lines[i].split('=')[1]
-				else:
-					data["pairs"][0]['address'] = lines[i].split('=')[1]
-				
-		
-		
-		# if mode == 'tx':
-		# 	#the 3 is for savename, savetime and recv
-		# 	data['count'] = (len(data.keys()) - 3) //2
-		# else:
-		# 	data['count'] = 1
-		
-		return data
-	else:
-		return {'count':1, 'old_savename':'', 'old_savetime':'', 'old_recv_addr':''}
-		
 
+#TODO
+def create_inis(data: dict):
+	#gets loadout contents, creates an appropriate amount of inis
+	try:
+		for proc in data:
+			if proc['main'] or proc['second']:
+				if not proc['main']:
+					proc['main'] = proc['second']
+					proc['second'] = None
+				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={DEFAULTS.recvaddr}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
+				if proc['second']:
+					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
+				
+				(Path(DEFAULTS.INIDIR)/f"dd104client{data.index(proc) + 1}.ini").write_text(msg)
+					
+			else:
+				raise ValueError(f"process {data.index(proc) + 1} data is invalid ({proc})")
+	
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
 
 
 def get_status(PID: int) -> int:
@@ -118,10 +85,10 @@ def get_status(PID: int) -> int:
 #TODO test
 def get_processes(LD_ID: str) -> list:
 	# will return a list of dicts with fields "main", "secondary", "comment" 
-	loadouts = [x for x in listdir(LOADOUTDIR) if (Path(LOADOUTDIR)/x).is_file() and (Path(LOADOUTDIR)/x).name.split('.')[-1] == 'loadout']
+	loadouts = [x for x in listdir(DEFAULTS.LOADOUTDIR) if (Path(DEFAULTS.LOADOUTDIR)/x).is_file() and (Path(DEFAULTS.LOADOUTDIR)/x).name.split('.')[-1] == 'loadout']
 	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
 	if ID in loadouts:
-		data = json.loads((Path(LOADOUTDIR)/ID).read_text())
+		data = json.loads((Path(DEFAULTS.LOADOUTDIR)/ID).read_text())
 		return data
 	else:
 		return None
@@ -131,14 +98,14 @@ def get_processes(LD_ID: str) -> list:
 #TODO test
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
-	return (Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
+	return (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
 	# return "placeholder"
 
 
 #TODO test
 def list_ld() -> list:
 	# lists loadout IDs !!!
-	return [x for x in listdir(LOADOUTDIR) if (Path(LOADOUTDIR)/x).is_file() and (Path(LOADOUTDIR)/x).name.split('.')[-1] == 'loadout' and (Path(LOADOUTDIR)/x).name != ".ACTIVE.loadout"]
+	return [x for x in listdir(DEFAULTS.LOADOUTDIR) if (Path(DEFAULTS.LOADOUTDIR)/x).is_file() and (Path(DEFAULTS.LOADOUTDIR)/x).name.split('.')[-1] == 'loadout' and (Path(DEFAULTS.LOADOUTDIR)/x).name != ".ACTIVE.loadout"]
 	# return ["a", "b", "ne b"]
 
 
