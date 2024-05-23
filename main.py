@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 import sqlite3, json
 
 from pages.router import router as router_pages
@@ -82,7 +83,7 @@ async def name(request: Request):
 @app.get("/dd104/")
 async def render_104(request: Request):
 	data = {}
-	data["active"] = {"name":DD104.get_active_ld(), "proc_data" : DD104.get_processes(DD104.get_active_ld()), "stat_list":[]}
+	data["active"] = {"name":DD104.get_active_ld(), "proc_data" : DD104.get_processes(DD104.get_active_ld())}
 	data["loadout_names"] = DD104.list_ld()
 	for i in data["active"]["proc_data"]:
 		i["status"] = DD104.get_status(i)
@@ -102,3 +103,13 @@ async def dd104_process_handler(Ticket: Models.ProcessOperationTicket):
 	except Exception as e:
 		syslog.syslog(syslog.LOG_ERR, f"main.dd104_process_handler: Error: {str(e)}")
 		return -2
+
+
+@app.post("/dd104/save")
+async def dd104_save_ld_handler(Request:dict):
+	try:
+		return DD104.save_ld(Request['filename'], Request['data'])
+	except Exception as e:
+		msg = f"main.dd104_save_ld_handler: Error: {str(e)}"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		return {'status': -2, "msg":msg, "requestid":Request['requestid'] if 'requestid' in Request and type(Request)==dict else None}

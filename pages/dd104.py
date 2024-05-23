@@ -5,13 +5,11 @@ from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 
+from models import dd104_defaults
 # Globals
 _mode = 'tx'
-class DEFAULTS:
-	recvaddr = "192.168.100.10"
-	DEFAULTS.INIDIR = '/etc/dd/dd104/configs/'
-	DEFAULTS.ARCDIR = '/etc/dd/dd104/archive.d/'
-	DEFAULTS.LOADOUTDIR = '/etc/dd/dd104/loadouts.d/'
+
+DEFAULTS = DD104_Defaults("/etc/dd/DDConf.json") #change this parameter later to a CLI parameter
 # /Globals
 
 def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
@@ -38,19 +36,21 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 def create_inis(data: dict):
 	#gets loadout contents, creates an appropriate amount of inis
 	try:
+		COUNT = 0
 		for proc in data:
+			COUNT += 1
 			if proc['main'] or proc['second']:
 				if not proc['main']:
 					proc['main'] = proc['second']
 					proc['second'] = None
-				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={DEFAULTS.recvaddr}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
+				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={DEFAULTS.RECVADDR}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
 				if proc['second']:
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
-				(Path(DEFAULTS.INIDIR)/f"dd104client{data.index(proc) + 1}.ini").write_text(msg)
+				(Path(DEFAULTS.INIDIR)/f"dd104client{COUNT}.ini").write_text(msg)
 					
 			else:
-				raise ValueError(f"process {data.index(proc) + 1} data is invalid ({proc})")
+				raise ValueError(f"process {COUNT} data is invalid ({proc})")
 	
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
@@ -80,6 +80,17 @@ def get_status(PID: int) -> int:
 		syslog.syslog(syslog.LOG_WARNING, f"dd104.status: {str(e)}")
 		return -2
 	# return randrange(-2, 3)
+
+
+def save_ld(filename: str, data : dict) -> dict:
+	try:
+		Path(filename).write_text(json.dumps(data))
+		return None
+	except Exception as e:
+		msg = f"dd104.save_ld: an error occured: {str(e)}"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		return {'status': -2, 'msg': msg}
+		
 
 
 #TODO test
