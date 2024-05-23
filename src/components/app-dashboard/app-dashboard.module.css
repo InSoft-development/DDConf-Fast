@@ -1,0 +1,40 @@
+.header{
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+    font-family: Inter, sans-serif;
+}
+
+.upLine{
+    padding: 10px 15px;
+    background-color: var(--status-success);
+}
+
+.upLineContent{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.wrapper{
+    padding: 10px 15px;
+    background-color: var(--gray-300);
+}
+
+.inner{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 32px 0;
+}
+
+.headerText{
+    margin-left: 33px;
+}
+
+.menu{
+    font-size: 32px;
+    cursor: pointer;
+}

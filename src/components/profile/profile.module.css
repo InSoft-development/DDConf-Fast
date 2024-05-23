@@ -1,0 +1,25 @@
+.profile{
+    margin-top: 60px;
+    padding: 10px 15px;
+}
+
+.workProfile{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 42px;
+}
+
+.btnPanel{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 33px;
+}
+
+.panelLeftSide{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
