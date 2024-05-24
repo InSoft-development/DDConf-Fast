@@ -38,3 +38,9 @@
     font-size: 32px;
     cursor: pointer;
 }
+
+.ant-drawer-close{
+    float: right;
+    color: red;
+    background-color: blue;
+}
