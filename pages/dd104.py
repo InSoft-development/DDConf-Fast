@@ -109,8 +109,11 @@ def get_processes(LD_ID: str) -> list:
 #TODO test
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
-	return (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
-	# return "placeholder"
+	try:
+		return (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"dd104.get_active_ld: Error: {str(e)}")
+		return f"Ошибка: {str(e)}"
 
 
 #TODO test
@@ -120,13 +123,16 @@ def list_ld() -> list:
 	# return ["a", "b", "ne b"]
 
 
-def process_handle(PID:int, OP:str) -> int:
+def process_handle(PID: int, OP:str) -> int:
 	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
 	try:
-		std = subprocess.run(f'systemctl {OP} {"dd104client" if _mode == "tx" else "dd104server"}{PID}.service'.split(), text=True, capture_output=True)
-		if std.stderr:
-			raise RuntimeError(std.stderr)
-		return get_status(PID)
+		if type(PID) == int or type(PID) == str:
+			std = subprocess.run(f'systemctl {OP} {"dd104client" if _mode == "tx" else "dd104server"}{PID}.service'.split(), text=True, capture_output=True)
+			if std.stderr:
+				raise RuntimeError(std.stderr)
+			return get_status(PID)
+		else:
+			raise TypeError(f"dd104.process_handle: PID must be a single instance or a list of int, str, got {type(PID)}.")
 	except RuntimeError:
 		return -1
 	except Exception as e:

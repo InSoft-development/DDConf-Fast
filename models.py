@@ -1,9 +1,15 @@
  from pydantic import BaseModel
  from typing import Union, Annotated
  
-class ProcessOperationTicket(BaseModel): #POT hehe
-	PID: int
-	OP: str
+# class ProcessOperationTicket(BaseModel): #POT hehe
+# 	PID: int
+# 	OP: str
+
+
+class POST(BaseModel):
+	method: str
+	params: dict 
+
 
 class DD104_Defaults:
 	RECVADDR = "192.168.100.10"
