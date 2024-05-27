@@ -3,6 +3,7 @@ import { MenuOutlined } from '@ant-design/icons';
 import styles from './app-dashboard.module.css';
 import { Drawer } from "antd";
 import { useState } from "react";
+import AppDashboardFiles from "../app-dashboardFiles/app-dashboardFiles";
 
 
 const AppDashboard = () => {
@@ -41,12 +42,9 @@ const AppDashboard = () => {
                 <h2 className={`text text_type_large ${styles.headerText}`}>Дашбоард</h2>
                 
             </div>
-        </div>   
-
-        <div>
-            hello
-            
-        </div>     
+        </div>  
+          
+        <AppDashboardFiles/>    
     </header>
     );
 }
