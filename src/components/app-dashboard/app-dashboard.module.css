@@ -44,3 +44,41 @@
     color: red;
     background-color: blue;
 }
+.first_text{
+    color: rgb(13, 110, 253);
+    position: static;
+    width: 150px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    margin-left: 30px;
+    font-size: 16px;
+    font-weight: 400;
+    padding-bottom: 22px;
+    cursor: pointer;
+}
+.settings{
+    color: rgb(13, 110, 253);
+    position: static;
+    width: 150px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    margin-left: 30px;
+    font-size: 16px;
+    font-weight: 400;
+    padding-bottom: 22px;
+    cursor: pointer;
+    margin-top: 111px;
+}
+
+.title{
+    color: red;
+}
+

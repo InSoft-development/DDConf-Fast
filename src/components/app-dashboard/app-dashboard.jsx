@@ -22,15 +22,17 @@ const AppDashboard = () => {
                 <Drawer
                     visible={visible}
                     title="ДД Конфигуратор"
+                    
+                   
                     onClose={() => {
                         setVisible(false);
                         
                     }}
                     placement="left">
                     
-                    <p>МЭК 104</p>
-                    
-                    <p>OPC UA</p>
+                    <p className={styles.first_text}>МЭК 104</p>                    
+                    <p className={styles.first_text}>OPC UA</p>
+                    <p className={styles.settings}>Настройки</p>
 
                 </Drawer>
                 
@@ -39,7 +41,12 @@ const AppDashboard = () => {
                 <h2 className={`text text_type_large ${styles.headerText}`}>Дашбоард</h2>
                 
             </div>
-        </div>        
+        </div>   
+
+        <div>
+            hello
+            
+        </div>     
     </header>
     );
 }
