@@ -11,9 +11,13 @@ const AppDashboard = () => {
     return (
     <header className={styles.header}>
         <div className={styles.upLine}>
+            
             <div className={`wrapper ${styles.upLineContent}`}>
                 ДД Конфигуртор
+                  {/* <div className={styles.upLineContentt}>InControl</div>   */}
+            
             </div>
+          
         </div>
         <div className={styles.wrapper}>
             <div className={`wrapper ${styles.inner}`}>
@@ -43,7 +47,7 @@ const AppDashboard = () => {
                 
             </div>
         </div>  
-          
+
         <AppDashboardFiles/>    
     </header>
     );

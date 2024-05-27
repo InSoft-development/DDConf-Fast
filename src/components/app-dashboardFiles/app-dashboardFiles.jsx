@@ -5,7 +5,7 @@ import { dataSource, columns } from '../../utils/mock';
 
 const AppDashboardFiles = () =>{
     return (
-      <div>
+      <div className={styles.wrap}>
         <div className={styles.LineContent}>ПАК ОПТИ: 
             <span className={styles.LineContentF}>номер устройства</span>
         </div>

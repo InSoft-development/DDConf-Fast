@@ -11,6 +11,11 @@
     font-weight: 400;
     src: url('./fonts/Inter/Inter-Regular.ttf');
 }
+@font-face {
+    font-family: 'Interr';
+    font-weight: 400;
+    src: url('./fonts/Inter/Sixtyfour-Regular.ttf');
+}
 
 /* constants */
 
