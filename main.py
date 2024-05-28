@@ -67,44 +67,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # @app.post("/token")
 # async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
 # 	return Login.login_for_access_token(form_data)
-# 
-# @app.get("/")
-# async def name(request: Request):
-# 	dashboard_data = DD104.get_processes(DD104.get_active_ld())
-# 	return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
-# 
-# 
-# @app.post("/dd104/")
-# async def render_104(request: Request):
-# 	data = {}
-# 	data["active"] = {"name":DD104.get_active_ld(), "proc_data" : DD104.get_processes(DD104.get_active_ld())}
-# 	data["loadout_names"] = DD104.list_ld()
-# 	for i in data["active"]["proc_data"]:
-# 		i["status"] = DD104.get_status(i)
-# 	
-# 	
-# 	print(f"/dd104/: {data}")
-# 	
-# 	return templates.TemplateResponse("Protokol_MEK_104.html", {"request": request, "dd104_data": json.dumps(data)})
-# 
-# 
-# @app.post("/dd104/")
-# async def dd104_process_handler(Ticket: Models.ProcessOperationTicket):
-# 	try:
-# 		return DD104.process_handle(Ticket.PID, Ticket.OP)
-# 	except Exception as e:
-# 		syslog.syslog(syslog.LOG_ERR, f"main.dd104_process_handler: Error: {str(e)}")
-# 		return -2
-# 
-# 
-# @app.post("/dd104/")
-# async def dd104_save_ld_handler(Request:dict):
-	# try:
-	# 	return DD104.save_ld(Request['filename'], Request['data'])
-	# except Exception as e:
-	# 	msg = f"main.dd104_save_ld_handler: Error: {str(e)}"
-	# 	syslog.syslog(syslog.LOG_ERR, msg)
-	# 	return {'status': -2, "msg":msg, "requestid":Request['requestid'] if 'requestid' in Request and type(Request)==dict else None}
+
 
 @app.post("/dd104")
 def dd104_post(REQ: Models.POST) -> dict:
@@ -121,7 +84,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 				i["status"] = DD104.get_status(i)
 			
 			print(f"/dd104/: {data}")
-			return {"result": data, "errors":None}
+			
 			
 		
 		elif REQ.method == "process_handle":
@@ -146,19 +109,34 @@ def dd104_post(REQ: Models.POST) -> dict:
 		
 		elif REQ.method == "profile_save": #TODO
 			try:
-				return DD104.save_ld(Request['filename'], Request['data'])
+				data = DD104.save_ld(REQ.params['filename'], REQ.params['data'])
 			except Exception as e:
 				msg = f"main.dd104_save_ld_handler: Error: {str(e)}"
 				syslog.syslog(syslog.LOG_ERR, msg)
-				return {'status': -2, "msg":msg}
+				data = None
+				errs.append(msg)
 			
 		
 		elif REQ.method == "profile_apply": #TODO
-			pass
+			try:
+				if REQ.params['data']:
+					try:
+						data = DD104.save_ld(REQ.params['filename'], REQ.params['data'])
+					except Exception as e:
+						msg = f"main.dd104_apply_ld_handler.save: Error: {str(e)}"
+						syslog.syslog(syslog.LOG_ERR, msg)
+						data = None
+						errs.append(msg)
+					data = DD104.apply_ld(REQ.params['filename'])
+			except Exception as e:
+				msg = f"main.dd104_apply_ld_handler: Error: {str(e)}"
+				syslog.syslog(syslog.LOG_ERR, msg)
+				data = None
+				errs.append(msg)
 			
 		
 	except Exception as e:
 		syslog.syslog(syslog.lOG_CRIT, f"DDConf.main.dd104_post: ERROR: {str(e)}")
-		return {"result":None, "errors":str(e)}
+		return {"result":None, "error":str(e)}
 	else:
-		return {"result": data, "errors":None if not errs else errs}
+		return {"result": data, "error":None if not errs else errs}

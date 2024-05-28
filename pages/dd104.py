@@ -5,7 +5,7 @@ from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 
-from models import dd104_defaults
+from models import DD104_Defaults
 # Globals
 _mode = 'tx'
 
@@ -33,7 +33,7 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 
 
 #TODO
-def create_inis(data: dict):
+def create_inis(data: list):
 	#gets loadout contents, creates an appropriate amount of inis
 	try:
 		COUNT = 0
@@ -48,7 +48,7 @@ def create_inis(data: dict):
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
 				(Path(DEFAULTS.INIDIR)/f"dd104client{COUNT}.ini").write_text(msg)
-					
+				print(f"Created a file at {(Path(DEFAULTS.INIDIR)/f"dd104client{COUNT}.ini")}. ")
 			else:
 				raise ValueError(f"process {COUNT} data is invalid ({proc})")
 	
@@ -82,18 +82,40 @@ def get_status(PID: int) -> int:
 	# return randrange(-2, 3)
 
 
-def save_ld(filename: str, data : dict) -> dict:
+def save_ld(filename: str, data : dict) -> None:
 	try:
-		Path(filename).write_text(json.dumps(data))
+		if not filename.split('.')[-1] == 'loadout':
+			filename = filename+".loadout"
+		(Path(DD104_Defaults.LOADOUTDIR)/filename).write_text(json.dumps(data))
 		return None
 	except Exception as e:
 		msg = f"dd104.save_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
-		return {'status': -2, 'msg': msg}
+		raise RuntimeError(msg)
 		
 
 
-#TODO test
+def apply_ld(filename: str) -> None:
+	try:
+		if not filename.split('.')[-1] == 'loadout':
+			filename = filename+".loadout"
+		if (Path(DD104_Defaults.LOADOUTDIR)/filename).is_file():
+			data = json.loads((Path(DD104_Defaults.LOADOUTDIR)/filename).read_text())
+			if type(data) == list:
+				create_inis(data)
+			elif  type(data) == dict:
+				create_inis([data])
+			else:
+				raise TypeError(f"Error while reading {filename}: data is corrupted or invalid, data type received ({type(data)}) is not in [list, dict]")
+			return None
+		else:
+			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
+	except Exception as e:
+		msg = f"dd104.apply_ld: an error occured: {str(e)}"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		raise RuntimeError(msg)
+
+
 def get_processes(LD_ID: str) -> list:
 	# will return a list of dicts with fields "main", "secondary", "comment" 
 	loadouts = [x for x in listdir(DEFAULTS.LOADOUTDIR) if (Path(DEFAULTS.LOADOUTDIR)/x).is_file() and (Path(DEFAULTS.LOADOUTDIR)/x).name.split('.')[-1] == 'loadout']
@@ -106,7 +128,6 @@ def get_processes(LD_ID: str) -> list:
 	# return [{"main":"1.2.3.4", "second":"", "comment":"asdf"}, {"main":"3.4.5.6", "second":"2.3.4.5", "comment":"fdsa"}]
 
 
-#TODO test
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
 	try:
@@ -116,7 +137,6 @@ def get_active_ld() -> str:
 		return f"Ошибка: {str(e)}"
 
 
-#TODO test
 def list_ld() -> list:
 	# lists loadout IDs !!!
 	return [x for x in listdir(DEFAULTS.LOADOUTDIR) if (Path(DEFAULTS.LOADOUTDIR)/x).is_file() and (Path(DEFAULTS.LOADOUTDIR)/x).name.split('.')[-1] == 'loadout' and (Path(DEFAULTS.LOADOUTDIR)/x).name != ".ACTIVE.loadout"]
