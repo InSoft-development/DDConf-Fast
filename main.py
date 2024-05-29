@@ -73,9 +73,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def dd104_post(REQ: Models.POST) -> dict:
 	try:
 		data = {} #just in case
-		errs = [] #just in case
+		errs = None #just in case
 		
-		if REQ.method == "fetch_table":
+		if REQ.method == "fetch_initial":
 			
 			data = {}
 			data["active"] = {"name":DD104.get_active_ld(), "proc_data" : DD104.get_processes(DD104.get_active_ld())}
@@ -83,49 +83,74 @@ def dd104_post(REQ: Models.POST) -> dict:
 			for i in data["active"]["proc_data"]:
 				i["status"] = DD104.get_status(i)
 			
-			print(f"/dd104/: {data}")
+			print(f"/dd104.fetch_initial: {data}")
 			
 			
 		
 		elif REQ.method == "process_handle":
 			
-			if type(REQ.params['pid']) == list:
+			if REQ.params['op'] in ['start', 'stop', 'restart']:
+				if type(REQ.params['pid']) == list:
+					
+					data = []
+					errs = []
+					
+					for pid in REQ.params['pid']:
+						try:
+							data.append({"pid": pid, "status": DD104.process_handle(pid, REQ.params["op"])})
+						except Exception as e:
+							errs.append(f"pid: {pid}, err: {str(e)}")
 				
-				data = []
-				
-				for pid in REQ.params['pid']:
-					try:
-						data.append({"pid": pid, "status": DD104.process_handle(pid, REQ.params["op"])})
-					except Exception as e:
-						errs.append(f"pid: {pid}, err: {str(e)}")
-			
-			elif type(REQ.params['pid']) == str or type(REQ.params['pid']) == int:
-				
-				data = {"status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
+				elif type(REQ.params['pid']) == str or type(REQ.params['pid']) == int:
+					
+					data = {"status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
+					
+				else:
+					raise TypeError(f"process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
 				
 			else:
-				raise TypeError(f"process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
-			
+				raise ValueError(f"dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
 		
-		elif REQ.method == "profile_save": #TODO
-			try:
-				data = DD104.save_ld(REQ.params['filename'], REQ.params['data'])
-			except Exception as e:
-				msg = f"main.dd104_save_ld_handler: Error: {str(e)}"
-				syslog.syslog(syslog.LOG_ERR, msg)
-				data = None
-				errs.append(msg)
+		elif REQ.method == "profile_save": #TODO validation
 			
+			if REQ.params['name'] in DD104.list_ld():
+				try:
+					data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
+				except Exception as e:
+					msg = f"main.dd104_save_ld_handler: Error: {str(e)}"
+					syslog.syslog(syslog.LOG_ERR, msg)
+					data = None
+					errs.append(msg)
+			else:
+				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}\n"
+				data = None
 		
-		elif REQ.method == "profile_apply": #TODO
-			try:
-				data = DD104.apply_ld(REQ.params['filename'])
-			except Exception as e:
-				msg = f"main.dd104_apply_ld_handler: Error: {str(e)}"
-				syslog.syslog(syslog.LOG_ERR, msg)
-				data = None
-				errs.append(msg)
+		elif REQ.method == "profile_apply": #TODO validation
 			
+			if REQ.params['name'] in DD104.list_ld():
+				try:
+					data = DD104.apply_ld(REQ.params['name'])
+				except Exception as e:
+					msg = f"main.dd104_apply_ld_handler: Error: {str(e)}"
+					syslog.syslog(syslog.LOG_ERR, msg)
+					data = None
+					errs.append(msg)
+			else:
+				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}\n"
+				data = None
+		
+		elif REQ.method == "fetch_ld":
+			
+			if REQ.params['name']:
+				if REQ.params['name'] in DD104.list_ld():
+					data = DD104.get_processes(REQ.params['name'])
+					print(f"/dd104.fetch_ld({REQ.params['name']}): {data}")
+				else:
+					errs = f"dd104.fetch_ld: incorrect ld name; data: {REQ.params['name']}\n"
+					data = None
+			else:
+				errs = f"dd104.fetch_ld: incorrect data: {REQ.params}\n"
+				data = None
 		
 	except Exception as e:
 		syslog.syslog(syslog.lOG_CRIT, f"DDConf.main.dd104_post: ERROR: {str(e)}")
