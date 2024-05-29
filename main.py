@@ -119,15 +119,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 		
 		elif REQ.method == "profile_apply": #TODO
 			try:
-				if REQ.params['data']:
-					try:
-						data = DD104.save_ld(REQ.params['filename'], REQ.params['data'])
-					except Exception as e:
-						msg = f"main.dd104_apply_ld_handler.save: Error: {str(e)}"
-						syslog.syslog(syslog.LOG_ERR, msg)
-						data = None
-						errs.append(msg)
-					data = DD104.apply_ld(REQ.params['filename'])
+				data = DD104.apply_ld(REQ.params['filename'])
 			except Exception as e:
 				msg = f"main.dd104_apply_ld_handler: Error: {str(e)}"
 				syslog.syslog(syslog.LOG_ERR, msg)
