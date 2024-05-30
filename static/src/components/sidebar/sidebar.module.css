@@ -1,0 +1,31 @@
+.sidebar{
+    width: 100vw;
+    height: 100wh;
+    position: absolute;
+    z-index: 10;
+    background-color: #7a7a7a62;
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    animation: appearance 0.25s forwards;
+}
+
+.aside{
+    position: relative;
+    z-index: 20;
+    width: 560px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 26px 94px;
+    background-color: white;  
+}
+
+.clsBtn{
+    cursor: pointer;
+    align-self: end;
+}
+
+@keyframes appearance {
+    0%{opacity: 0;}
+    100%{opacity: 1;}
+}
