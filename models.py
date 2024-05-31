@@ -18,7 +18,7 @@ class DD104_Defaults:
 	ARCDIR = None #'/etc/dd/dd104/archive.d/'
 	LOADOUTDIR = '/etc/dd/dd104/loadouts.d/'
 	
-	def __init__(self, confile = "/etc/dd/DDConf.json" : str):
+	def __init__(self, confile = "/etc/dd/DDConf.json"):
 		try:
 			conf = json.loads(Path(confile).read_text())
 			self.RECVADDR = conf['recvaddr'] if 'recvaddr' in conf and conf['recvaddr'] else "192.168.100.10"
