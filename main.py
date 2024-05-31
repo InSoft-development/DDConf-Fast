@@ -22,7 +22,6 @@ import models as Models
 
 
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 	# startup
