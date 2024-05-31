@@ -1,72 +1,158 @@
-from typing import Union
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
+from typing import Union, Annotated
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
-from pages.router import router as router_pages
-#from fastapi.templating import Jinja2Templates as J2T
+from fastapi.responses import RedirectResponse, PlainTextResponse
+from fastapi.templating import Jinja2Templates 
+from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from pathlib import Path
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings
+import sqlite3, json
 
-# env = Environment(
-#     loader=FileSystemLoader('.'),
-#     autoescape=select_autoescape(['html', 'xml'])
-# )
+from pages.router import router as router_pages
+import pages.dd104 as DD104
+import pages.dashboard as Dashboard
+import pages.login as Login
+import models as Models
 
-app = FastAPI()
+
+
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+	# startup
+	pass
+	yield
+	# shutdown
+	pass
+
+
+
+# pwd_context = Login.pwd_context
+# oauth2_scheme = Login.oauth2_scheme
+
+app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
+app.include_router(router_pages)
+
+BASE_DIR = Path(__file__).parent
+templates = Jinja2Templates(directory=[
+	BASE_DIR / "templates",
+])
+
+origins = [
+	# "http://127.0.0.1:8080",
+	# "https://127.0.0.1",
+	# "http://localhost",
+	# "http://localhost:8080",
+	'*'
+]
+
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=origins,
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"],
+)
+
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
-# PAC = [{"name":"Номер протокола"}] # ПАК ОПТИ:
-# LIC = [{"name":"Номер лицензии"}]  # Лицензия:
-# PROT = [{"name": "МЭК 104", "page":"pages/Protokol_MEK_104"},
-#         {"name": "OPC UA"},
-#         {"name": "OPC UA"},
-#         {"name": "МЭК 104"},
-#         {"name": "МЭК 104"},
-#         {"name": "МЭК 104"},
-#         {"name": "МЭК 104"}] # Протоколы
 
-# SETINTERF = [{"namber_row":"1.","ip":"10.44.55.56","adres":"00:1b:63:84:45:e6","text":"Up, configured"},
-#              {"namber_row":"2.","ip":"-","adres":"00:1b:63:84:45:e7","textt":"Down"},
-#              {"namber_row":"3.","ip":" 10.44.55.57","adres":"00:1b:63:84:45:e8","text":"Up, configured"},
-#              {"namber_row":"4.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"5.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"6.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"7.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"8.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"9.","ip":" 10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"10.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"11.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"12.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","text":"Up, configured"},
-#              {"namber_row":"13.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"},
-#              {"namber_row":"14.","ip":"10.44.55.58","adres":"00:1b:63:84:45:e9","textt":"Down"}          
-#              ]
-
-# RABPROF = [{"name":"Название профиляzz"}]
+# @app.post("/token")
+# async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
+# 	return Login.login_for_access_token(form_data)
 
 
-# dashboard_data = {"active_protocols":[{"DD104":"/pages/dd104"}, {"OPC UA":"/pages/something"}, {"SomeBullshit":"/pages/suckmydick"}],
-#                   "License":"12321","pac_num":"12345",
-#                   "network":[{"id":"1", "addr":"10.23.23.123", "macaddr":"00:1b:63:84:45:e6", "status": "1"}, {"id":"2", "addr":"127.0.0.1", "DHCP":"no", "status": "0"}]}
-
-dashboard_data = {"active_protocols":{"DD104":"/pages/dd104", "OPC UA":"/pages/something", "SomeBullshit":"/pages/suckmydick"},
-                  "license":"12321", "pac_num":"123123",
-                  "network":[{"id":"1", "addr":"10.23.23.123", "macaddr":"eb:1a:b0:b1:cc", "status": "1"},
-                             {"id":"2", "addr":"127.0.0.1", "macaddr":"eb:1a:b0:b1:c1", "status": "0"}]} # 0 = down, 1 = up
-
-@app.get('/')
-async def name(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request, "dashboard_data": dashboard_data})
-
-    
-
-
-
-app.include_router(router_pages)
-# @app.get("/")
-# def read_root():``
-#     return {"Hello": "World"}
-
-
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: Union[str, None] = None):
-#     return {"item_id": item_id, "q": q}
+@app.post("/dd104")
+def dd104_post(REQ: Models.POST) -> dict:
+	try:
+		data = {} #just in case
+		errs = None #just in case
+		
+		if REQ.method == "fetch_initial":
+			
+			data = {}
+			data["active"] = {"name":DD104.get_active_ld(), "proc_data" : DD104.get_processes(DD104.get_active_ld())}
+			data["loadout_names"] = DD104.list_ld()
+			for i in data["active"]["proc_data"]:
+				i["status"] = DD104.get_status(i)
+			
+			print(f"/dd104.fetch_initial: {data}")
+			
+			
+		
+		elif REQ.method == "process_handle":
+			
+			if REQ.params['op'] in ['start', 'stop', 'restart']:
+				if type(REQ.params['pid']) == list:
+					
+					data = []
+					errs = []
+					
+					for pid in REQ.params['pid']:
+						try:
+							data.append({"pid": pid, "status": DD104.process_handle(pid, REQ.params["op"])})
+						except Exception as e:
+							errs.append(f"pid: {pid}, err: {str(e)}")
+				
+				elif type(REQ.params['pid']) == str or type(REQ.params['pid']) == int:
+					
+					data = {"status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
+					
+				else:
+					raise TypeError(f"process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
+				
+			else:
+				raise ValueError(f"dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
+		
+		elif REQ.method == "profile_save": #TODO validation
+			
+			if REQ.params['name'] in DD104.list_ld():
+				try:
+					data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
+				except Exception as e:
+					msg = f"main.dd104_save_ld_handler: Error: {str(e)}"
+					syslog.syslog(syslog.LOG_ERR, msg)
+					data = None
+					errs.append(msg)
+			else:
+				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}\n"
+				data = None
+		
+		elif REQ.method == "profile_apply": #TODO validation
+			
+			if REQ.params['name'] in DD104.list_ld():
+				try:
+					data = DD104.apply_ld(REQ.params['name'])
+				except Exception as e:
+					msg = f"main.dd104_apply_ld_handler: Error: {str(e)}"
+					syslog.syslog(syslog.LOG_ERR, msg)
+					data = None
+					errs.append(msg)
+			else:
+				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}\n"
+				data = None
+		
+		elif REQ.method == "fetch_ld":
+			
+			if REQ.params['name']:
+				if REQ.params['name'] in DD104.list_ld():
+					data = DD104.get_processes(REQ.params['name'])
+					print(f"/dd104.fetch_ld({REQ.params['name']}): {data}")
+				else:
+					errs = f"dd104.fetch_ld: incorrect ld name; data: {REQ.params['name']}\n"
+					data = None
+			else:
+				errs = f"dd104.fetch_ld: incorrect data: {REQ.params}\n"
+				data = None
+		
+	except Exception as e:
+		syslog.syslog(syslog.lOG_CRIT, f"DDConf.main.dd104_post: ERROR: {str(e)}")
+		return {"result":None, "error":str(e)}
+	else:
+		return {"result": data, "error":None if not errs else errs}
