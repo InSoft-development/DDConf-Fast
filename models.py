@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Union, Annotated
-import syslog
+import syslog, json
  
 # class ProcessOperationTicket(BaseModel): #POT hehe
 # 	PID: int
