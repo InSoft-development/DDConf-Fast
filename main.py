@@ -68,6 +68,18 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # 	return Login.login_for_access_token(form_data)
 
 
+@app.post("/dashboard")
+def dashboard_post(REQ: Models.POST) -> dict:
+	try:
+		data = {}
+		errs = None
+		#TODO
+	except Exception as e:
+		msg = f"DDConf.dashboard_post: Error: {str(e)}"
+		syslog.syslog(syslog.LOG_CRIT, msg)
+		return {"result": None, "error": msg}
+
+
 @app.post("/dd104")
 def dd104_post(REQ: Models.POST) -> dict:
 	try:
