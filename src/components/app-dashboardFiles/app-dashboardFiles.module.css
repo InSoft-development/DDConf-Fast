@@ -43,6 +43,7 @@
     
 }
 .LineContentMEK{
+    font-family: Inter, sans-serif; 
     font-weight: 400;
     color: var(--gray-500);
     font-size: 21px;
@@ -50,6 +51,7 @@
     margin-top: 16px;   
 }
 .LineContentOPC{
+    font-family: Inter, sans-serif; 
     font-weight: 400;
     color: var(--gray-500);
     font-size: 21px;
