@@ -15,7 +15,7 @@ const Profile = () => {
                 </div>
                 <button className='button btn-green'>Профиль</button>
             </div>
-            <Table 
+            <Table
                 dataSource={dataSource} 
                 columns={columns} 
                 pagination={false}

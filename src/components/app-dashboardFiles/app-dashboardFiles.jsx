@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './app-dashboardFiles.module.css';
-import { Table } from "antd";
-import { dataSource, columns } from '../../utils/mock';
+
+
 
 const AppDashboardFiles = () =>{
     return (
@@ -15,8 +15,8 @@ const AppDashboardFiles = () =>{
         </div>
 
         <div className={styles.LineContentProt}>Протоколы: 
-            <div className={styles.LineContentPr}>МЭК 104</div>
-            <div className={styles.LineContentPr}>OPC UA</div>
+            <div className={styles.LineContentMEK}>МЭК 104</div>
+            <div className={styles.LineContentOPC}>OPC UA</div>
         </div>
 
         <div className={styles.LineContentSetIn}>Сетевые интерфейсы: 
@@ -24,15 +24,10 @@ const AppDashboardFiles = () =>{
             
         </div>
 
+       
+      </div>    
       
-      </div>
-
-        
-        
-        
-        
-
-    )
+     )
 
 }
 export default AppDashboardFiles;

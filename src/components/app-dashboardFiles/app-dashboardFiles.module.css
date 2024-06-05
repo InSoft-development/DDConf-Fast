@@ -1,27 +1,15 @@
-.wrapper{
-    padding: 10px 15px;
-    background-color: var(--gray-300);
-}
-.wrap{
-    padding: 10px 15px;
-    margin-left: 33px;
-}
 .LineContent{
-    font-family: Inter, sans-serif; 
-    font-size: 16px;
+    font-family: Inter, sans-serif;    
     font-weight: 400;
     color: var(--gray-900);
     font-size: 20px;
-    font-weight: 700;
-    margin-top: 62px;
-    margin-left: 350px;
-    display: flex;
-    
-    
-    
+    font-weight: 700;  
+    display: flex; 
+    margin-top: 56px;  
 }
+
 .LineContentF{
-    /* margin-left: 100px; */
+    
     font-weight: 400;
     color: var(--gray-500);
     font-size: 21px;
@@ -29,14 +17,12 @@
 }
 
 .LineContentLic{
-    font-family: Inter, sans-serif; 
-    font-size: 16px;
+    font-family: Inter, sans-serif;     
     font-weight: 400;
     color: var(--gray-900);
     font-size: 20px;
     font-weight: 700;
-    margin-top: 20px;
-    margin-left: 350px;
+    margin-top: 27px;    
     display: flex;
 }
 .LineContentNL{
@@ -46,36 +32,39 @@
     margin-left: 45px;
 }
 .LineContentProt{
-    font-family: Inter, sans-serif; 
-    font-size: 16px;
+    font-family: Inter, sans-serif;    
     font-weight: 400;
     color: var(--gray-900);
     font-size: 20px;
     font-weight: 700;
-    margin-top: 41px;
-    margin-left: 350px;
+    margin-top: 34px;
+   
    
     
 }
-.LineContentPr{
+.LineContentMEK{
+    font-weight: 400;
+    color: var(--gray-500);
+    font-size: 21px;
+    margin-left: 17px;
+    margin-top: 16px;   
+}
+.LineContentOPC{
     font-weight: 400;
     color: var(--gray-500);
     font-size: 21px;
     margin-left: 17px;
     margin-top: 12px;
-    
-    
+
 }
 
 .LineContentSetIn{
-    font-family: Inter, sans-serif; 
-    font-size: 16px;
+    font-family: Inter, sans-serif;
     font-weight: 400;
     color: var(--gray-900);
     font-size: 20px;
     font-weight: 700;
     margin-top: 27px;
-    margin-left: 350px;
     display: flex;
 }
 

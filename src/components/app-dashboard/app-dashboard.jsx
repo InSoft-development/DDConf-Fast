@@ -14,7 +14,7 @@ const AppDashboard = () => {
             
             <div className={`wrapper ${styles.upLineContent}`}>
                 ДД Конфигуртор
-                  {/* <div className={styles.upLineContentt}>InControl</div>   */}
+                 
             
             </div>
           
@@ -46,10 +46,13 @@ const AppDashboard = () => {
                 <h2 className={`text text_type_large ${styles.headerText}`}>Дашбоард</h2>
                 
             </div>
-        </div>  
 
-        <AppDashboardFiles/>    
+         
+        </div>  
+    <AppDashboardFiles/> 
+          
     </header>
+    
     );
 }
 
