@@ -32,7 +32,8 @@ def fetch_net() -> dict:
 
 def fetch_initial() -> dict: # fetch s/n and license
 	try:
-		pass #TODO
+		data = {'serial': Path('/opt/serialnumber.txt').read_text(), "license": Path('/etc/dd/license').read_text()}
+		return {'result': data, "error": None}
 	except Exception as e:
 		msg = f"DDConf.dashboard.fetch_initial: Error: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
@@ -41,7 +42,8 @@ def fetch_initial() -> dict: # fetch s/n and license
 def fetch_protocols() -> list:
 	#[{'name': "", "link": ""}, ...]
 	try:
-		
+		data = [{"name":x['name'], "link": x['link']} for x in json.loads(Path("/etc/dd/DDConf.json").read_text())['ddconf']['protocols']]
+		return {"result":data, "error":None}
 	except Exception as e:
 		msg = f"DDConf.dashboard.fetch_protocols: Error: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)

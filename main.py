@@ -73,7 +73,19 @@ def dashboard_post(REQ: Models.POST) -> dict:
 	try:
 		data = {}
 		errs = None
-		#TODO
+		if REQ.method == "fetch_initial":
+			
+			return Dashboard.fetch_initial()
+			
+		elif REQ.method == "fetch_net":
+			
+			return Dashboard.fetch_net()
+			
+		elif REQ.method == "fetch_protocols":
+			
+			return Dashboard.fetch_protocols()
+			
+		
 	except Exception as e:
 		msg = f"DDConf.dashboard_post: Error: {str(e)}"
 		syslog.syslog(syslog.LOG_CRIT, msg)
