@@ -1,5 +1,6 @@
 import React from "react";
 import styles from './app-dashboardFiles.module.css';
+import AppDashboardTable from "../app-dashboardTable/app-dashboardTable";
 
 
 
@@ -19,10 +20,8 @@ const AppDashboardFiles = () =>{
             <div className={styles.LineContentOPC}>OPC UA</div>
         </div>
 
-        <div className={styles.LineContentSetIn}>Сетевые интерфейсы: 
-     
-            
-        </div>
+        <div className={styles.LineContentSetIn}>Сетевые интерфейсы:</div>       
+        <AppDashboardTable/>
 
        
       </div>    
