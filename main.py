@@ -94,7 +94,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 
 @app.get("/dd104", response_class=HTMLResponse)
 def dd104_serve(REQ: Request):
-	templates = Jinja2Templates(directory="/static/build")
+	templates = Jinja2Templates(directory="static/build")
 	return templates.TemplateResponse("index.html", {"request": REQ})
 
 
