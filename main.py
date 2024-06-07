@@ -15,7 +15,7 @@ import sqlite3, json
 from pages.router import router as router_pages
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
-import pages.login as Login
+# import pages.login as Login
 import models as Models
 
 
@@ -39,9 +39,9 @@ app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
 app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
-templates = Jinja2Templates(directory=[
-	BASE_DIR / "templates",
-])
+# templates = Jinja2Templates(directory=[
+# 	BASE_DIR / "templates",
+# ])
 
 origins = [
 	# "http://127.0.0.1:8080",
