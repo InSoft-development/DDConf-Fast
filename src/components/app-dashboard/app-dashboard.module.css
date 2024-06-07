@@ -1,8 +1,14 @@
+html{
+    scroll-behavior: smooth;
+}
 .header{
     display: flex;
     flex-direction: column;
     cursor: default;
-    font-family: Inter, sans-serif;
+    font-family: Inter, sans-serif;  
+    position: sticky; 
+    top: 0;
+
 }
 
 .upLine{

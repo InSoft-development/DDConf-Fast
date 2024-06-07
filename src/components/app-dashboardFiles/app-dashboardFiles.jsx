@@ -10,7 +10,7 @@ const AppDashboardFiles = () =>{
     const [contacts] = useState(data);
     const [contactsProt] = useState(dataProt);
     return (
-      <div className={styles.wrap}>
+      <div className={styles.wrapper}>
         <div className={styles.LineContent}>ПАК ОПТИ: 
             {contacts.map((contact) =>
                 <span className={styles.LineContentF}>{contact.serial}</span>

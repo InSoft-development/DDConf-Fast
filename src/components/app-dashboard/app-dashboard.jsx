@@ -4,6 +4,8 @@ import styles from './app-dashboard.module.css';
 import { Drawer } from "antd";
 import { useState } from "react";
 import AppDashboardFiles from "../app-dashboardFiles/app-dashboardFiles";
+import { Route, Routes } from "react-router-dom";
+import AppMek from "../app-mek/app-mek104";
 
 
 const AppDashboard = () => {
@@ -35,11 +37,15 @@ const AppDashboard = () => {
                     }}
                     placement="left">
                     
-                    <p className={styles.first_text}>МЭК 104</p>                    
+                    <a className={styles.first_text} href='/app-mek104'>МЭК 104</a>                    
                     <p className={styles.first_text}>OPC UA</p>
                     <p className={styles.settings}>Настройки</p>
 
                 </Drawer>
+                <Routes>
+                    <Route path="/app-mek104" element={<AppMek/>}/>
+
+                </Routes>
                 
 
 
@@ -49,7 +55,7 @@ const AppDashboard = () => {
 
          
         </div>  
-    <AppDashboardFiles/> 
+            {/* <AppDashboardFiles/>  */}
           
     </header>
     
