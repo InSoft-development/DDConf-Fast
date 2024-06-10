@@ -70,7 +70,7 @@ app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 @app.get("/dd104")
-async def dd104_serve(REQ: Request):
+async def dd104_serve():
 	# templates = Jinja2Templates(directory="static")
 	# return templates.TemplateResponse("index.html", {"request": REQ})
 	return HTMLResponse(content='index.html', status_code=200)
