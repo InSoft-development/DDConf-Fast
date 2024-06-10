@@ -39,9 +39,9 @@ app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
 app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
-# templates = Jinja2Templates(directory=[
-# 	BASE_DIR / "templates",
-# ])
+templates = Jinja2Templates(directory=[
+	BASE_DIR / "static",
+])
 
 origins = [
 	# "http://127.0.0.1:8080",
@@ -94,7 +94,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 
 @app.get("/dd104", response_class=HTMLResponse)
 def dd104_serve(REQ: Request):
-	templates = Jinja2Templates(directory="static/build")
+	# templates = Jinja2Templates(directory="static/build")
 	return templates.TemplateResponse("index.html", {"request": REQ})
 
 
