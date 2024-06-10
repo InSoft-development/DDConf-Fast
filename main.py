@@ -43,6 +43,8 @@ BASE_DIR = Path(__file__).parent
 # 	BASE_DIR / "static",
 # ])
 
+app.mount("/", StaticFiles(directory=BASE_DIR/"static"), name="static")
+
 origins = [
 	# "http://127.0.0.1:8080",
 	# "https://127.0.0.1",
@@ -60,7 +62,6 @@ app.add_middleware(
 )
 
 
-app.mount("/", StaticFiles(directory="static"), name="static")
 
 
 # @app.post("/token")
