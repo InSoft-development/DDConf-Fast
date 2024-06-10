@@ -61,6 +61,7 @@ app.add_middleware(
 )
 
 
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 # @app.post("/token")
@@ -68,11 +69,11 @@ app.add_middleware(
 # 	return Login.login_for_access_token(form_data)
 
 
-# @app.get("/dd104", response_class=HTMLResponse)
-# async def dd104_serve(REQ: Request):
-# 	# templates = Jinja2Templates(directory="static")
-# 	# return templates.TemplateResponse("index.html", {"request": REQ})
-# 	return FileResponse('index.html')
+@app.get("/dd104", response_class=HTMLResponse)
+async def dd104_serve(REQ: Request):
+	# templates = Jinja2Templates(directory="static")
+	# return templates.TemplateResponse("index.html", {"request": REQ})
+	return FileResponse('index.html')
 
 
 @app.post("/dashboard")
@@ -190,4 +191,3 @@ def dd104_post(REQ: Models.POST) -> dict:
 	else:
 		return {"result": data, "error":None if not errs else errs}
 
-app.mount("/dd104", StaticFiles(directory="static", html=True), name="static")
