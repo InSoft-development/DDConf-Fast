@@ -61,7 +61,7 @@ app.add_middleware(
 )
 
 
-app.mount("/dd104", StaticFiles(directory="static", html=True), name="static")
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 # @app.post("/token")
@@ -73,7 +73,7 @@ app.mount("/dd104", StaticFiles(directory="static", html=True), name="static")
 async def dd104_serve(REQ: Request):
 	# templates = Jinja2Templates(directory="static")
 	# return templates.TemplateResponse("index.html", {"request": REQ})
-	return FileResponse('static/index.html')
+	return HTMLResponse(content='index.html', status_code=200)
 
 
 @app.post("/dashboard")
