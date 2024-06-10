@@ -43,7 +43,7 @@ BASE_DIR = Path(__file__).parent
 # 	BASE_DIR / "static",
 # ])
 
-app.mount("/static", StaticFiles(directory="static/", html=True), name="static")
+app.mount("/", StaticFiles(directory="static/", html=True), name="static")
 
 origins = [
 	# "http://127.0.0.1:8080",
@@ -73,7 +73,7 @@ app.add_middleware(
 async def dd104_serve(REQ: Request):
 	# templates = Jinja2Templates(directory="static")
 	# return templates.TemplateResponse("index.html", {"request": REQ})
-	return FileResponse('static/index.html')
+	return FileResponse('index.html')
 
 
 @app.post("/dashboard")
