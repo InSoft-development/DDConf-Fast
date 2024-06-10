@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse, PlainTextResponse, FileResponse
+from fastapi.responses import RedirectResponse, PlainTextResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates 
 from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -69,6 +69,13 @@ app.add_middleware(
 # 	return Login.login_for_access_token(form_data)
 
 
+@app.get("/dd104", response_class=HTMLResponse)
+def dd104_serve():
+	# templates = Jinja2Templates(directory="static/build")
+	# return templates.TemplateResponse("index.html", {"request": REQ})
+	return HTMLResponse(content='index.html', status_code=200)
+
+
 @app.post("/dashboard")
 def dashboard_post(REQ: Models.POST) -> dict:
 	try:
@@ -93,11 +100,6 @@ def dashboard_post(REQ: Models.POST) -> dict:
 		return {"result": None, "error": msg}
 
 
-@app.get("/dd104", response_class=FileResponse)
-def dd104_serve(REQ: Request):
-	# templates = Jinja2Templates(directory="static/build")
-	# return templates.TemplateResponse("index.html", {"request": REQ})
-	return FileResponse('index.html')
 
 
 @app.post("/dd104")
