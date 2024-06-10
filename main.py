@@ -70,9 +70,9 @@ app.add_middleware(
 
 
 @app.get("/dd104", response_class=HTMLResponse)
-async def dd104_serve():
+async def dd104_serve(REQ: Request):
 	templates = Jinja2Templates(directory="static")
-	return templates.TemplateResponse("index.html")
+	return templates.TemplateResponse("index.html", {"request": REQ})
 	# return HTMLResponse(content='index.html', status_code=200)
 
 
