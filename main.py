@@ -40,7 +40,7 @@ app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=[
-	BASE_DIR / "static/build",
+	BASE_DIR / "static",
 ])
 
 origins = [
@@ -60,7 +60,7 @@ app.add_middleware(
 )
 
 
-# app.mount("/static", StaticFiles(directory="static/build"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # @app.post("/token")
