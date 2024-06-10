@@ -69,11 +69,11 @@ app.mount("/", StaticFiles(directory="static"), name="static")
 # 	return Login.login_for_access_token(form_data)
 
 
-@app.get("/dd104", response_class=FileResponse)
-async def dd104_serve(REQ: Request):
-	# templates = Jinja2Templates(directory="static")
-	# return templates.TemplateResponse("index.html", {"request": REQ})
-	return FileResponse('index.html')
+# @app.get("/dd104", response_class=FileResponse)
+# async def dd104_serve(REQ: Request):
+# 	# templates = Jinja2Templates(directory="static")
+# 	# return templates.TemplateResponse("index.html", {"request": REQ})
+# 	return FileResponse('index.html')
 
 
 @app.post("/dashboard")
