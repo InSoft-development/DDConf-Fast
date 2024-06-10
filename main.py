@@ -40,7 +40,7 @@ app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=[
-	BASE_DIR / "static",
+	BASE_DIR / "static/build",
 ])
 
 origins = [
