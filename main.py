@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 import sqlite3, json
 
-from pages.router import router as router_pages
+# from pages.router import router as router_pages
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 # import pages.login as Login
@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
 # oauth2_scheme = Login.oauth2_scheme
 
 app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
-app.include_router(router_pages)
+# app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
 # templates = Jinja2Templates(directory=[
@@ -60,7 +60,7 @@ app.add_middleware(
 )
 
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app.mount("/", StaticFiles(directory="static"), name="static")
 
 
 # @app.post("/token")
