@@ -43,7 +43,7 @@ BASE_DIR = Path(__file__).parent
 # 	BASE_DIR / "static",
 # ])
 
-app.mount("static", StaticFiles(directory="static", html=True), name="static")
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 origins = [
 	# "http://127.0.0.1:8080",
