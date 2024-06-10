@@ -71,9 +71,9 @@ app.add_middleware(
 
 @app.get("/dd104", response_class=HTMLResponse)
 async def dd104_serve():
-	# templates = Jinja2Templates(directory="static/build")
-	# return templates.TemplateResponse("index.html", {"request": REQ})
-	return HTMLResponse(content=str(BASE_DIR/'index.html'), status_code=200)
+	templates = Jinja2Templates(directory="static")
+	return templates.TemplateResponse("index.html")
+	# return HTMLResponse(content='index.html', status_code=200)
 
 
 @app.post("/dashboard")
