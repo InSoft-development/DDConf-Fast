@@ -73,7 +73,7 @@ app.mount("/", StaticFiles(directory="static", html=True), name="static")
 async def dd104_serve(REQ: Request):
 	# templates = Jinja2Templates(directory="static")
 	# return templates.TemplateResponse("index.html", {"request": REQ})
-	return FileResponse('index.html')
+	return HTMLResponse('index.html')
 
 
 @app.post("/dashboard")
