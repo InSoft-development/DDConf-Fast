@@ -61,7 +61,7 @@ app.add_middleware(
 )
 
 
-app.mount("/", StaticFiles(directory="static/", html=True), name="static")
+app.mount("/", StaticFiles(directory="static/build", html=True), name="static")
 
 
 # @app.post("/token")
