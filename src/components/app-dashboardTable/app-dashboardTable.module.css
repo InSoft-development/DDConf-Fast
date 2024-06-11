@@ -10,12 +10,12 @@ table{
     padding-top: 16px;
     padding-left: 17px;
 }
-td:nth-child(1){
+/* td:nth-child(1){
     counter-increment: bubu;
 }
 td:nth-child(1)::before{
     content: counter(bubu) '.';
-}
+} */
 .numberStr{
     color: rgb(13, 110, 253);
 }

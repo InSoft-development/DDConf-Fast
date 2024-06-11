@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
 import { BrowserRouter } from 'react-router-dom';
+import { Drawer } from "antd";
 
 import './index.css';
 
@@ -13,9 +14,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    
+      <BrowserRouter>
       <App />
     </BrowserRouter>
+     
     
   </React.StrictMode>
 );

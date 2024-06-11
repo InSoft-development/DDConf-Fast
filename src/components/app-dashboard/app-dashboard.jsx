@@ -4,11 +4,31 @@ import styles from './app-dashboard.module.css';
 import { Drawer } from "antd";
 import { useState } from "react";
 import AppDashboardFiles from "../app-dashboardFiles/app-dashboardFiles";
-import { Route, Routes } from "react-router-dom";
-import AppMek from "../app-mek/app-mek104";
+import {Link } from "react-router-dom";
+
+
+
+
 
 
 const AppDashboard = () => {
+
+
+    const onClose = () => {
+        setVisible(false);
+    }
+    
+
+   const [name, setName] = useState('Дашбоард');
+   
+   const handleClick = () =>{
+    setName('Протокол МЭК 104');   
+   };
+   const handleClickD = () =>{
+    setName('Дашбоард');
+
+   }
+   
     const [visible, setVisible] = useState(false);
     return (
     <header className={styles.header}>
@@ -26,7 +46,7 @@ const AppDashboard = () => {
                 <MenuOutlined className={styles.menu} onClick={() =>{
                     setVisible(true);
                 }}/>
-                <Drawer
+                 <Drawer
                     visible={visible}
                     title="ДД Конфигуратор"
                     
@@ -36,26 +56,25 @@ const AppDashboard = () => {
                         
                     }}
                     placement="left">
-                    
-                    <a className={styles.first_text} href='/app-mek104'>МЭК 104</a>                    
+                    <Link onClick={() =>{onClose(); handleClickD()}}  className={styles.first_text} to='/'>Дашбоард</Link>  
+                    <Link onClick={() =>{onClose(); handleClick()}} className={styles.first_text} to='/app-mek104' >МЭК 104</Link>         
+                                     
                     <p className={styles.first_text}>OPC UA</p>
                     <p className={styles.settings}>Настройки</p>
 
                 </Drawer>
-                <Routes>
-                    <Route path="/app-mek104" element={<AppMek/>}/>
-
-                </Routes>
+                
                 
 
 
-                <h2 className={`text text_type_large ${styles.headerText}`}>Дашбоард</h2>
+                <h2 className={`text text_type_large ${styles.headerText}`}>{name}</h2>
                 
             </div>
 
          
         </div>  
             {/* <AppDashboardFiles/>  */}
+        
           
     </header>
     

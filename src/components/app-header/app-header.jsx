@@ -6,6 +6,7 @@ import styles from './app-header.module.css';
 
 const AppHeader = () => {
     const [visible, setVisible] = useState(false);
+    
     return (
         <header className={styles.header}>
             <div className={styles.upLine}>
