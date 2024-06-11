@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse, PlainTextResponse
+from fastapi.responses import RedirectResponse, PlainTextResponse, HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates 
 from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -12,10 +12,10 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 import sqlite3, json
 
-from pages.router import router as router_pages
+# from pages.router import router as router_pages
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
-import pages.login as Login
+# import pages.login as Login
 import models as Models
 
 
@@ -36,12 +36,13 @@ async def lifespan(app: FastAPI):
 # oauth2_scheme = Login.oauth2_scheme
 
 app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
-app.include_router(router_pages)
+# app.include_router(router_pages)
 
 BASE_DIR = Path(__file__).parent
-templates = Jinja2Templates(directory=[
-	BASE_DIR / "templates",
-])
+# templates = Jinja2Templates(directory=[
+# 	BASE_DIR / "static",
+# ])
+
 
 origins = [
 	# "http://127.0.0.1:8080",
@@ -60,12 +61,45 @@ app.add_middleware(
 )
 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/", StaticFiles(directory="static/build", html=True), name="static")
 
 
 # @app.post("/token")
 # async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
 # 	return Login.login_for_access_token(form_data)
+
+
+@app.get("/dd104")
+async def dd104_serve():
+	# templates = Jinja2Templates(directory="static")
+	# return templates.TemplateResponse("index.html", {"request": REQ})
+	return HTMLResponse(content='index.html', status_code=200)
+
+
+@app.post("/dashboard")
+def dashboard_post(REQ: Models.POST) -> dict:
+	try:
+		data = {}
+		errs = None
+		if REQ.method == "fetch_initial":
+			
+			return Dashboard.fetch_initial()
+			
+		elif REQ.method == "fetch_net":
+			
+			return Dashboard.fetch_net()
+			
+		elif REQ.method == "fetch_protocols":
+			
+			return Dashboard.fetch_protocols()
+			
+		
+	except Exception as e:
+		msg = f"DDConf.dashboard_post: Error: {str(e)}"
+		syslog.syslog(syslog.LOG_CRIT, msg)
+		return {"result": None, "error": msg}
+
+
 
 
 @app.post("/dd104")
@@ -156,3 +190,4 @@ def dd104_post(REQ: Models.POST) -> dict:
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
+

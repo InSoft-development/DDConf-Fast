@@ -18,15 +18,15 @@ class DD104_Defaults:
 	INIDIR = '/etc/dd/dd104/configs/'
 	#turned off by default, if the value is not-null, turn on archiving
 	ARCDIR = None #'/etc/dd/dd104/archive.d/'
-	LOADOUTDIR = '/etc/dd/dd104/loadouts.d/'
+	LOADOUTDIR = '/etc/dd/dd104/loadouts/'
 	
 	def __init__(self, confile = "/etc/dd/DDConf.json"):
 		try:
-			conf = json.loads(Path(confile).read_text())
+			conf = json.loads(Path(confile).read_text())['dd104']
 			self.RECVADDR = conf['recvaddr'] if 'recvaddr' in conf and conf['recvaddr'] else "192.168.100.10"
 			self.INIDIR = conf['confdir'] if 'confdir' in conf and conf['confdir'] else '/etc/dd/dd104/configs/'
 			self.ARCDIR = conf['archdir'] if 'archdir' in conf and conf['archdir'] else None 
-			self.LOADOUTDIR = conf['loadoutdir'] if 'loadoutdir' in conf and conf['loadoutdir'] else '/etc/dd/dd104/loadouts.d/'
+			self.LOADOUTDIR = conf['loadoutdir'] if 'loadoutdir' in conf and conf['loadoutdir'] else '/etc/dd/dd104/loadouts/'
 			self.DEFAULTS_FILE = confile
 		except Exception as e:
 			msg = f"DDConf.defaults: failed to init defaults, details: {str(e)}"
