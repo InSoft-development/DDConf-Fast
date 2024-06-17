@@ -5,6 +5,7 @@ import { Drawer } from "antd";
 import { useState } from "react";
 import AppDashboardFiles from "../app-dashboardFiles/app-dashboardFiles";
 import {Link } from "react-router-dom";
+import logo2 from '../../images/logo2.jpeg';
 
 
 
@@ -19,13 +20,13 @@ const AppDashboard = () => {
     }
     
 
-   const [name, setName] = useState('Дашбоард');
+   const [name, setName] = useState('Дашборд');
    
    const handleClick = () =>{
     setName('Протокол МЭК 104');   
    };
    const handleClickD = () =>{
-    setName('Дашбоард');
+    setName('Дашборд');
 
    }
    
@@ -33,11 +34,14 @@ const AppDashboard = () => {
     return (
     <header className={styles.header}>
         <div className={styles.upLine}>
+           
+           
+          
+           
+
             
             <div className={`wrapper ${styles.upLineContent}`}>
-                ДД Конфигуртор
-                 
-            
+                ДД Конфигуратор  
             </div>
           
         </div>
@@ -56,7 +60,7 @@ const AppDashboard = () => {
                         
                     }}
                     placement="left">
-                    <Link onClick={() =>{onClose(); handleClickD()}}  className={styles.first_text} to='/'>Дашбоард</Link>  
+                    <Link onClick={() =>{onClose(); handleClickD()}}  className={styles.first_text} to='/'>Дашборд</Link>  
                     <Link onClick={() =>{onClose(); handleClick()}} className={styles.first_text} to='/app-mek104' >МЭК 104</Link>         
                                      
                     <p className={styles.first_text}>OPC UA</p>
@@ -68,11 +72,13 @@ const AppDashboard = () => {
 
 
                 <h2 className={`text text_type_large ${styles.headerText}`}>{name}</h2>
+                <img src="logo1" alt="" />
                 
             </div>
 
          
         </div>  
+    
             {/* <AppDashboardFiles/>  */}
         
           

@@ -12,7 +12,10 @@ html{
 }
 
 .upLine{
+   
     padding: 10px 15px;
+   
+    
     background-color: var(--status-success);
 }
 
@@ -23,6 +26,15 @@ html{
     font-weight: 700;
     color: #fff;
 }
+.upLineContentt{   
+    justify-content: flex-start;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;  
+ }
+
+
+
 
 
 .wrapper{
