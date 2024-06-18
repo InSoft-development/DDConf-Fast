@@ -5,7 +5,7 @@ import { Drawer } from "antd";
 import { useState } from "react";
 import AppDashboardFiles from "../app-dashboardFiles/app-dashboardFiles";
 import {Link } from "react-router-dom";
-import logo2 from '../../images/logo2.jpeg';
+import {HomeTwoTone } from '@ant-design/icons';
 
 
 
@@ -41,7 +41,9 @@ const AppDashboard = () => {
 
             
             <div className={`wrapper ${styles.upLineContent}`}>
-                ДД Конфигуратор  
+                ДД Конфигуратор    
+                          
+            
             </div>
           
         </div>
@@ -60,10 +62,20 @@ const AppDashboard = () => {
                         
                     }}
                     placement="left">
-                    <Link onClick={() =>{onClose(); handleClickD()}}  className={styles.first_text} to='/'>Дашборд</Link>  
-                    <Link onClick={() =>{onClose(); handleClick()}} className={styles.first_text} to='/app-mek104' >МЭК 104</Link>         
+                       
+                            <HomeTwoTone className={styles.icon}/> 
+                            <Link onClick={() =>{onClose(); handleClickD()}}  className={styles.first_text} to='/'>Дашборд</Link>
+                            
+                       
+                     
+                            
+                        
+                    
+
+                      
+                    <Link onClick={() =>{onClose(); handleClick()}} className={styles.second_text} to='/app-mek104' >МЭК 104</Link>         
                                      
-                    <p className={styles.first_text}>OPC UA</p>
+                    <p className={styles.third_text}>OPC UA</p>
                     <p className={styles.settings}>Настройки</p>
 
                 </Drawer>

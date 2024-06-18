@@ -18,6 +18,10 @@ html{
     
     background-color: var(--status-success);
 }
+.icon{
+    display:inline-block;
+    padding: 7px;
+}
 
 .upLineContent{
     display: flex;
@@ -68,16 +72,42 @@ html{
     position: static;
     width: 150px;
     height: 32px;
-    display: flex;
+    /* display: flex; */
+    display:inline-block;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     padding: 0px;
-    margin-left: 30px;
+    margin-left: 10px;
     font-size: 16px;
     font-weight: 400;
     padding-bottom: 22px;
     cursor: pointer;
+}
+.second_text{
+    color: rgb(13, 110, 253);
+    position: static;
+    width: 150px;
+    height: 32px;
+    display:inline-block;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 400;
+    margin-left: 37px;
+}
+.third_text{
+    color: rgb(13, 110, 253);
+    position: static;
+    width: 150px;
+    height: 32px;
+    display:inline-block;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 400;
+    margin-left: 37px;
+
 }
 .settings{
     color: rgb(13, 110, 253);
