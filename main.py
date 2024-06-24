@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
-import sqlite3, json
+import sqlite3, json, syslog
 
 # from pages.router import router as router_pages
 import pages.dd104 as DD104
