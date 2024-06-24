@@ -184,7 +184,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 				data = None
 		
 	except Exception as e:
-		syslog.syslog(syslog.lOG_CRIT, f"DDConf.main.dd104_post: ERROR: {str(e)}")
+		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {str(e)}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
