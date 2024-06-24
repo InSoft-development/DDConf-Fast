@@ -10,7 +10,7 @@ from pathlib import Path
 
 class POST(BaseModel):
 	method: str
-	params: dict 
+	params: dict | None | str
 
 
 class DD104_Defaults:
