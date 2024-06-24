@@ -99,9 +99,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		return {"result": None, "error": msg}
 
-
-
-
+@app.head("/dd104")
 @app.post("/dd104")
 def dd104_post(REQ: Models.POST) -> dict:
 	try:
