@@ -131,7 +131,7 @@ def get_processes(LD_ID: str) -> list:
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
 	try:
-		return (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
+		return ((Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:])) if Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().is_file() else None
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.get_active_ld: Error: {str(e)}")
 		return f"Ошибка: {str(e)}"
