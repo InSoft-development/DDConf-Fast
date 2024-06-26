@@ -6,6 +6,10 @@ import { PlayCircleOutlined,
         LoadingOutlined
  } from '@ant-design/icons';
 import {Input} from 'antd'
+import { store } from '../services/store';
+import { changeProсess } from '../services/actions/profile';
+
+
 
 const actions = [
     {
@@ -22,8 +26,24 @@ const actions = [
     },
 ];
 
-const onActionBtnClickHandler = (action) => {
-    console.log(action);
+
+const onActionBtnClickHandler = (actionIndex, processIndex) => {
+    let action = null;
+    switch(actionIndex){
+        case 0: {
+            action = 'start';
+            break;
+        }
+        case 1: {
+            action = 'stop'
+            break;
+        }
+        case 2: {
+            action = 'restart'
+            break;
+        }
+    }
+    store.dispatch(changeProсess(action, processIndex))
 }
 
 
@@ -108,12 +128,12 @@ export const columns = [
         title: 'Действия',
         dataIndex: 'actions',
         key: 'actions',
-        render: () => (
+        render: (_, record) => (
             <Flex vertical={false} gap={'small'}>
             {
                 actions.map((action, index) => {
-                    return <div key={index} onClick={(e) => {
-                        console.log(action);
+                    return <div key={`${record.id}_${index}`} onClick={(e) => {
+                        onActionBtnClickHandler(index, record.id);
                     }}>{action.item}</div>;
                 })
             }

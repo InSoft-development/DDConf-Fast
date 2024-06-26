@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 const Profile = () => {
 
     const navigate = useNavigate();
-    const { currentProfile,
+    const { activeProfile,
         availableProfiles,
         processes,
         profileRequest,
@@ -30,11 +30,12 @@ const Profile = () => {
                 <div className={styles.workProfile}>
                     <div className={styles.profileMenu}>
                         <div className={`text text_type_main ${styles.currentProfile}`}>Рабочий профиль:</div>
-                        <DropDown currentProfile={currentProfile} availableProfiles={availableProfiles} />
+                        <DropDown currentProfile={activeProfile} availableProfiles={availableProfiles} />
                     </div>
-                    <button className='button btn-green' onClick={() => navigate('/profile-editor', {state: {profile: currentProfile}})}>Редактировать</button>
+                    <button className='button btn-green' onClick={() => navigate('/profile-editor', {state: {profile: activeProfile}})}>Редактировать</button>
                 </div>
                 <Table
+                    rowKey={(record) => record.id}
                     dataSource={processes}
                     expandable={{
                         expandedRowRender: (record) => (
