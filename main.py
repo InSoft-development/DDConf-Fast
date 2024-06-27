@@ -102,7 +102,7 @@ async def websocket_logs_104(WS: WebSocket):
 			RQ = await WS.receive_text()
 			syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
 			RQ = json.loads(RQ)
-			await manager.send(json.dumps(DD104.get_logs(RQ['pid'] if 'pid' in RQ)), WS)
+			await manager.send(json.dumps(DD104.get_logs(RQ['pid'])), WS)
 			
 		except WebSocketDisconnect:
 			manager.disconnect(WS)
