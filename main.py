@@ -202,7 +202,8 @@ def dd104_post(REQ: Models.POST) -> dict:
 				try:
 					data = DD104.apply_ld(REQ.params['name'])
 				except Exception as e:
-					msg = f"main.dd104_apply_ld_handler: Error: {str(e)}"
+					msg = f"dd104.profile_apply: Error: {str(e)}"
+					print(f"dd104.profile_apply: Error: {traceback.print_exception(e)}")
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
 					errs.append(msg)
@@ -225,6 +226,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 		
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {traceback.print_exception(e)}")
+		print(f"DDConf.main.dd104_post: ERROR: {traceback.print_exception(e)}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
