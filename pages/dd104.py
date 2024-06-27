@@ -88,7 +88,7 @@ def save_ld(filename: str, data : dict) -> None:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
 		(Path(DD104_Defaults.LOADOUTDIR)/filename).write_text(json.dumps(data))
-		return None
+		return "success"
 	except Exception as e:
 		msg = f"dd104.save_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
