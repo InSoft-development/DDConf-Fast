@@ -159,6 +159,10 @@ def process_handle(PID: int, OP:str) -> int:
 		syslog.syslog(syslog.LOG_WARNING, f"dd104.{OP}: {str(e)}")
 		return -2
 
-
+def get_logs(PID: str):
+	try:
+		
+	except Exception as e:
+		
 
 

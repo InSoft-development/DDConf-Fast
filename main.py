@@ -1,6 +1,6 @@
 from typing import Union, Annotated
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, Request, HTTPException, status, Form
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, PlainTextResponse, HTMLResponse, FileResponse
@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
-import sqlite3, json, syslog
+import sqlite3, json, syslog, traceback
 
 # from pages.router import router as router_pages
 import pages.dd104 as DD104
@@ -20,7 +20,25 @@ import models as Models
 
 
 
+class ConnectionManager:
+	def __init__(self):
+		self.active_connections: list[WebSocket] = []
 
+	async def connect(self, websocket: WebSocket):
+		await websocket.accept()
+		self.active_connections.append(websocket)
+
+	def disconnect(self, websocket: WebSocket):
+		self.active_connections.remove(websocket)
+
+	async def send(self, message: str, websocket: WebSocket):
+		await websocket.send_text(message)
+
+	# async def broadcast(self, message: str):
+	# 	for connection in self.active_connections:
+	# 		await connection.send_text(message)
+
+CManager = ConnectionManager()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -75,6 +93,28 @@ app.mount("/static", StaticFiles(directory="static/build", html=True), name="sta
 # 	# return templates.TemplateResponse("index.html", {"request": REQ})
 # 	return HTMLResponse(content='index.html', status_code=200)
 
+@app.websocket("/ws_logs_104")
+async def websocket_logs_104(WS: WebSocket):
+	await WS.accept()
+	syslog.syslog(syslog.LOG_INFO, f"Client connected")
+	while True:
+		try:
+			RQ = await WS.receive_text()
+			syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
+			RQ = json.loads(RQ)
+			await manager.send(json.dumps(DD104.get_logs(RQ['pid'] if 'pid' in RQ)), WS)
+			
+		except WebSocketDisconnect:
+			manager.disconnect(WS)
+			syslog.syslog(syslog.LOG_INFO, f"Client disconnected")
+			break
+		except Exception as e:
+			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.print_exc(e)}")
+			await manager.send(json.dumps({"response":None, "errors":str(e)}))
+	
+	syslog.syslog(syslog.LOG_INFO, "WS function shutdown")
+	
+
 
 @app.post("/dashboard")
 def dashboard_post(REQ: Models.POST) -> dict:
@@ -95,7 +135,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 			
 		
 	except Exception as e:
-		msg = f"DDConf.dashboard_post: Error: {str(e)}"
+		msg = f"DDConf.dashboard_post: Error: {traceback.print_exc(e)}"
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		return {"result": None, "error": msg}
 
@@ -134,7 +174,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 				
 				elif type(REQ.params['pid']) == str or type(REQ.params['pid']) == int:
 					
-					data = {"status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
+					data = {"pid": REQ.params['pid'], "status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
 					
 				else:
 					raise TypeError(f"process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
@@ -184,7 +224,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 				data = None
 		
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {str(e)}")
+		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {traceback.print_exc(e)}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
