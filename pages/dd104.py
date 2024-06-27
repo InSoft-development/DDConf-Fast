@@ -60,7 +60,8 @@ def create_inis(data: list):
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
 				(Path(DEFAULTS.INIDIR)/f"dd104client{COUNT}.ini").write_text(msg)
-				print(f'Created a file at {(str(Path(DEFAULTS.INIDIR)/"dd104client")+str(COUNT)+".ini")}. ')
+				syslog.syslog(syslog.LOG_INFO, f'dd104.create_inis: Created a file at {(str(Path(DEFAULTS.INIDIR)/"dd104client")+str(COUNT)+".ini")}. ')
+				print(f'dd104.create_inis: Created a file at {(str(Path(DEFAULTS.INIDIR)/"dd104client")+str(COUNT)+".ini")}. ')
 			else:
 				raise ValueError(f"process {COUNT} data is invalid ({proc})")
 	
