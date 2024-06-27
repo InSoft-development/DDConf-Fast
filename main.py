@@ -151,8 +151,8 @@ def dd104_post(REQ: Models.POST) -> dict:
 			data = {}
 			data["active"] = DD104.get_active_ld()
 			data["loadout_names"] = DD104.list_ld()
-			for i in data["active"]["proc_data"]:
-				i["status"] = DD104.get_status(i)
+			# for i in data["active"]["proc_data"]:
+			# 	i["status"] = DD104.get_status(i)
 			
 			print(f"/dd104.fetch_initial: {data}")
 			
