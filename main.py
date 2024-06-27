@@ -184,7 +184,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 		
 		elif REQ.method == "profile_save": #TODO validation
 			
-			if REQ.params['name'] in DD104.list_ld():
+			if REQ.params['name'] in DD104.list_ld() or ".loadout" in REQ.params['name']:
 				try:
 					data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
 				except Exception as e:
@@ -193,7 +193,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 					data = None
 					errs.append(msg)
 			else:
-				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}\n"
+				errs = f"dd104.profile_save: incorrect ld name; data: {REQ.params['name']}\n"
 				data = None
 		
 		elif REQ.method == "profile_apply": #TODO validation
@@ -208,7 +208,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 					data = None
 					errs.append(msg)
 			else:
-				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}\n"
+				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
 				data = None
 		
 		elif REQ.method == "fetch_ld":
