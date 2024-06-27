@@ -108,7 +108,7 @@ def apply_ld(filename: str) -> None:
 				create_inis([data])
 			else:
 				raise TypeError(f"Error while reading {filename}: data is corrupted or invalid, data type received ({type(data)}) is not in [list, dict]")
-			return None
+			return "success"
 		else:
 			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
 	except Exception as e:
