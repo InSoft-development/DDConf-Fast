@@ -109,7 +109,7 @@ async def websocket_logs_104(WS: WebSocket):
 			syslog.syslog(syslog.LOG_INFO, f"Client disconnected")
 			break
 		except Exception as e:
-			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.print_exc(e)}")
+			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.print_exception(e)}")
 			await manager.send(json.dumps({"response":None, "errors":str(e)}))
 	
 	syslog.syslog(syslog.LOG_INFO, "WS function shutdown")
@@ -135,7 +135,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 			
 		
 	except Exception as e:
-		msg = f"DDConf.dashboard_post: Error: {traceback.print_exc(e)}"
+		msg = f"DDConf.dashboard_post: Error: {traceback.print_exception(e)}"
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		return {"result": None, "error": msg}
 
@@ -224,7 +224,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 				data = None
 		
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {traceback.print_exc(e)}")
+		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {traceback.print_exception(e)}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
