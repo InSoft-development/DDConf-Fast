@@ -32,6 +32,18 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 		raise RuntimeError(msg)
 
 
+def rm_inis():
+	try:
+		dest = Path(DEFAULTS.INIDIR)
+		for ini in listdir(dest):
+			(dest/ini).unlink()
+			syslog.syslog(syslog.LOG_INFO, f"dd104.rm_inis: {str(dest/ini)} file was removed")
+			print(f"dd104.rm_inis: {str(dest/ini)} file was removed")
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"dd104.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
+		print(f"dd104.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+
+
 #TODO
 def create_inis(data: list):
 	#gets loadout contents, creates an appropriate amount of inis
@@ -103,8 +115,10 @@ def apply_ld(filename: str) -> None:
 		if (Path(DD104_Defaults.LOADOUTDIR)/filename).is_file():
 			data = json.loads((Path(DD104_Defaults.LOADOUTDIR)/filename).read_text())
 			if type(data) == list:
+				rm_inis()
 				create_inis(data)
 			elif  type(data) == dict:
+				rm_inis()
 				create_inis([data])
 			else:
 				raise TypeError(f"Error while reading {filename}: data is corrupted or invalid, data type received ({type(data)}) is not in [list, dict]")
