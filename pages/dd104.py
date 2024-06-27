@@ -1,4 +1,4 @@
-import syslog, subprocess, time, tarfile, json
+import syslog, subprocess, time, tarfile, json, traceback
 from shutil import move, copy2, unpack_archive, make_archive
 from pathlib import Path
 from random import randrange
@@ -54,6 +54,7 @@ def create_inis(data: list):
 	
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
+		print(f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {traceback.print_exception(e)}\n")
 
 
 def get_status(PID: int) -> int:
