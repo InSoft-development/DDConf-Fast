@@ -97,12 +97,19 @@ app.mount("/static", StaticFiles(directory="static/build", html=True), name="sta
 async def websocket_logs_104(WS: WebSocket):
 	await WS.accept()
 	syslog.syslog(syslog.LOG_INFO, f"Client connected")
+	data = ""
+	_data = ""
 	while True:
 		try:
-			RQ = await WS.receive_text()
-			syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
-			RQ = json.loads(RQ)
-			await manager.send(json.dumps(DD104.get_logs(RQ['pid'])), WS)
+			if not RQ:
+				RQ = await WS.receive_text()
+				syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
+				RQ = json.loads(RQ)
+			_data = data
+			data = DD104.get_logs(RQ['pid'], RQ['length'])
+			if not data == _data:
+				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
+				await manager.send(json.dumps(payload), WS)
 			
 		except WebSocketDisconnect:
 			manager.disconnect(WS)

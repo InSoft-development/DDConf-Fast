@@ -176,12 +176,52 @@ def process_handle(PID: int, OP:str) -> int:
 		return -2
 
 #TODO
-def get_logs(PID: str):
+def get_logs(PID: str, LEN: int):
 	try:
-		pass
+		if PID.lower() == "syslog":
+			if LEN:
+				LOGS = subprocess.run(f"tail -n {LEN} /var/log/syslog".split(), capture_output=True, text=True).stdout.strip()
+			else:
+				LOGS = subprocess.run(f"cat /var/log/syslog".split(), capture_output=True, text=True).stdout.strip()
+			
+		elif "dd104" in PID[0:5:]:
+			lines=[x.strip() for x in subprocess.run(f"systemctl status {PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if PID in x]
+				
+			if not lines: 
+				raise RuntimeError("dd104.get_logs: lines is empty!")
+			
+			if LEN:
+				
+				if len(lines) <= LEN:
+					LOGS="\n".join(lines)
+				else:
+					LOGS='\n'.join(lines[-1*LEN::])
+				
+			else:
+				LOGS="\n".join(lines)
+			
+		elif int(PID):
+			lines=[x.strip() for x in subprocess.run(f"systemctl status dd104{'server' if _mode='tx' else 'client'}{PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if f"dd104{'server' if _mode='tx' else 'client'}{PID}" in x]
+				
+			if not lines: 
+				raise RuntimeError("dd104.get_logs: lines is empty!")
+			
+			if LEN:
+				
+				if len(lines) <= LEN:
+					LOGS="\n".join(lines)
+				else:
+					LOGS='\n'.join(lines[-1*LEN::])
+				
+			else:
+				LOGS="\n".join(lines)
+		else:
+			raise ValueError(f"dd104.get_logs: PID={PID} was not 'syslog', 'dd104*', or a number.")
 	except Exception as e:
-		pass
+		syslog.syslog(syslog.LOG_ERR, f"dd104.get_logs: {str(e)}")
+		print(f"dd104.get_logs: {traceback.print_exception(e)}")
+		return {'error':f"dd104.get_logs: error handling {PID} {traceback.print_exception(e)}"}
 	else:
-		return {"pid": PID, "logs":"lorem ipsum"}
+		return {"pid": PID, "logs":LOGS}
 
 
