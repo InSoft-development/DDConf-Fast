@@ -10,6 +10,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
+from time import sleep
 import sqlite3, json, syslog, traceback
 
 # from pages.router import router as router_pages
@@ -110,6 +111,7 @@ async def websocket_logs_104(WS: WebSocket):
 			if not data == _data:
 				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
 				await manager.send(json.dumps(payload), WS)
+			sleep(0.5)
 			
 		except WebSocketDisconnect:
 			manager.disconnect(WS)
