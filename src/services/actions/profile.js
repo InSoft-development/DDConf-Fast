@@ -23,7 +23,7 @@ export const CHANGE_PROCESS_STATUS_FAILED = 'CHANGE_PROCCESS_STATUS_FAILED';
 
 export const getProfiles = () => (dispatch) => {
     dispatch({ type: PROFILE_REQUEST });
-    request('fetch_initial')
+    request('dd104', 'fetch_initial')
         .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: PROFILE_REQUEST_SUCCESS, payload: res.result })
@@ -39,7 +39,7 @@ export const getProfiles = () => (dispatch) => {
 
 export const getProcessesByProfile = (profileName) => (dispatch) => {
     dispatch({type: GET_PROCESSES});
-    request('fetch_id', {
+    request('dd104','fetch_id', {
         name: profileName
     })
         .then(res => checkResponce(res))
@@ -62,7 +62,7 @@ export const getProcessesByProfile = (profileName) => (dispatch) => {
 
 export const changeProfile = (profileName) => (dispatch) => {
     dispatch({type: CHANGE_PROFILE, payload: profileName});
-    request('profile_apply', {
+    request('dd104','profile_apply', {
         name: profileName
     })
         .then(res => checkResponce(res))
@@ -79,7 +79,7 @@ export const changeProfile = (profileName) => (dispatch) => {
 
 export const changeProсess = (actionIndex, processId) => (dispatch) => {
     dispatch({ type: CHANGE_PROCESS_STATUS, payload: processId })
-    request('process_handle', {
+    request('dd104','process_handle', {
         pid: processId,
         op: actionIndex
     })

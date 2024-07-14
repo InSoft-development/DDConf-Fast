@@ -4,7 +4,7 @@ html {margin-right: calc(-1 * (100vw - 100%));}
 .wrapper{
     max-width: 1280px;
     margin: 0 auto;
-    padding-right: 15px;
+    width: 95%;
 }
 
 /* fonts */
@@ -127,6 +127,7 @@ html {margin-right: calc(-1 * (100vw - 100%));}
 .mt-10{margin-top: calc(10 * var(--margin-index))}
 .mt-20{margin-top: calc(20 * var(--margin-index))}
 .mt-30{margin-top: calc(30 * var(--margin-index))}
+.mt-40{margin-top: calc(40 * var(--margin-index))}
 
 .mb-2{margin-bottom: calc(2 * var(--margin-index))}
 .mb-4{margin-bottom: calc(4 * var(--margin-index))}
@@ -135,6 +136,7 @@ html {margin-right: calc(-1 * (100vw - 100%));}
 .mb-10{margin-bottom: calc(10 * var(--margin-index))}
 .mb-20{margin-bottom: calc(20 * var(--margin-index))}
 .mb-30{margin-bottom: calc(30 * var(--margin-index))}
+.mb-40{margin-bottom: calc(40 * var(--margin-index))}
 
 .mr-2{margin-right: calc(2 * var(--margin-index))}
 .mr-4{margin-right: calc(4 * var(--margin-index))}
@@ -143,6 +145,7 @@ html {margin-right: calc(-1 * (100vw - 100%));}
 .mr-10{margin-right: calc(10 * var(--margin-index))}
 .mr-20{margin-right: calc(20 * var(--margin-index))}
 .mr-30{margin-right: calc(30 * var(--margin-index))}
+.mr-40{margin-right: calc(40 * var(--margin-index))}
 
 .ml-2{margin-left: calc(2 * var(--margin-index))}
 .ml-4{margin-left: calc(4 * var(--margin-index))}
@@ -151,3 +154,4 @@ html {margin-right: calc(-1 * (100vw - 100%));}
 .ml-10{margin-left: calc(10 * var(--margin-index))}
 .ml-20{margin-left: calc(20 * var(--margin-index))}
 .ml-30{margin-left: calc(30 * var(--margin-index))}
+.ml-40{margin-left: calc(40 * var(--margin-index))}
