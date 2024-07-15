@@ -9,10 +9,10 @@ import styles from './dashboard.module.css';
 const Dashboard = () => {
 
     const dispatch = useDispatch();
-    const {serial, license, devices, deviceFeaturesRequest, deviceNetRequest} = useSelector(store => store.device)
+    const {serial, license, devices, availableProtocols,
+        deviceFeaturesRequest, deviceNetRequest} = useSelector(store => store.device)
 
     useEffect(() => {
-        dispatch(getDeviceFeatures());
         dispatch(getDevicesNet());
     }, [])
 
@@ -96,8 +96,11 @@ const Dashboard = () => {
                 <div>
                     <div className='text_type_main'>Протоколы:</div>
                     <Flex vertical={true}>
-                        <div className='ml-8 mt-4'>МЭК 104</div>
-                        <div className='ml-8 mt-4'>OPC UA</div>
+                        {availableProtocols?.map(protocol => (
+                            <div className='ml-8 mt-4'>{protocol.name}</div>
+                        ))}
+                        {/* <div className='ml-8 mt-4'>МЭК 104</div>
+                        <div className='ml-8 mt-4'>OPC UA</div> */}
                     </Flex>
                 </div>
             </div>
