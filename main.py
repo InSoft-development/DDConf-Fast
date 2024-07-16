@@ -11,7 +11,9 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from time import sleep
-import sqlite3, json, syslog, traceback
+import sqlite3, json, syslog, traceback, datetime
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 # from pages.router import router as router_pages
 import pages.dd104 as DD104
@@ -39,6 +41,47 @@ class ConnectionManager:
 	# 	for connection in self.active_connections:
 	# 		await connection.send_text(message)
 
+
+class SyslogFSHandler(FileSystemEventHandler):
+	
+	websocket = None
+	
+	def __init__(self, WS: WebSocket):
+		self.last_modified = datetime.now()
+		self.websocket = WS
+	
+	def on_modified(self, event):
+		if datetime.now() - self.last_modified < timedelta(seconds=1):
+			return
+		# elif not self.websocket or self.websocket.connected:
+		# 	return
+		else:
+			self.last_modified = datetime.now()
+		
+		data = DD104.get_logs("syslog", 0)
+		if self.websocket and self.websocket.connected:
+			try:
+				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
+				await CManager.send(json.dumps(payload), WS)
+			except Exception as e:
+				syslog.syslog(syslog.LOG_ERR, f"main.syslogfshandler: error occured, details: {traceback.format_exc().strip().split('\n')[1::]}")
+		
+		# print(f'Event type: {event.event_type}  path : {event.src_path}')
+	
+
+def prime_observer(WS: WebSocket) -> Observer: 
+	try:
+		event_handler = SyslogFSHandler(WS)
+		observer = Observer()
+		syslog.syslog(syslog.LOG_INFO, f"main.prime_observer: observer {observer} created. ")
+		observer.schedule(event_handler, "/var/log/syslog", recursive=True)
+		return observer
+	except Exception as e:
+		msg = f"main.prime_observer: unexpected exception caught, details: {traceback.format_exc().strip().split('\n')[1::]}"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		raise RuntimeError(msg)
+
+
 CManager = ConnectionManager()
 
 @asynccontextmanager
@@ -55,12 +98,9 @@ async def lifespan(app: FastAPI):
 # oauth2_scheme = Login.oauth2_scheme
 
 app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
-# app.include_router(router_pages)
+
 
 BASE_DIR = Path(__file__).parent
-# templates = Jinja2Templates(directory=[
-# 	BASE_DIR / "static",
-# ])
 
 
 origins = [
@@ -87,40 +127,51 @@ app.mount("/static", StaticFiles(directory="static/build", html=True), name="sta
 # async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
 # 	return Login.login_for_access_token(form_data)
 
-
-# @app.get("/dd104")
-# async def dd104_serve():
-# 	# templates = Jinja2Templates(directory="static")
-# 	# return templates.TemplateResponse("index.html", {"request": REQ})
-# 	return HTMLResponse(content='index.html', status_code=200)
-
+#TODO very jank, pids take a request 
 @app.websocket("/ws_logs_104")
 async def websocket_logs_104(WS: WebSocket):
 	await WS.accept()
 	syslog.syslog(syslog.LOG_INFO, f"Client connected")
+	observer = prime_observer(WS)
+	# observer.start()
 	data = ""
 	_data = ""
+	_RQ = None
 	while True:
 		try:
-			if not RQ:
-				RQ = await WS.receive_text()
-				syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
-				RQ = json.loads(RQ)
-			_data = data
-			data = DD104.get_logs(RQ['pid'], RQ['length'])
-			if not data == _data:
-				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
-				await manager.send(json.dumps(payload), WS)
-			sleep(0.5)
+			RQ = await WS.receive_text()
+			syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
+			RQ = json.loads(RQ)
+			
+			if _RQ != RQ:
+				_RQ = RQ
+				if 'pid' in RQ and RQ['pid'] == 'syslog':
+					try:
+						observer.start()
+					except RuntimeError:
+						syslog.syslog(syslog.LOG_INFO, f"main.websocket_logs_104: reinitializing observer upon user request")
+						observer.stop()
+						observer = prime_observer(WS)
+						observer.start()
+				else:
+					_data = data
+					data = DD104.get_logs(RQ['pid'], RQ['length'])
+					if not data == _data:
+						payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
+						await CManager.send(json.dumps(payload), WS)
+					sleep(0.5)
+			
 			
 		except WebSocketDisconnect:
-			manager.disconnect(WS)
+			CManager.disconnect(WS)
+			observer.stop()
 			syslog.syslog(syslog.LOG_INFO, f"Client disconnected")
 			break
 		except Exception as e:
-			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.print_exception(e)}")
-			await manager.send(json.dumps({"response":None, "errors":str(e)}))
+			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.format_exc().strip().split('\n')[1::]}")
+			await CManager.send(json.dumps({"response":None, "errors":str(e)}))
 	
+	observer.join()
 	syslog.syslog(syslog.LOG_INFO, "WS function shutdown")
 	
 
@@ -144,7 +195,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 			
 		
 	except Exception as e:
-		msg = f"DDConf.dashboard_post: Error: {traceback.print_exception(e)}"
+		msg = f"DDConf.dashboard_post: Error: {traceback.format_exc().strip().split('\n')[1::]}"
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		return {"result": None, "error": msg}
 
@@ -160,8 +211,6 @@ def dd104_post(REQ: Models.POST) -> dict:
 			data = {}
 			data["active"] = DD104.get_active_ld()
 			data["loadout_names"] = DD104.list_ld()
-			# for i in data["active"]["proc_data"]:
-			# 	i["status"] = DD104.get_status(i)
 			
 			print(f"/dd104.fetch_initial: {data}")
 			
@@ -212,7 +261,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 					data = DD104.apply_ld(REQ.params['name'])
 				except Exception as e:
 					msg = f"dd104.profile_apply: Error: {str(e)}"
-					print(f"dd104.profile_apply: Error: {traceback.print_exception(e)}")
+					print(f"dd104.profile_apply: Error: {traceback.format_exc().strip().split('\n')[1::]}")
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
 					errs.append(msg)
@@ -234,8 +283,8 @@ def dd104_post(REQ: Models.POST) -> dict:
 				data = None
 		
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {traceback.print_exception(e)}")
-		print(f"DDConf.main.dd104_post: ERROR: {traceback.print_exception(e)}")
+		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {traceback.format_exc().strip().split('\n')[1::]}")
+		print(f"DDConf.main.dd104_post: ERROR: {traceback.format_exc().strip().split('\n')[1::]}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
