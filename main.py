@@ -45,10 +45,13 @@ class ConnectionManager:
 class SyslogFSHandler(FileSystemEventHandler):
 	
 	websocket = None
+	pid = None
+	last_modified = None
 	
-	def __init__(self, WS: WebSocket):
+	def __init__(self, WS: WebSocket, PID: str):
 		self.last_modified = datetime.now()
 		self.websocket = WS
+		self.pid = PID
 	
 	def on_modified(self, event):
 		if datetime.now() - self.last_modified < timedelta(seconds=1):
@@ -58,7 +61,7 @@ class SyslogFSHandler(FileSystemEventHandler):
 		else:
 			self.last_modified = datetime.now()
 		
-		data = DD104.get_logs("syslog", 0)
+		data = DD104.get_logs(self.pid, 0)
 		if self.websocket and self.websocket.connected:
 			try:
 				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
@@ -69,9 +72,9 @@ class SyslogFSHandler(FileSystemEventHandler):
 		# print(f'Event type: {event.event_type}  path : {event.src_path}')
 	
 
-def prime_observer(WS: WebSocket) -> Observer: 
+def prime_observer(WS: WebSocket, PID: str) -> Observer: 
 	try:
-		event_handler = SyslogFSHandler(WS)
+		event_handler = SyslogFSHandler(WS, PID)
 		observer = Observer()
 		syslog.syslog(syslog.LOG_INFO, f"main.prime_observer: observer {observer} created. ")
 		observer.schedule(event_handler, "/var/log/syslog", recursive=True)
@@ -127,7 +130,7 @@ app.mount("/static", StaticFiles(directory="static/build", html=True), name="sta
 # async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
 # 	return Login.login_for_access_token(form_data)
 
-#TODO very jank, pids take a request 
+#TODO very jank, but better already
 @app.websocket("/ws_logs_104")
 async def websocket_logs_104(WS: WebSocket):
 	await WS.accept()
@@ -145,21 +148,21 @@ async def websocket_logs_104(WS: WebSocket):
 			
 			if _RQ != RQ:
 				_RQ = RQ
-				if 'pid' in RQ and RQ['pid'] == 'syslog':
+				if 'pid' in RQ and RQ['pid']:
 					try:
 						observer.start()
 					except RuntimeError:
 						syslog.syslog(syslog.LOG_INFO, f"main.websocket_logs_104: reinitializing observer upon user request")
 						observer.stop()
-						observer = prime_observer(WS)
+						observer = prime_observer(WS, RQ['pid'])
 						observer.start()
-				else:
-					_data = data
-					data = DD104.get_logs(RQ['pid'], RQ['length'])
-					if not data == _data:
-						payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
-						await CManager.send(json.dumps(payload), WS)
-					sleep(0.5)
+				# else:
+				# 	_data = data
+				# 	data = DD104.get_logs(RQ['pid'], RQ['length'])
+				# 	if not data == _data:
+				# 		payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
+				# 		await CManager.send(json.dumps(payload), WS)
+				# 	sleep(0.5)
 			
 			
 		except WebSocketDisconnect:
