@@ -227,7 +227,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 					data = None
 					if type(errs) == list:
 						errs.append(msg)
-					elif type(errs) == NoneType:
+					elif type(errs) == type(None):
 						errs = [msg]
 			else:
 				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
