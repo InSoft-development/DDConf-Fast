@@ -123,9 +123,11 @@ def apply_ld(filename: str) -> None:
 				create_inis([data])
 			else:
 				raise TypeError(f"Error while reading {filename}: data is corrupted or invalid, data type received ({type(data)}) is not in [list, dict]")
-			return "success"
+			
 		else:
 			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
+		(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").symlink_to(DD["LOADOUTDIR"]+'/'+filename)
+		return "success"
 	except Exception as e:
 		msg = f"dd104.apply_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
