@@ -100,7 +100,7 @@ def save_ld(filename: str, data : dict) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		(Path(DD104_Defaults.LOADOUTDIR)/filename).write_text(json.dumps(data))
+		(Path(Defaults.LOADOUTDIR)/filename).write_text(json.dumps(data))
 		return "success"
 	except Exception as e:
 		msg = f"dd104.save_ld: an error occured: {str(e)}"
@@ -113,8 +113,8 @@ def apply_ld(filename: str) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		if (Path(DD104_Defaults.LOADOUTDIR)/filename).is_file():
-			data = json.loads((Path(DD104_Defaults.LOADOUTDIR)/filename).read_text())
+		if (Path(Defaults.LOADOUTDIR)/filename).is_file():
+			data = json.loads((Path(Defaults.LOADOUTDIR)/filename).read_text())
 			if type(data) == list:
 				rm_inis()
 				create_inis(data)
