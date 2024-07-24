@@ -225,7 +225,10 @@ def dd104_post(REQ: Models.POST) -> dict:
 					print(f"dd104.profile_apply: Error: {tb}")
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
-					errs.append(msg)
+					if type(errs) == list:
+						errs.append(msg)
+					elif type(errs) == NoneType:
+						errs = [msg]
 			else:
 				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
 				data = None
