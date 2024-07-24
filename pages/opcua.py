@@ -36,12 +36,14 @@ def validate_numbers(lines:list) -> bool:
 		return True
 		
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"opcua.validate_numbers: {str(e)}, traceback: {traceback.format_exc().strip().split('\n')[1::]}")
+		tb = traceback.format_exc().strip().split('\n')[1::]
+		syslog.syslog(syslog.LOG_CRIT, f"opcua.validate_numbers: {str(e)}, traceback: {tb}")
 		raise RuntimeError(e)
 
 def parse_subs(subs:list) -> dict:
 	try:
 		
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"opcua.parse_subs: {str(e)}, traceback: {traceback.format_exc().strip().split('\n')[1::]}")
-		return {"result":None, "error":f"opcua.parse_subs: {str(e)}, traceback: {traceback.format_exc().strip().split('\n')[1::]}"}
+		tb = traceback.format_exc().strip().split('\n')[1::]
+		syslog.syslog(syslog.LOG_CRIT, f"opcua.parse_subs: {str(e)}, traceback: {tb}")
+		return {"result":None, "error":f"opcua.parse_subs: {str(e)}, traceback: {tb}"}

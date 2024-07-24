@@ -67,7 +67,8 @@ class SyslogFSHandler(FileSystemEventHandler):
 				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
 				await CManager.send(json.dumps(payload), WS)
 			except Exception as e:
-				syslog.syslog(syslog.LOG_ERR, f"main.syslogfshandler: error occured, details: {traceback.format_exc().strip().split('\n')[1::]}")
+				tb = traceback.format_exc().strip().split('\n')[1::]
+				syslog.syslog(syslog.LOG_ERR, f"main.syslogfshandler: error occured, details: {tb}")
 		
 		# print(f'Event type: {event.event_type}  path : {event.src_path}')
 	
@@ -80,7 +81,8 @@ def prime_observer(WS: WebSocket, PID: str) -> Observer:
 		observer.schedule(event_handler, "/var/log/syslog", recursive=True)
 		return observer
 	except Exception as e:
-		msg = f"main.prime_observer: unexpected exception caught, details: {traceback.format_exc().strip().split('\n')[1::]}"
+		tb = traceback.format_exc().strip().split('\n')[1::]
+		msg = f"main.prime_observer: unexpected exception caught, details: {tb}"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		raise RuntimeError(msg)
 
@@ -150,7 +152,8 @@ def dashboard_post(REQ: Models.POST) -> dict:
 			
 		
 	except Exception as e:
-		msg = f"DDConf.dashboard_post: Error: {traceback.format_exc().strip().split('\n')[1::]}"
+		tb = traceback.format_exc().strip().split('\n')[1::]
+		msg = f"DDConf.dashboard_post: Error: {tb}"
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		return {"result": None, "error": msg}
 
@@ -215,8 +218,9 @@ def dd104_post(REQ: Models.POST) -> dict:
 				try:
 					data = DD104.apply_ld(REQ.params['name'])
 				except Exception as e:
+					tb=traceback.format_exc().strip().split('\n')[1::]
 					msg = f"dd104.profile_apply: Error: {str(e)}"
-					print(f"dd104.profile_apply: Error: {traceback.format_exc().strip().split('\n')[1::]}")
+					print(f"dd104.profile_apply: Error: {tb}")
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
 					errs.append(msg)
@@ -238,8 +242,9 @@ def dd104_post(REQ: Models.POST) -> dict:
 				data = None
 		
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {traceback.format_exc().strip().split('\n')[1::]}")
-		print(f"DDConf.main.dd104_post: ERROR: {traceback.format_exc().strip().split('\n')[1::]}")
+		tb=traceback.format_exc().strip().split('\n')[1::]
+		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {tb}")
+		print(f"DDConf.main.dd104_post: ERROR: {tb}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
@@ -286,7 +291,8 @@ async def websocket_logs_104(WS: WebSocket):
 			syslog.syslog(syslog.LOG_INFO, f"Client disconnected")
 			break
 		except Exception as e:
-			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.format_exc().strip().split('\n')[1::]}")
+			tb=traceback.format_exc().strip().split('\n')[1::]
+			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {tb}")
 			await CManager.send(json.dumps({"response":None, "errors":str(e)}))
 	
 	observer.join()
