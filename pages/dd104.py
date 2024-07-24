@@ -201,7 +201,7 @@ def get_logs(PID: str, LEN: int):
 				LOGS="\n".join(lines)
 			
 		elif int(PID):
-			lines=[x.strip() for x in subprocess.run(f"systemctl status dd104{'server' if _mode='tx' else 'client'}{PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if f"dd104{'server' if _mode='tx' else 'client'}{PID}" in x]
+			lines=[x.strip() for x in subprocess.run(f"systemctl status dd104{'server' if _mode=='tx' else 'client'}{PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if f"dd104{'server' if _mode=='tx' else 'client'}{PID}" in x]
 				
 			if not lines: 
 				raise RuntimeError("dd104.get_logs: lines is empty!")
