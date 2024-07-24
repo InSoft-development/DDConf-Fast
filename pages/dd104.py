@@ -55,7 +55,7 @@ def create_inis(data: list):
 				if not proc['main']:
 					proc['main'] = proc['second']
 					proc['second'] = None
-				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.DD['RECVADDR']}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
+				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.RECVADDR}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
 				if proc['second']:
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
@@ -100,7 +100,7 @@ def save_ld(filename: str, data : dict) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		(Path(Defaults.LOADOUTDIR)/filename).write_text(json.dumps(data))
+		(Path(Defaults.DD["LAODOUTDIR"])/filename).write_text(json.dumps(data))
 		return "success"
 	except Exception as e:
 		msg = f"dd104.save_ld: an error occured: {str(e)}"
@@ -113,8 +113,8 @@ def apply_ld(filename: str) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		if (Path(Defaults.LOADOUTDIR)/filename).is_file():
-			data = json.loads((Path(Defaults.LOADOUTDIR)/filename).read_text())
+		if (Path(Defaults.DD["LAODOUTDIR"])/filename).is_file():
+			data = json.loads((Path(Defaults.DD["LAODOUTDIR"])/filename).read_text())
 			if type(data) == list:
 				rm_inis()
 				create_inis(data)
