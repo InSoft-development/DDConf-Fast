@@ -1,15 +1,15 @@
-import syslog, subprocess, time, tarfile, json
+import syslog, subprocess, time, tarfile, json, traceback
 from shutil import move, copy2, unpack_archive, make_archive
 from pathlib import Path
 from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 
-from models import DD104_Defaults
+from models import Defaults
 # Globals
 _mode = 'tx'
 
-DEFAULTS = DD104_Defaults("/etc/dd/DDConf.json") #change this parameter later to a CLI parameter
+DEFAULTS = Defaults("/etc/dd/DDConf.json") #change this parameter later to a CLI parameter
 # /Globals
 
 def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
@@ -32,6 +32,18 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 		raise RuntimeError(msg)
 
 
+def rm_inis():
+	try:
+		dest = Path(Defaults.DD["INIDIR"])
+		for ini in listdir(dest):
+			(dest/ini).unlink()
+			syslog.syslog(syslog.LOG_INFO, f"dd104.rm_inis: {str(dest/ini)} file was removed")
+			print(f"dd104.rm_inis: {str(dest/ini)} file was removed")
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"dd104.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
+		print(f"dd104.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+
+
 #TODO
 def create_inis(data: list):
 	#gets loadout contents, creates an appropriate amount of inis
@@ -43,17 +55,19 @@ def create_inis(data: list):
 				if not proc['main']:
 					proc['main'] = proc['second']
 					proc['second'] = None
-				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={DEFAULTS.RECVADDR}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
+				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.DD['RECVADDR']}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
 				if proc['second']:
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
-				(Path(DEFAULTS.INIDIR)/f"dd104client{COUNT}.ini").write_text(msg)
-				print(f'Created a file at {(Path(DEFAULTS.INIDIR)/"dd104client"+str(COUNT)+".ini")}. ')
+				(Path(Defaults.DD["INIDIR"])/f"dd104client{COUNT}.ini").write_text(msg)
+				syslog.syslog(syslog.LOG_INFO, f'dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
+				print(f'dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
 			else:
 				raise ValueError(f"process {COUNT} data is invalid ({proc})")
 	
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
+		print(f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {traceback.print_exception(e)}\n")
 
 
 def get_status(PID: int) -> int:
@@ -87,7 +101,7 @@ def save_ld(filename: str, data : dict) -> None:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
 		(Path(DD104_Defaults.LOADOUTDIR)/filename).write_text(json.dumps(data))
-		return None
+		return "success"
 	except Exception as e:
 		msg = f"dd104.save_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
@@ -102,12 +116,14 @@ def apply_ld(filename: str) -> None:
 		if (Path(DD104_Defaults.LOADOUTDIR)/filename).is_file():
 			data = json.loads((Path(DD104_Defaults.LOADOUTDIR)/filename).read_text())
 			if type(data) == list:
+				rm_inis()
 				create_inis(data)
 			elif  type(data) == dict:
+				rm_inis()
 				create_inis([data])
 			else:
 				raise TypeError(f"Error while reading {filename}: data is corrupted or invalid, data type received ({type(data)}) is not in [list, dict]")
-			return None
+			return "success"
 		else:
 			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
 	except Exception as e:
@@ -118,10 +134,10 @@ def apply_ld(filename: str) -> None:
 
 def get_processes(LD_ID: str) -> list:
 	# will return a list of dicts with fields "main", "secondary", "comment" 
-	loadouts = [x for x in listdir(DEFAULTS.LOADOUTDIR) if (Path(DEFAULTS.LOADOUTDIR)/x).is_file() and (Path(DEFAULTS.LOADOUTDIR)/x).name.split('.')[-1] == 'loadout']
+	loadouts = [x for x in listdir(Defaults.DD["LOADOUTDIR"]) if (Path(Defaults.DD["LOADOUTDIR"])/x).is_file() and (Path(Defaults.DD["LOADOUTDIR"])/x).name.split('.')[-1] == 'loadout']
 	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
 	if ID in loadouts:
-		data = json.loads((Path(DEFAULTS.LOADOUTDIR)/ID).read_text())
+		data = json.loads((Path(Defaults.DD["LOADOUTDIR"])/ID).read_text())
 		return data
 	else:
 		return None
@@ -131,7 +147,7 @@ def get_processes(LD_ID: str) -> list:
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
 	try:
-		return (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name if (Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(DEFAULTS.LOADOUTDIR)/".ACTIVE.loadout").resolve().name.split('.')[:-1:]) 
+		return ((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[:-1:])) if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().is_file() else None
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.get_active_ld: Error: {str(e)}")
 		return f"Ошибка: {str(e)}"
@@ -139,7 +155,7 @@ def get_active_ld() -> str:
 
 def list_ld() -> list:
 	# lists loadout IDs !!!
-	return [x for x in listdir(DEFAULTS.LOADOUTDIR) if (Path(DEFAULTS.LOADOUTDIR)/x).is_file() and (Path(DEFAULTS.LOADOUTDIR)/x).name.split('.')[-1] == 'loadout' and (Path(DEFAULTS.LOADOUTDIR)/x).name != ".ACTIVE.loadout"]
+	return [x for x in listdir(Defaults.DD["LOADOUTDIR"]) if (Path(Defaults.DD["LOADOUTDIR"])/x).is_file() and (Path(Defaults.DD["LOADOUTDIR"])/x).name.split('.')[-1] == 'loadout' and (Path(Defaults.DD["LOADOUTDIR"])/x).name != ".ACTIVE.loadout"]
 	# return ["a", "b", "ne b"]
 
 
@@ -159,6 +175,53 @@ def process_handle(PID: int, OP:str) -> int:
 		syslog.syslog(syslog.LOG_WARNING, f"dd104.{OP}: {str(e)}")
 		return -2
 
-
+#TODO
+def get_logs(PID: str, LEN: int):
+	try:
+		if PID.lower() == "syslog":
+			if LEN:
+				LOGS = subprocess.run(f"tail -n {LEN} /var/log/syslog".split(), capture_output=True, text=True).stdout.strip()
+			else:
+				LOGS = subprocess.run(f"cat /var/log/syslog".split(), capture_output=True, text=True).stdout.strip()
+			
+		elif "dd104" in PID[0:5:]:
+			lines=[x.strip() for x in subprocess.run(f"systemctl status {PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if PID in x]
+				
+			if not lines: 
+				raise RuntimeError("dd104.get_logs: lines is empty!")
+			
+			if LEN:
+				
+				if len(lines) <= LEN:
+					LOGS="\n".join(lines)
+				else:
+					LOGS='\n'.join(lines[-1*LEN::])
+				
+			else:
+				LOGS="\n".join(lines)
+			
+		elif int(PID):
+			lines=[x.strip() for x in subprocess.run(f"systemctl status dd104{'server' if _mode=='tx' else 'client'}{PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if f"dd104{'server' if _mode=='tx' else 'client'}{PID}" in x]
+				
+			if not lines: 
+				raise RuntimeError("dd104.get_logs: lines is empty!")
+			
+			if LEN:
+				
+				if len(lines) <= LEN:
+					LOGS="\n".join(lines)
+				else:
+					LOGS='\n'.join(lines[-1*LEN::])
+				
+			else:
+				LOGS="\n".join(lines)
+		else:
+			raise ValueError(f"dd104.get_logs: PID={PID} was not 'syslog', 'dd104*', or a number.")
+	except Exception as e:
+		syslog.syslog(syslog.LOG_ERR, f"dd104.get_logs: {str(e)}")
+		print(f"dd104.get_logs: {traceback.print_exception(e)}")
+		return {'error':f"dd104.get_logs: error handling {PID} {traceback.print_exception(e)}"}
+	else:
+		return {"pid": PID, "logs":LOGS}
 
 
