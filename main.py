@@ -130,54 +130,6 @@ app.mount("/static", StaticFiles(directory="static/build", html=True), name="sta
 # async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
 # 	return Login.login_for_access_token(form_data)
 
-#TODO very jank, but better already
-@app.websocket("/ws_logs_104")
-async def websocket_logs_104(WS: WebSocket):
-	await WS.accept()
-	syslog.syslog(syslog.LOG_INFO, f"Client connected")
-	observer = prime_observer(WS)
-	# observer.start()
-	data = ""
-	_data = ""
-	_RQ = None
-	while True:
-		try:
-			RQ = await WS.receive_text()
-			syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
-			RQ = json.loads(RQ)
-			
-			if _RQ != RQ:
-				_RQ = RQ
-				if 'pid' in RQ and RQ['pid']:
-					try:
-						observer.start()
-					except RuntimeError:
-						syslog.syslog(syslog.LOG_INFO, f"main.websocket_logs_104: reinitializing observer upon user request")
-						observer.stop()
-						observer = prime_observer(WS, RQ['pid'])
-						observer.start()
-				# else:
-				# 	_data = data
-				# 	data = DD104.get_logs(RQ['pid'], RQ['length'])
-				# 	if not data == _data:
-				# 		payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
-				# 		await CManager.send(json.dumps(payload), WS)
-				# 	sleep(0.5)
-			
-			
-		except WebSocketDisconnect:
-			CManager.disconnect(WS)
-			observer.stop()
-			syslog.syslog(syslog.LOG_INFO, f"Client disconnected")
-			break
-		except Exception as e:
-			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.format_exc().strip().split('\n')[1::]}")
-			await CManager.send(json.dumps({"response":None, "errors":str(e)}))
-	
-	observer.join()
-	syslog.syslog(syslog.LOG_INFO, "WS function shutdown")
-	
-
 
 @app.post("/dashboard")
 def dashboard_post(REQ: Models.POST) -> dict:
@@ -292,3 +244,50 @@ def dd104_post(REQ: Models.POST) -> dict:
 	else:
 		return {"result": data, "error":None if not errs else errs}
 
+
+#TODO very jank, but better already
+@app.websocket("/ws_logs_104")
+async def websocket_logs_104(WS: WebSocket):
+	await WS.accept()
+	syslog.syslog(syslog.LOG_INFO, f"Client connected")
+	observer = prime_observer(WS)
+	# observer.start()
+	data = ""
+	_data = ""
+	_RQ = None
+	while True:
+		try:
+			RQ = await WS.receive_text()
+			syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
+			RQ = json.loads(RQ)
+			
+			if _RQ != RQ:
+				_RQ = RQ
+				if 'pid' in RQ and RQ['pid']:
+					try:
+						observer.start()
+					except RuntimeError:
+						syslog.syslog(syslog.LOG_INFO, f"main.websocket_logs_104: reinitializing observer upon user request")
+						observer.stop()
+						observer = prime_observer(WS, RQ['pid'])
+						observer.start()
+				# else:
+				# 	_data = data
+				# 	data = DD104.get_logs(RQ['pid'], RQ['length'])
+				# 	if not data == _data:
+				# 		payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
+				# 		await CManager.send(json.dumps(payload), WS)
+				# 	sleep(0.5)
+			
+			
+		except WebSocketDisconnect:
+			CManager.disconnect(WS)
+			observer.stop()
+			syslog.syslog(syslog.LOG_INFO, f"Client disconnected")
+			break
+		except Exception as e:
+			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {traceback.format_exc().strip().split('\n')[1::]}")
+			await CManager.send(json.dumps({"response":None, "errors":str(e)}))
+	
+	observer.join()
+	syslog.syslog(syslog.LOG_INFO, "WS function shutdown")
