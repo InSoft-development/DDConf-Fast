@@ -16,16 +16,16 @@ class POST(BaseModel):
 class Defaults:
 	RECVADDR = "192.168.100.10"
 	DD = {
-		"INIDIR" = '/etc/dd/dd104/configs/',
+		"INIDIR" : '/etc/dd/dd104/configs/',
 		#turned off by default, if the value is not-null, turn on archiving
-		"ARCDIR" = None, #'/etc/dd/dd104/archive.d/'
-		"LOADOUTDIR" = '/etc/dd/dd104/loadouts/'
+		"ARCDIR" : None, #'/etc/dd/dd104/archive.d/'
+		"LOADOUTDIR" : '/etc/dd/dd104/loadouts/'
 	}
 	OPCUA = {
-		"INIDIR" = '/etc/dd/opcua/configs/',
+		"INIDIR" : '/etc/dd/opcua/configs/',
 		#turned off by default, if the value is not-null, turn on archiving
-		"ARCDIR" = None, #'/etc/dd/dd104/archive.d/'
-		"LOADOUTDIR" = '/etc/dd/opcua/loadouts/'
+		"ARCDIR" : None, #'/etc/dd/dd104/archive.d/'
+		"LOADOUTDIR" : '/etc/dd/opcua/loadouts/'
 	}
 	
 	def __init__(self, confile = "/etc/dd/DDConf.json"):
