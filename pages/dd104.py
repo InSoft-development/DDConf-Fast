@@ -5,7 +5,7 @@ from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 
-from models import DD104_Defaults
+from models import Defaults
 # Globals
 _mode = 'tx'
 
