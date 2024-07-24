@@ -42,6 +42,9 @@ class ConnectionManager:
 	# 		await connection.send_text(message)
 
 
+CManager = ConnectionManager()
+
+
 class SyslogFSHandler(FileSystemEventHandler):
 	
 	websocket = None
@@ -53,7 +56,7 @@ class SyslogFSHandler(FileSystemEventHandler):
 		self.websocket = WS
 		self.pid = PID
 	
-	def on_modified(self, event):
+	async def on_modified(self, event):
 		if datetime.now() - self.last_modified < timedelta(seconds=1):
 			return
 		# elif not self.websocket or self.websocket.connected:
@@ -87,7 +90,6 @@ def prime_observer(WS: WebSocket, PID: str) -> Observer:
 		raise RuntimeError(msg)
 
 
-CManager = ConnectionManager()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
