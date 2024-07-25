@@ -124,40 +124,91 @@ export const profileReducer = (state = initialState, action) => {
         case CHANGE_PROCESS_STATUS: {
             const processId = action.payload;
 
-            const changedProcesses = state.processes.map(process => {
-                if(process.id === processId){
+            if (Array.isArray(processId)) {
+                const changedProcesses = state.processes.map(process => {
                     return {
                         ...process,
                         status: 'loading'
                     }
+
+                });
+
+                return {
+                    ...state,
+                    processes: changedProcesses,
                 }
-                return process;
-            });
 
-            return {
-                ...state,
-                processes: changedProcesses,
+            } else {
+                const changedProcesses = state.processes.map(process => {
+                    if (process.id === processId) {
+                        return {
+                            ...process,
+                            status: 'loading'
+                        }
+                    }
+                    return process;
+                });
 
+                return {
+                    ...state,
+                    processes: changedProcesses,
+
+                }
             }
+
+
 
         }
         case CHANGE_PROCESS_STATUS_SUCCESS: {
-            const {pid, status} = action.payload;
+            if (Array.isArray(action.payload)) {
 
-            const changedProcesses = state.processes.map((process) => {
-                if(process.id === pid){
-                    return {
-                        ...process,
-                        status,
+                const newProcesses = [];
+                state.processes.forEach((process) => {
+
+                    let isProcessConsist = false;
+
+                    for (let changedProcess of action.payload) {
+                        if (process.id === changedProcess.pid) {
+                            isProcessConsist = true;
+                            newProcesses.push({
+                                ...process,
+                                status: changedProcess.status,
+                            })
+                            break;
+                        }
                     }
-                }
-                return process;
-            })
 
-            return {
-                ...state,
-                processes: changedProcesses
+                    if (!isProcessConsist) {
+                        newProcesses.push(process)
+                    }
+
+                })
+
+                return {
+                    ...state,
+                    processes: newProcesses
+
+                }
+
+            } else {
+                const { pid, status } = action.payload;
+
+                const changedProcesses = state.processes.map((process) => {
+                    if (process.id === pid) {
+                        return {
+                            ...process,
+                            status,
+                        }
+                    }
+                    return process;
+                })
+
+                return {
+                    ...state,
+                    processes: changedProcesses
+                }
             }
+
         }
         case CHANGE_PROCESS_STATUS_FAILED: {
             return {
