@@ -9,6 +9,10 @@ export const GET_DEVICES_NET = 'GET_DEVICES_NET';
 export const GET_DEVICES_NET_SUCCESS = 'GET_DEVICES_NET_SUCCESS';
 export const GET_DEVICES_NET_FAILED = 'GET_DEVICES_NET_FAILED';
 
+export const GET_AVAILABLE_PROTOCOLS = 'GET_AVAILABLE_PROTOCOLS';
+export const GET_AVAILABLE_PROTOCOLS_SUCCESS = 'GET_AVAILABLE_PROTOCOLS_SUCCESS';
+export const GET_AVAILABLE_PROTOCOLS_FAILED = 'GET_AVAILABLE_PROTOCOLS_FAILED';
+
 export const getDeviceFeatures = () => (dispatch) => {
     dispatch({type: GET_DEVICE_FEATURES});
     request('dashboard', 'fetch_initial')
@@ -41,5 +45,20 @@ export const getDevicesNet = () => (dispatch) => {
         })
         .catch(error => {
             dispatch({type: GET_DEVICES_NET_FAILED})
+        })
+}
+
+export const getAvailableProtocols = () => (dispatch) => {
+    dispatch({type: GET_AVAILABLE_PROTOCOLS});
+    request('dashboard', 'fetch_protocols')
+        .then(res => checkResponce(res))
+        .then(res => {
+            dispatch({
+                type: GET_AVAILABLE_PROTOCOLS_SUCCESS,
+                payload: res.result,
+            })
+        })
+        .catch(error => {
+            dispatch({type: GET_AVAILABLE_PROTOCOLS_FAILED})
         })
 }
