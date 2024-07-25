@@ -170,7 +170,7 @@ def process_handle(PID: int, OP:str) -> int:
 				raise RuntimeError(std.stderr)
 			return get_status(PID)
 		else:
-			raise TypeError(f"dd104.process_handle: PID must be a single instance or a list of int, str, got {type(PID)}.")
+			raise TypeError(f"dd104.process_handle: PID must be a single instance of int, str, got {type(PID)}.")
 	except RuntimeError:
 		return -1
 	except Exception as e:
