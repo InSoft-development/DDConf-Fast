@@ -13,7 +13,12 @@ import {
 
     CHANGE_PROCESS_STATUS,
     CHANGE_PROCESS_STATUS_SUCCESS,
-    CHANGE_PROCESS_STATUS_FAILED
+    CHANGE_PROCESS_STATUS_FAILED,
+    
+    ADD_NEW_PROCESS,
+    SET_EDITABLE_ROW_ID,
+    CHANGE_TABLE_CELL
+
 
 } from '../actions/profile';
 
@@ -36,6 +41,11 @@ const initialState = {
     changeProfileSuccess: false,
     changeProfileFailed: false,
 
+    // editable page
+
+    editableProfile: null,
+    editableProcesses: [],
+    editableRow: null,
 }
 
 export const profileReducer = (state = initialState, action) => {
@@ -105,13 +115,28 @@ export const profileReducer = (state = initialState, action) => {
             }
         }
         case GET_PROCESSES_SUCCESS: {
-            return {
-                ...state,
-                processRequest: false,
-                processRequestSuccess: true,
-                processRequestFailed: false,
-                processes: action.payload
+
+            const {processes, editable} = action.payload;
+
+            if(editable){
+                return {
+                    ...state,
+                    processRequest: false,
+                    processRequestSuccess: true,
+                    processRequestFailed: false,
+                    editableProcesses: processes,
+                }
+            }else{
+                return {
+                    ...state,
+                    processRequest: false,
+                    processRequestSuccess: true,
+                    processRequestFailed: false,
+                    processes: processes
+                }
             }
+
+
         }
         case GET_PROCESSES_FAILED: {
             return {
@@ -213,6 +238,56 @@ export const profileReducer = (state = initialState, action) => {
         case CHANGE_PROCESS_STATUS_FAILED: {
             return {
                 ...state,
+            }
+        }
+        case ADD_NEW_PROCESS: {
+
+            const newProcesses = [...state.editableProcesses];
+
+            newProcesses.push({
+                main: null,
+                second: null,
+                comment: null,
+                id: newProcesses.length
+            })
+
+            console.log(newProcesses);
+
+            return {
+                ...state,
+                editableProcesses: newProcesses
+            }
+        }
+        case SET_EDITABLE_ROW_ID: {
+
+            const editableRow = action.payload.id;
+
+            return {
+                ...state,
+                editableRow
+            }
+        }
+        case CHANGE_TABLE_CELL: {
+            const {field, value} = action.payload;
+            const currentEditableRow = state.editableRow;
+
+            const newProcesses = [...state.editableProcesses].map((process) => {
+                if(process.id === currentEditableRow){
+                    console.log(process);
+                    return {
+                        ...process,
+                        [field]: value,
+                    }
+                }else{
+                    return process
+                }
+            })
+
+            console.log(newProcesses);
+
+            return {
+                ...state,
+                editableProcesses: newProcesses
             }
         }
         default: {

@@ -20,6 +20,11 @@ export const CHANGE_PROCESS_STATUS = 'CHANGE_PROCCESS_STATUS';
 export const CHANGE_PROCESS_STATUS_SUCCESS = 'CHANGE_PROCCESS_STATUS_SUCCESS';
 export const CHANGE_PROCESS_STATUS_FAILED = 'CHANGE_PROCCESS_STATUS_FAILED';
 
+// editabe profile
+export const ADD_NEW_PROCESS = 'ADD_NEW_PROCESS';
+export const SET_EDITABLE_ROW_ID = 'SET_EDITABLE_ROW_ID';
+export const CHANGE_TABLE_CELL = 'CHANGE_TABLE_CELL';
+
 
 export const getProfiles = () => (dispatch) => {
     dispatch({ type: PROFILE_REQUEST });
@@ -37,7 +42,7 @@ export const getProfiles = () => (dispatch) => {
         })
 }
 
-export const getProcessesByProfile = (profileName) => (dispatch) => {
+export const getProcessesByProfile = (profileName, editable = false) => (dispatch) => {
     dispatch({type: GET_PROCESSES});
     request('dd104','fetch_id', {
         name: profileName
@@ -47,12 +52,16 @@ export const getProcessesByProfile = (profileName) => (dispatch) => {
             const {data} = res.result;
             dispatch({
                 type: GET_PROCESSES_SUCCESS,
-                 payload: data.map((procces, index) => {
-                    return {
-                        ...procces,
-                        id: index
-                    }
-                 })
+                payload: {
+                    processes:
+                        data.map((procces, index) => {
+                        return {
+                            ...procces,
+                            id: index
+                        }
+                    }),
+                    editable
+                }
             })
         })
         .catch(error => {

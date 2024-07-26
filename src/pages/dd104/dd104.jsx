@@ -6,17 +6,22 @@ import styles from './dd104.module.css';
 import { columns } from '../../utils/table-description';
 import DropDown from '../../components/drop-down/drop-down';
 import { getProfiles } from '../../services/actions/profile';
-import { changeProсess } from '../../services/actions/profile';
+import { changeProсess, changeProfile } from '../../services/actions/profile';
+import { useNavigate } from 'react-router-dom';
 
 
 const Dd104 = () => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const { profileRequest,
         activeProfile,
         availableProfiles,
         processes,
-        processRequest
+        processRequest,
+        changeProfileRequest
+        
     } = useSelector(state => state.profile);
 
 
@@ -24,12 +29,16 @@ const Dd104 = () => {
         dispatch(getProfiles());
     }, [])
 
-    const onStartAllBtnClickHandler = (e) => {
-        dispatch(changeProсess('start', processes.map((processes, index) => index)))
+    const onStartAllBtnClickHandler = () => {
+        dispatch(changeProсess('start', processes.map((_, index) => index)))
     }
 
-    const onStopAllBtnClickHandler = (e) => {
-        dispatch(changeProсess('stop', processes.map((processes, index) => index)))
+    const onStopAllBtnClickHandler = () => {
+        dispatch(changeProсess('stop', processes.map((_, index) => index)))
+    }
+
+    const onProfileClickHandler = (profile) => {
+        dispatch(changeProfile(profile))
     }
 
     return (
@@ -40,7 +49,20 @@ const Dd104 = () => {
                     {profileRequest ? (
                         <LoadingOutlined style={{ fontSize: 20 }} />
                     ) : (
-                        <DropDown currentProfile={activeProfile} availableProfiles={availableProfiles} />
+                        <>
+                            <DropDown 
+                                currentProfile={activeProfile} 
+                                availableProfiles={availableProfiles} 
+                                loading={changeProfileRequest}
+                                onClick={onProfileClickHandler}
+                            />
+                            {processes.length !== 0 && (
+                                <button className='button btn-green ml-auto'
+                                        onClick={e => {navigate('/profile-editor')}}
+                                >Профиль</button>
+                            )}
+                            
+                        </>
                     )}
 
                 </div>

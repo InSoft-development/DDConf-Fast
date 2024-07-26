@@ -1,112 +1,90 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Table, Flex, Form, Input, Button } from 'antd';
-import DropDown from '../../components/drop-down/drop-down';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styles from './profile-editor.module.css';
+import { Flex, Table, Form} from 'antd';
+import DropDown from '../../components/drop-down/drop-down';
+import { editColumns } from '../../utils/table-description';
+import { getProcessesByProfile } from '../../services/actions/profile';
+import { ADD_NEW_PROCESS, SET_EDITABLE_ROW_ID, CHANGE_TABLE_CELL} from '../../services/actions/profile';
+
 
 const ProfileEditor = () => {
 
-    const location = useLocation();
-    const { processes, availableProfiles } = useSelector(state => state.profile);
-    const [editableProsses, setEditableProsses] = useState(null);
-    const [editingRow, setEditingRow] = useState(null);
-    const [form] = Form.useForm();
+    const dispatch = useDispatch();
+    const {
+        availableProfiles,
+        editableProcesses
+    } = useSelector(state => state.profile);
 
-    useEffect(() => {
-        setEditableProsses(processes);
-    }, [processes])
+    const [form] = Form.useForm()
 
-    const columns = [
-        {
-            title: 'Основной (IP:PORT)',
-            dataIndex: 'main',
-            render: (text, record) => {
-                if (editingRow === record.id) {
-                    return (
-                        <Form.Item name="main">
-                            <Input></Input>
-                        </Form.Item>
-                    )
-                } else {
-                    return <div>{text}</div>
-                }
-            }
-        },
-        {
-            title: 'Резервный (IP:PORT)',
-            dataIndex: 'second',
-            render: (text, record) => {
-                if (editingRow === record.id) {
-                    return (
-                        <Form.Item name="second">
-                            <Input></Input>
-                        </Form.Item>
-                    )
-                } else {
-                    return <div>{text}</div>
-                }
-            }
-        },
-        {
-            title: 'Действия',
-            render: (_, record) => {
-                return (
-                    <Flex gap={'middle'}>
-                        <Button>
-                            <EditOutlined
-                                style={{ fontSize: 22, cursor: 'pointer' }}
-                                onClick={() => {
-                                    setEditingRow(record.id);
-                                    form.setFieldsValue({
-                                        main: record.main,
-                                        second: record.second,
-                                    })
-                                }} />
-                        </Button>
-                        <Button htmlType='submit'>
-                            <SaveOutlined
-                                style={{ fontSize: 22, cursor: 'pointer' }}
-                            />
-                        </Button>
-                    </Flex>
-                )
-            }
-        }
-    ]
-
-    const onFinish = (values) => {
-        const updatedDataSource = [...editableProsses];
-        updatedDataSource.splice(editingRow, 1, {...values, id: editingRow})
-        setEditableProsses(updatedDataSource);
-        setEditingRow(null);
+    const onProfileClickHandler = (profile) => {
+        dispatch(getProcessesByProfile(profile, true))
     }
 
+    const onAddProcessBtnClickHandler = (e) => {
+        dispatch({type: ADD_NEW_PROCESS})
+    }
+
+    const setEditableRow = (record) => {
+        dispatch({
+            type: SET_EDITABLE_ROW_ID,
+            payload: record,
+        })
+    }
+
+    const onFieldsChange = (changedFields) => {
+        const {value, name} = changedFields[0];
+
+        dispatch({
+            type: CHANGE_TABLE_CELL,
+            payload: {
+                field: name.shift(),
+                value,
+            }
+        })
+    }
 
     return (
-        <div className='text'>
-            <div className={styles.chooseProfile}>
-                <div className='text_type_main mr-4'>Выберитое профиль:</div>
-                <DropDown
-                    availableProfiles={availableProfiles}
-                    currentProfile={location.state.profile ? location.state.profile : null} />
-            </div>
-
-            <div className={`mt-4 ${styles.profileEditor}`}>
-                <div className='ml-8 mb-8'>Редактор профилей</div>
-                <Form form={form} onFinish={onFinish}>
+        <div className={styles.profileEditor}>
+            <header className='text text_type_main'>Редактор профилей</header>
+            <main>
+                <Flex justify='space-between' className='mb-10'>
+                    <DropDown availableProfiles={availableProfiles} onClick={onProfileClickHandler}/>
+                    <button className='button btn-green ml-10'>Новый</button>
+                </Flex>
+                <Form form={form} onFieldsChange={onFieldsChange}>
                     <Table
-                        dataSource={editableProsses}
-                        columns={columns}
-                        pagination={{
-                            defaultCurrent: 1,
-                            pageSize: 5,
+                        rowKey={(record) => record.id}
+                        columns={editColumns}
+                        dataSource={editableProcesses}
+                        onRow={(record) => {
+                            return {
+                                onClick: (e) => {
+                                    setEditableRow(record);
+                                    form.setFieldsValue({
+                                        main: record.main,
+                                        second: record.second
+                                    })
+                                }
+                            }
                         }}
                     />
                 </Form>
-            </div>
+                <button className='button btn-green'
+                        onClick={onAddProcessBtnClickHandler}
+                >Добавить процесс</button>
 
+            </main>
+            <footer>
+                <Flex justify='flex-end'>
+                    <button className='button btn-red mr-4'>Применить</button>
+                    <button className='button btn-purple mr-4'>Удалить</button>
+                    <button className='button btn-purple mr-4'>Сохранить</button>
+                    <button className='button btn-purple mr-4'>Сохранить как</button>
+                    <button className='button btn-grey'>Отменить</button>
+                </Flex>
+            </footer>
         </div>
     );
 }

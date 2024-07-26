@@ -1,35 +1,33 @@
-import { Badge, Flex } from 'antd';
-import { PlayCircleOutlined,
-        PauseCircleOutlined,
-        ReloadOutlined,
-        DeleteOutlined,
-        LoadingOutlined
- } from '@ant-design/icons';
-import {Input} from 'antd'
+import { Badge, Flex, Input, Form } from 'antd';
+import {
+    PlayCircleOutlined,
+    PauseCircleOutlined,
+    ReloadOutlined,
+    LoadingOutlined
+} from '@ant-design/icons';
 import { store } from '../services/store';
 import { changeProсess } from '../services/actions/profile';
-
 
 
 const actions = [
     {
         key: 1,
-        item: <PlayCircleOutlined style={{fontSize:20, cursor: 'pointer'}}/>
+        item: <PlayCircleOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
     },
     {
         key: 2,
-        item: <PauseCircleOutlined style={{fontSize:20, cursor: 'pointer'}}/>
+        item: <PauseCircleOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
     },
     {
         key: 3,
-        item: <ReloadOutlined style={{fontSize:20, cursor: 'pointer'}}/>
+        item: <ReloadOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
     },
 ];
 
 
 const onActionBtnClickHandler = (actionIndex, processIndex) => {
     let action = null;
-    switch(actionIndex){
+    switch (actionIndex) {
         case 0: {
             action = 'start';
             break;
@@ -69,11 +67,11 @@ export const columns = [
         dataIndex: 'second',
         key: 'second',
         render: (text) => {
-           if(text === null){
-            return <div className='text text_color_inactive'>нет резерва</div>
-           }else {
-            return <div className='text'>{text}</div>
-           }
+            if (text === null) {
+                return <div className='text text_color_inactive'>нет резерва</div>
+            } else {
+                return <div className='text'>{text}</div>
+            }
         }
     },
     {
@@ -102,26 +100,26 @@ export const columns = [
             }
         ],
         onFilter: (value, record) => record.status === value,
-        
+
         render: (text) => {
-            switch(String(text)){
+            switch (String(text)) {
                 case '0': {
-                    return <Badge status='warning' text="остановлен"/>
+                    return <Badge status='warning' text="остановлен" />
                 }
                 case '1': {
-                    return <Badge status='success' text="запущен"/>
+                    return <Badge status='success' text="запущен" />
                 }
                 case '2': {
-                    return <Badge status='processing' text="в процессе"/>
+                    return <Badge status='processing' text="в процессе" />
                 }
                 case 'loading': {
-                    return <LoadingOutlined/>
+                    return <LoadingOutlined />
                 }
                 case '-1': {
-                    return <Badge status='error' text="ошибка"/> 
+                    return <Badge status='error' text="ошибка" />
                 }
             }
-            
+
         }
     },
     {
@@ -130,13 +128,13 @@ export const columns = [
         key: 'actions',
         render: (_, record) => (
             <Flex vertical={false} gap={'small'}>
-            {
-                actions.map((action, index) => {
-                    return <div key={`${record.id}_${index}`} onClick={(e) => {
-                        onActionBtnClickHandler(index, record.id);
-                    }}>{action.item}</div>;
-                })
-            }
+                {
+                    actions.map((action, index) => {
+                        return <div key={`${record.id}_${index}`} onClick={(e) => {
+                            onActionBtnClickHandler(index, record.id);
+                        }}>{action.item}</div>;
+                    })
+                }
             </Flex>
         )
     },
@@ -144,51 +142,57 @@ export const columns = [
 
 
 
-const editActions = [
-    {
-        key: 1,
-        item: <DeleteOutlined style={{fontSize:20, cursor: 'pointer'}}/>
-    }
-]
-
 export const editColumns = [
     {
         title: 'Процесс',
-        dataIndex: 'key',
-        key: 'key',
+        dataIndex: 'id',
+        key: 'id',
         render: (text) => (
-            <div className='text'>{text}</div>
+            <div className='text'>{text + 1}</div>
         )
     },
     {
         title: 'Основной (IP:PORT)',
         dataIndex: 'main',
         key: 'main',
-        render: (text) => (
-            <Input value={text}/>
-        )
+        render: (text, record) => {
+            if (record.id === store.getState().profile.editableRow) {
+                return (
+                    <Form.Item name='main'>
+                        <Input value={text}
+                            placeholder='Введите основной IP'/>
+                    </Form.Item>
+                )
+            } else {
+                if (text === null) {
+                    return <div className='text text_color_inactive'>укажите IP</div>
+                } else {
+                    return <div className='text'>{text}</div>
+                }
+            }
+
+        }
     },
     {
         title: 'Резервный (IP:PORT)',
         dataIndex: 'second',
         key: 'second',
-        render: (text) => (
-           <Input value={text}/>
-
-        )
-    },
-    {
-        title: 'Действия',
-        dataIndex: 'actions',
-        key: 'actions',
-        render: () => (
-            <Flex vertical={false} gap={'small'}>
-            {
-                editActions.map((action, index) => {
-                    return <div key={index} onClick={() => onActionBtnClickHandler(action)}>{action.item}</div>;
-                })
+        render: (text, record) => {
+            if (record.id === store.getState().profile.editableRow) {
+                return (
+                    <Form.Item name='second'>
+                        <Input value={text}
+                            placeholder='Введите резервный IP'/>
+                    </Form.Item>
+                )
+            } else {
+                if (text === null) {
+                    return <div className='text text_color_inactive'>укажите резерв</div>
+                } else {
+                    return <div className='text'>{text}</div>
+                }
             }
-            </Flex>
-        )
-    },
+
+        }
+    }
 ];
