@@ -1,0 +1,6 @@
+FastAPI
+pydantic
+typing
+contextlib
+pydantic-settings
+
