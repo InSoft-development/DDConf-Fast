@@ -92,6 +92,30 @@ def make_file(data: dict, fname="/etc/dd/opcua/config.ini":str) -> str:
 	return "success"
 
 
-def fetch_file() -> dict:
+def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini": str) -> dict:
 	#TODO
-	return {"restore":True, "servers":[]}
+	
+	try:
+		if Path(path).is_file():
+			cont = Path(path).read_text().strip().split('\n')
+			block = ""
+			sercount = -1
+			subcount = -1
+			for line in cont:
+				if 'receiver' in line and line.strip()[0] != '#':
+					block = "receiver"
+				elif "server" in line and line.strip()[0] !='#':
+					sercount += 1
+					block = "server"
+				elif "subscription" in line and line.strip()[0] != "#":
+					subcount += 1
+					block = "subscription"
+			
+	except Exception as e:
+		msg = f"DDConf.opcua.fetch_file: error fetching file ({}); details: \n{traceback.format_exc()}\n"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		print(msg)
+		raise RuntimeError(e)
+	else:
+		
+		return {"restore":True, "servers":[]}
