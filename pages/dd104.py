@@ -55,7 +55,7 @@ def create_inis(data: list):
 				if not proc['main']:
 					proc['main'] = proc['second']
 					proc['second'] = None
-				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.DD['RECVADDR']}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
+				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.RECVADDR}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
 				if proc['second']:
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
@@ -100,7 +100,7 @@ def save_ld(filename: str, data : dict) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		(Path(DD104_Defaults.LOADOUTDIR)/filename).write_text(json.dumps(data))
+		(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
 		return "success"
 	except Exception as e:
 		msg = f"dd104.save_ld: an error occured: {str(e)}"
@@ -113,8 +113,8 @@ def apply_ld(filename: str) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		if (Path(DD104_Defaults.LOADOUTDIR)/filename).is_file():
-			data = json.loads((Path(DD104_Defaults.LOADOUTDIR)/filename).read_text())
+		if (Path(Defaults.DD["LOADOUTDIR"])/filename).is_file():
+			data = json.loads((Path(Defaults.DD["LOADOUTDIR"])/filename).read_text())
 			if type(data) == list:
 				rm_inis()
 				create_inis(data)
@@ -123,9 +123,11 @@ def apply_ld(filename: str) -> None:
 				create_inis([data])
 			else:
 				raise TypeError(f"Error while reading {filename}: data is corrupted or invalid, data type received ({type(data)}) is not in [list, dict]")
-			return "success"
+			
 		else:
 			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
+		(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").symlink_to(Defaults.DD["LOADOUTDIR"]+'/'+filename)
+		return "success"
 	except Exception as e:
 		msg = f"dd104.apply_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
@@ -168,7 +170,7 @@ def process_handle(PID: int, OP:str) -> int:
 				raise RuntimeError(std.stderr)
 			return get_status(PID)
 		else:
-			raise TypeError(f"dd104.process_handle: PID must be a single instance or a list of int, str, got {type(PID)}.")
+			raise TypeError(f"dd104.process_handle: PID must be a single instance of int, str, got {type(PID)}.")
 	except RuntimeError:
 		return -1
 	except Exception as e:

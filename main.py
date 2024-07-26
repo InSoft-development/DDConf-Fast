@@ -18,6 +18,7 @@ from watchdog.events import FileSystemEventHandler
 # from pages.router import router as router_pages
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
+import pages.opcua as OPCUA
 # import pages.login as Login
 import models as Models
 
@@ -225,7 +226,10 @@ def dd104_post(REQ: Models.POST) -> dict:
 					print(f"dd104.profile_apply: Error: {tb}")
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
-					errs.append(msg)
+					if type(errs) == list:
+						errs.append(msg)
+					elif type(errs) == type(None):
+						errs = [msg]
 			else:
 				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
 				data = None
@@ -247,6 +251,29 @@ def dd104_post(REQ: Models.POST) -> dict:
 		tb=traceback.format_exc().strip().split('\n')[1::]
 		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {tb}")
 		print(f"DDConf.main.dd104_post: ERROR: {tb}")
+		return {"result":None, "error":str(e)}
+	else:
+		return {"result": data, "error":None if not errs else errs}
+
+
+#TODO
+@app.post('/opcua')
+def handle_opcua(REQ:Models.POST):
+	
+	data = {}
+	errs = []
+	
+	try:
+		
+		if REQ.method == 'post_ua':
+			data = OPCUA.make_file(REQ.params, f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
+		elif REQ.method == 'fetch_ua':
+			data = OPCUA.fetch_file(f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
+		
+	except Exception as e:
+		tb=traceback.format_exc().strip().split('\n')[1::]
+		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.handle_opcua: ERROR: {tb}")
+		print(f"DDConf.main.handle_opcua: ERROR: {tb}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
