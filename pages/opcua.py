@@ -67,7 +67,7 @@ def parse_subs(subs:list) -> dict:
 				
 				if int(sub["items"][0].split(";")[0]) != _lbi + 1:
 					#TODO
-					raise ValueError(f"index out of order; LBI == {_lbi}, first line index == {int(sub["items"][-1].split(";")[0])} !")
+					raise ValueError(f'index out of order; LBI == {_lbi}, first line index == {int(sub["items"][-1].split(";")[0])} !')
 				
 				if not validate_numbers(sub["items"]):
 					try:
