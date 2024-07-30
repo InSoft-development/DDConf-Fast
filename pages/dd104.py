@@ -84,7 +84,7 @@ def create_inis(data: list):
 		print(f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {traceback.print_exception(e)}\n")
 
 
-def create_services(count:ini):
+def create_services(count:int):
 	try:
 		
 		for i in range(1, count+2):
