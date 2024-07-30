@@ -223,4 +223,4 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 		raise RuntimeError(e)
 	else:
 		
-		return {"restore":True, "servers":[]}
+		return data
