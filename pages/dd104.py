@@ -162,7 +162,7 @@ def apply_ld(filename: str) -> None:
 			
 		else:
 			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
-		(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").symlink_to(Defaults.DD["LOADOUTDIR"]+'/'+filename)
+		(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").symlink_to(Defaults.DD["LOADOUTDIR"]+filename)
 		return "success"
 	except Exception as e:
 		msg = f"dd104.apply_ld: an error occured: {str(e)}"
