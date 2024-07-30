@@ -181,7 +181,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 			if DD104.get_active_ld():
 				data = DD104.get_processes(DD104.get_active_ld())
 				for item in data:
-					item['status'] = DD104.get_status(data.index(item)) #WARNING this implies there are no duplicate entries, but there's no check for that in ld creation, beware
+					item['status'] = DD104.get_status(data.index(item)+1) #WARNING this implies there are no duplicate entries, but there's no check for that in ld creation, beware
 				print(f"dd104.fetch_table({DD104.get_active_ld()}): {data}")
 			
 			else:
