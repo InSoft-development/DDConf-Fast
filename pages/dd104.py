@@ -37,11 +37,25 @@ def rm_inis():
 		dest = Path(Defaults.DD["INIDIR"])
 		for ini in listdir(dest):
 			(dest/ini).unlink()
-			syslog.syslog(syslog.LOG_INFO, f"dd104.rm_inis: {str(dest/ini)} file was removed")
-			print(f"dd104.rm_inis: {str(dest/ini)} file was removed")
+			syslog.syslog(syslog.LOG_INFO, f"ddconf.dd104.rm_inis: {str(dest/ini)} file was removed")
+			print(f"ddconf.dd104.rm_inis: {str(dest/ini)} file was removed")
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"dd104.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
-		print(f"dd104.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
+		print(f"ddconf.dd104.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+
+
+def rm_services():
+	try:
+		dest = Path('/etc/systemd/system/')
+		for svc in listdir(dest):
+			if 'dd104' in svc:
+				(dest/svc).unlink()
+				syslog.syslog(syslog.LOG_INFO, f"ddconf.dd104.rm_services: {str(dest/svc)} file was removed")
+				print(f"ddconf.dd104.rm_services: {str(dest/svc)} file was removed")
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.rm_services: Error while removing file:  {str(e)}")
+		print(f"ddconf.dd104.rm_services: Error while removing file:  {traceback.print_exception(e)}\n")
+
 
 
 #TODO
@@ -68,6 +82,24 @@ def create_inis(data: list):
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
 		print(f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {traceback.print_exception(e)}\n")
+
+
+def create_services(count:int):
+	try:
+		
+		for i in range(1, count+2):
+			msg = f"[Unit]\nDescription=dd104client\nAfter=hasplmd.service\n[Service]\nKillMode=mixed\nExecStartPre=/bin/sleep 5\nExecStart=/opt/dd/{'dd104client/dd104client' if _mode=='tx' else 'dd104server/dd104server'} -c {Defaults.DD['INIDIR']}dd104{'client' if _mode=='tx' else 'server'}{i}.ini\nRestart=always\nUser=dd\nGroup=dd\n\n[Install]\nWantedBy=multi-user.target"
+			
+			stat = Path(f'/etc/systemd/system/{"dd104client" if _mode=="tx" else "dd104server"}{i}.service').write_text(msg)
+			
+			msg = f"ddconf.dd104.create_services: Created a file at /etc/systemd/system/dd104{'client' if _mode=='tx' else 'server'}{i}.service. "
+			syslog.syslog(syslog.LOG_INFO, msg)
+			print(msg)
+		
+		
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_services: couldn't create services; Details:  {str(e)}\n")
+		print(f"dd104.create_services: couldn't create services; Details:  {traceback.print_exception(e)}\n")
 
 
 def get_status(PID: int) -> int:
@@ -117,16 +149,25 @@ def apply_ld(filename: str) -> None:
 			data = json.loads((Path(Defaults.DD["LOADOUTDIR"])/filename).read_text())
 			if type(data) == list:
 				rm_inis()
+				rm_services()
 				create_inis(data)
+				create_services(len(data))
 			elif  type(data) == dict:
 				rm_inis()
+				rm_services()
 				create_inis([data])
+				create_services(1)
 			else:
 				raise TypeError(f"Error while reading {filename}: data is corrupted or invalid, data type received ({type(data)}) is not in [list, dict]")
 			
 		else:
 			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
-		(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").symlink_to(Defaults.DD["LOADOUTDIR"]+'/'+filename)
+		
+		if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").is_file():
+			(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").unlink()
+		
+		(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").symlink_to(Defaults.DD["LOADOUTDIR"]+filename)
+		
 		return "success"
 	except Exception as e:
 		msg = f"dd104.apply_ld: an error occured: {str(e)}"

@@ -1,4 +1,4 @@
-import syslog, subprocess, time, tarfile, json, traceback
+import syslog, subprocess, time, tarfile, json, traceback, re
 from shutil import move, copy2, unpack_archive, make_archive
 from pathlib import Path
 from random import randrange
@@ -67,7 +67,7 @@ def parse_subs(subs:list) -> dict:
 				
 				if int(sub["items"][0].split(";")[0]) != _lbi + 1:
 					#TODO
-					raise ValueError(f"index out of order; LBI == {_lbi}, first line index == {int(sub["items"][-1].split(";")[0])} !")
+					raise ValueError(f'index out of order; LBI == {_lbi}, first line index == {int(sub["items"][-1].split(";")[0])} !')
 				
 				if not validate_numbers(sub["items"]):
 					try:
@@ -87,35 +87,140 @@ def parse_subs(subs:list) -> dict:
 		return {"result":None, "error":f"opcua.parse_subs: {str(e)}, traceback: {tb}"}
 
 
-def make_file(data: dict, fname="/etc/dd/opcua/config.ini":str) -> str:
+def validate_url(url:str) -> str:
+	regex = re.compile(
+		r'^(?:http|ftp)s?://' # http:// or https://
+		r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+		r'localhost|' #localhost...
+		r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+		r'(?::\d+)?' # optional port
+		r'([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|'          # 1:2:3:4:5:6:7:8
+		r'([0-9a-fA-F]{1,4}:){1,7}:|'                         # 1::                              1:2:3:4:5:6:7::
+		r'([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|'         # 1::8             1:2:3:4:5:6::8  1:2:3:4:5:6::8
+		r'([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|'  # 1::7:8           1:2:3:4:5::7:8  1:2:3:4:5::8
+		r'([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|'  # 1::6:7:8         1:2:3:4::6:7:8  1:2:3:4::8
+		r'([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|'  # 1::5:6:7:8       1:2:3::5:6:7:8  1:2:3::8
+		r'([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|'  # 1::4:5:6:7:8     1:2::4:5:6:7:8  1:2::8
+		r'[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|'       # 1::3:4:5:6:7:8   1::3:4:5:6:7:8  1::8  
+		r':((:[0-9a-fA-F]{1,4}){1,7}|:)|'                     # ::2:3:4:5:6:7:8  ::2:3:4:5:6:7:8 ::8       ::     
+		r'fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|'     # fe80::7:8%eth0   fe80::7:8%1     (link-local IPv6 addresses with zone index)
+		r'::(ffff(:0{1,4}){0,1}:){0,1}'
+		r'((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}'
+		r'(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|'          # ::255.255.255.255   ::ffff:255.255.255.255  ::ffff:0:255.255.255.255  r'(IPv4-mapped IPv6 addresses and IPv4-translated addresses)
+		r'([0-9a-fA-F]{1,4}:){1,4}:'
+		r'((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}'
+		r'(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])'           # 2001:db8:3:4::192.0.2.33  64:ff9b::192.0.2.33 (IPv4-Embedded IPv6 Address)
+		r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+	
+	if 'opc.tcp://' in url:
+		url = url.strip()[10::]
+	
+	
+	hostflag = False
+	try:
+		lines = Path("/etc/hosts").read_text().strip().split('\n')
+		for line in lines:
+			if ':' in url:
+				url = url.split(':')[0]
+			if url in line:
+				if not ('#' in line and line.index('#')<line.index('url')):  
+					hostflag = True
+	except Exception:
+		pass
+	
+	return "opc.tcp://"+url if re.match(regex, url) or hostflag else None
+	
+
+
+def make_file(data: dict, fname="/etc/dd/opcua/config.ini") -> str:
 	#TODO
 	return "success"
 
 
-def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini": str) -> dict:
+def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini") -> dict:
 	#TODO
 	
 	try:
+		data = {"restore":None, "servers": [], "servers_len":None}
 		if Path(path).is_file():
 			cont = Path(path).read_text().strip().split('\n')
 			block = ""
 			sercount = -1
 			subcount = -1
 			for line in cont:
-				if 'receiver' in line and line.strip()[0] != '#':
-					block = "receiver"
-				elif "server" in line and line.strip()[0] !='#':
-					sercount += 1
-					block = "server"
-				elif "subscription" in line and line.strip()[0] != "#":
-					subcount += 1
-					block = "subscription"
-			
+				if line:
+					if '#' in line:
+						line = line[0:line.index('#'):]
+					if 'receiver' in line:
+						block = "receiver"
+					elif "server" in line:
+						sercount += 1
+						block = "server"
+						data["servers"].append(dict())
+					elif "subscription" in line:
+						subcount += 1
+						block = "subscription"
+						if "subscriptions" not in data["servers"][sercount].keys():
+							data["servers"][sercount]["subscriptions"] = []
+						data["servers"][sercount]["subscriptions"].append(dict)
+					
+					if block == "receiver":
+						if "restore" in line:
+							data["restore"] = bool(int(line.split('=')[1]))
+					elif block == "server":
+						if "id" in line:
+							data["servers"][sercount]["id"] = line.split('=')[1]
+						elif "url1" in line:
+							data["servers"][sercount]["main"] = validate_url(line.split("=")[1])
+						
+						elif "url2" in line:
+							data["servers"][sercount]["second"] = validate_url(line.split("=")[1])
+						
+						elif "usertokentype" in line:
+							data["servers"][sercount]["utoken_type"] = line.split('=')[1]
+							data["servers"][sercount]["utoken_data"] = None if line.split('=')[1] == "anonymous" else {}
+						
+						elif "username" in line:
+							data["servers"][sercount]["utoken_data"]["username"] = line.split("=")[1]
+						
+						elif "password" in line:
+							data["servers"][sercount]["utoken_data"]["password"] = line.split("=")[1]
+						
+						#TODO certs should be files
+# 						elif "certificate" in line:
+# 							data["servers"][sercount]["utoken_data"]["cert"] = line.split("=")[1]
+# 						
+# 						elif "privatekey" in line:
+# 							data["servers"][sercount]["utoken_data"]["pkey"] = line.split("=")[1]
+						
+						elif "secpolicy" in line:
+							data["servers"][sercount]["secpolicy"] = line.split("=")[1]
+						
+						elif "mesmode" in line:
+							data["servers"][sercount]["mesmode"] = line.split("=")[1]
+						
+					elif block == "subscription":
+						
+						if "id" in line:
+							data["servers"][sercount]["subscriptions"][subcount]["id"] = line.split("=")[1]
+						
+						if "interval" in line:
+							data["servers"][sercount]["subscriptions"][subcount]["interval"] = line.split("=")[1]
+						
+						if "items" in line:
+							block = "items"
+							data["servers"][sercount]["subscriptions"][subcount]["items"] = []
+					
+					elif block == "items":
+						data["servers"][sercount]["subscriptions"][subcount]["items"].append(line)
+						
+				
+				
 	except Exception as e:
-		msg = f"DDConf.opcua.fetch_file: error fetching file ({}); details: \n{traceback.format_exc()}\n"
+		msg = f"DDConf.opcua.fetch_file: error fetching file ({path}); details: \n{traceback.format_exc()}\n"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		print(msg)
 		raise RuntimeError(e)
 	else:
 		
-		return {"restore":True, "servers":[]}
+		return data

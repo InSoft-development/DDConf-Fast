@@ -173,8 +173,21 @@ def dd104_post(REQ: Models.POST) -> dict:
 			data["active"] = DD104.get_active_ld()
 			data["loadout_names"] = DD104.list_ld()
 			
-			print(f"/dd104.fetch_initial: {data}")
+			print(f"dd104.fetch_initial: {data}")
 			
+		
+		elif REQ.method == "fetch_table":
+			
+			if DD104.get_active_ld():
+				data = DD104.get_processes(DD104.get_active_ld())
+				for item in data:
+					item['status'] = DD104.get_status(data.index(item)+1) #WARNING this implies there are no duplicate entries, but there's no check for that in ld creation, beware
+				print(f"dd104.fetch_table({DD104.get_active_ld()}): {data}")
+			
+			else:
+				print("dd104.fetch_table: there is no active loadout!")
+				data = None
+				errs = None
 			
 		
 		elif REQ.method == "process_handle":
@@ -275,8 +288,8 @@ def handle_opcua(REQ:Models.POST):
 		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.handle_opcua: ERROR: {tb}")
 		print(f"DDConf.main.handle_opcua: ERROR: {tb}")
 		return {"result":None, "error":str(e)}
-	else:
-		return {"result": data, "error":None if not errs else errs}
+	
+	return {"result": data, "error":None if not errs else errs}
 
 
 #TODO very jank, but better already
