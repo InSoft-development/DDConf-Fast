@@ -217,7 +217,7 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 				
 				
 	except Exception as e:
-		msg = f"DDConf.opcua.fetch_file: error fetching file ({}); details: \n{traceback.format_exc()}\n"
+		msg = f"DDConf.opcua.fetch_file: error fetching file ({path}); details: \n{traceback.format_exc()}\n"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		print(msg)
 		raise RuntimeError(e)
