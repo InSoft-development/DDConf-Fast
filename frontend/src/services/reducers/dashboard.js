@@ -15,7 +15,6 @@ import {
 const initialState = {
     serial: '',
     license: '',
-    availableProtocols: [],
     devices: [],
 
     deviceFeaturesRequest: false,
@@ -26,9 +25,6 @@ const initialState = {
     deviceNetRequestSuccess: false,
     deviceNetRequestFailed: false,
 
-    availableProtocolsRequest: false,
-    availableProtocolsRequestSuccess: false,
-    availableProtocolsRequestFailed: false,
 }
 
 export const deviceReducer = (state = initialState, action) => {
@@ -82,31 +78,6 @@ export const deviceReducer = (state = initialState, action) => {
                 deviceNetRequest: false,
                 deviceNetRequestSuccess: false,
                 deviceNetRequestFailed: true,
-            }
-        }
-        case GET_AVAILABLE_PROTOCOLS: {
-            return {
-                ...state,
-                availableProtocolsRequest: true,
-                availableProtocolsRequestSuccess: false,
-                availableProtocolsRequestFailed: false,
-            }
-        }
-        case GET_AVAILABLE_PROTOCOLS_SUCCESS: {
-            return {
-                ...state,
-                availableProtocolsRequest: false,
-                availableProtocolsRequestSuccess: true,
-                availableProtocolsRequestFailed: false,
-                availableProtocols: action.payload,
-            }
-        }
-        case GET_AVAILABLE_PROTOCOLS_FAILED: {
-            return {
-                ...state,
-                availableProtocolsRequest: false,
-                availableProtocolsRequestSuccess: false,
-                availableProtocolsRequestFailed: true,
             }
         }
         default: {

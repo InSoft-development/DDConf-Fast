@@ -93,16 +93,14 @@ const Dashboard = () => {
                 </Flex>
             </div>
             <div className='mt-20'>
-                <div>
+                {/* <div>
                     <div className='text_type_main'>Протоколы:</div>
                     <Flex vertical={true}>
                         {availableProtocols?.map(protocol => (
                             <div className='ml-8 mt-4'>{protocol.name}</div>
                         ))}
-                        {/* <div className='ml-8 mt-4'>МЭК 104</div>
-                        <div className='ml-8 mt-4'>OPC UA</div> */}
                     </Flex>
-                </div>
+                </div> */}
             </div>
             <div className='mt-20'>
                 <div className='text_type_main'>Сетевые интерфейсы:</div>

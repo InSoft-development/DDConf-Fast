@@ -47,18 +47,3 @@ export const getDevicesNet = () => (dispatch) => {
             dispatch({type: GET_DEVICES_NET_FAILED})
         })
 }
-
-export const getAvailableProtocols = () => (dispatch) => {
-    dispatch({type: GET_AVAILABLE_PROTOCOLS});
-    request('dashboard', 'fetch_protocols')
-        .then(res => checkResponce(res))
-        .then(res => {
-            dispatch({
-                type: GET_AVAILABLE_PROTOCOLS_SUCCESS,
-                payload: res.result,
-            })
-        })
-        .catch(error => {
-            dispatch({type: GET_AVAILABLE_PROTOCOLS_FAILED})
-        })
-}

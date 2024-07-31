@@ -4,7 +4,6 @@ import Sidebar from '../sidebar/sidebar';
 import { Outlet } from 'react-router-dom';
 
 
-
 const Layout = () => {
 
     const {sidebarIsOpen} = useSelector(state => state.modals);

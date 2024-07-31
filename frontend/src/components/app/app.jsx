@@ -1,13 +1,16 @@
 import { useDispatch } from 'react-redux';
-import Layout from '../layout/layout';
 import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
 // pages
+import Layout from '../layout/layout';
+
 import SignIn from '../../pages/sign-in/sign-in';
 import Dd104 from '../../pages/dd104/dd104';
 import Dashboard from '../../pages/dashboard/dashboard';
 import ProfileEditor from '../../pages/profile-editor/profile-editor';
-import { useEffect } from 'react';
+// services
 import {getDeviceFeatures, getAvailableProtocols} from '../../services/actions/dashboard'
+import { getProfiles } from '../../services/actions/profile';
 
 
 const App = () => {
@@ -15,8 +18,8 @@ const App = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(getProfiles());
         dispatch(getDeviceFeatures())
-        dispatch(getAvailableProtocols())
     }, [])
 
     return (

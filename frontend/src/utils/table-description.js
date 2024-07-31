@@ -3,10 +3,18 @@ import {
     PlayCircleOutlined,
     PauseCircleOutlined,
     ReloadOutlined,
-    LoadingOutlined
+    LoadingOutlined,
+    DeleteOutlined,
+    FormOutlined
 } from '@ant-design/icons';
 import { store } from '../services/store';
 import { changeProсess } from '../services/actions/profile';
+import {  
+    DELTE_PROCESS_BY_ID, 
+    RESET_EDITABLE_ROW_ID,
+    SET_EDITABLE_COMMENT
+} from '../services/actions/profile';
+import { OPEN_COMMENT_EDITOR } from '../services/actions/modals';
 
 
 const actions = [
@@ -140,7 +148,23 @@ export const columns = [
     },
 ];
 
+const onDeleteBtnClickHandler = (record) => {
+    store.dispatch({
+        type: DELTE_PROCESS_BY_ID,
+        payload: record.id
+    })
+    store.dispatch({type: RESET_EDITABLE_ROW_ID})
+}
 
+const onCommentEditBtnClickHandler = (record) => {
+    store.dispatch({
+        type: OPEN_COMMENT_EDITOR
+    })
+    store.dispatch({
+        type: SET_EDITABLE_COMMENT,
+        payload: record.comment
+    })
+}
 
 export const editColumns = [
     {
@@ -160,7 +184,7 @@ export const editColumns = [
                 return (
                     <Form.Item name='main'>
                         <Input value={text}
-                            placeholder='Введите основной IP'/>
+                            placeholder='Введите основной IP' />
                     </Form.Item>
                 )
             } else {
@@ -182,7 +206,7 @@ export const editColumns = [
                 return (
                     <Form.Item name='second'>
                         <Input value={text}
-                            placeholder='Введите резервный IP'/>
+                            placeholder='Введите резервный IP' />
                     </Form.Item>
                 )
             } else {
@@ -194,5 +218,28 @@ export const editColumns = [
             }
 
         }
-    }
+    },
+    {
+        title: 'Действия',
+        dataIndex: 'actions',
+        key: 'actions',
+        render: (_, record) => (
+            <Flex style={{width: 60}} justify='space-between'>
+                <DeleteOutlined
+                    style={{ fontSize: 20, cursor: 'pointer' }}
+                    onClick={e => {
+                        e.stopPropagation();
+                        onDeleteBtnClickHandler(record)
+                    }}
+                />
+                <FormOutlined
+                    style={{fontSize: 20, cursor: 'pointer'}}
+                    onClick={e => {
+                        onCommentEditBtnClickHandler(record)
+                    }}
+                />
+            </Flex>
+
+        )
+    },
 ];

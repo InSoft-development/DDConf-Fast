@@ -114,6 +114,7 @@ html {margin-right: calc(-1 * (100vw - 100%));}
     color: #fff;
 }
 
+.btn-outlined{color: black;}
 .btn-green{background-color: var(--status-success);}
 .btn-blue{background-color: var(--blue);}
 .btn-purple{background-color: var(--purple);}

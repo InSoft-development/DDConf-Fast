@@ -1,10 +1,14 @@
 import {
     OPEN_SIDEBAR,
-    CLOSE_SIDEBAR
+    CLOSE_SIDEBAR,
+    OPEN_COMMENT_EDITOR,
+    CLOSE_COMMENT_EDITOR
 } from '../actions/modals';
 
 const initialState = {
     sidebarIsOpen: false,
+    commentEditorIsOpen: false,
+
 }
 
 export const modalsReducer = (state = initialState, action) => {
@@ -19,6 +23,18 @@ export const modalsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 sidebarIsOpen: false,
+            }
+        }
+        case OPEN_COMMENT_EDITOR: {
+            return {
+                ...state,
+                commentEditorIsOpen: true,
+            }
+        }
+        case CLOSE_COMMENT_EDITOR: {
+            return {
+                ...state,
+                commentEditorIsOpen: false,
             }
         }
         default: {

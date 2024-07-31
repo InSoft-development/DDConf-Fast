@@ -1,8 +1,8 @@
 .sidebar{
     width: 100vw;
-    height: 100wh;
+    min-height: 100vh;
     position: absolute;
-    z-index: 10;
+    z-index: 200;
     background-color: #7a7a7a62;
     /* backdrop-filter: blur(2px); */
     opacity: 0;

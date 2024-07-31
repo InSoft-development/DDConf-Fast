@@ -3,9 +3,13 @@ import {
     PROFILE_REQUEST_SUCCESS,
     PROFILE_REQUEST_FAILED,
 
-    GET_PROCESSES,
-    GET_PROCESSES_SUCCESS,
-    GET_PROCESSES_FAILED,
+    GET_ACTIVE_TABLE,
+    GET_ACTIVE_TABLE_SUCCESS,
+    GET_ACTIVE_TABLE_FAILED,
+
+    GET_TABLE_BY_PROFILE_NAME,
+    GET_TABLE_BY_PROFILE_NAME_SUCCESS,
+    GET_TABLE_BY_PROFILE_NAME_FAILED,
 
     CHANGE_PROFILE,
     CHANGE_PROFILE_SUCCESS,
@@ -14,26 +18,35 @@ import {
     CHANGE_PROCESS_STATUS,
     CHANGE_PROCESS_STATUS_SUCCESS,
     CHANGE_PROCESS_STATUS_FAILED,
+
+    SAVE_PROFILE,
+    SAVE_PROFILE_SUCCESS,
+    SAVE_PROFILE_FAILED,
     
     ADD_NEW_PROCESS,
     SET_EDITABLE_ROW_ID,
-    CHANGE_TABLE_CELL
+    CHANGE_TABLE_CELL,
+    SET_EDITABLE_PROFILE,
+    DELTE_PROCESS_BY_ID,
+    RESET_EDITABLE_ROW_ID,
+    SET_EDITABLE_COMMENT,
+    CHANGE_TABLE_COMMENT
 
 
 } from '../actions/profile';
 
 const initialState = {
     activeProfile: undefined,
-    processes: [],
+    activeTable: [],
     availableProfiles: [],
 
     profileRequest: false,
     profileSuccess: false,
     profileFailed: false,
 
-    processRequest: false,
-    processRequestSuccess: false,
-    processRequestFailed: false,
+    activeTableRequest: false,
+    activeTableRequestSuccess: false,
+    activeTableRequestFailed: false,
 
     // active profile changing not inner data
     nextProfile: null,
@@ -44,8 +57,17 @@ const initialState = {
     // editable page
 
     editableProfile: null,
-    editableProcesses: [],
+    editableTable: [],
     editableRow: null,
+    editableComment: '',
+
+    editableTableRequest: false,
+    editableTableRequestSuccess: false,
+    editableTableRequestFailed: false,
+
+    saveProfileRequest: false,
+    saveProfileRequestSuccess: false,
+    saveProfileRequestFailed: false,
 }
 
 export const profileReducer = (state = initialState, action) => {
@@ -78,6 +100,36 @@ export const profileReducer = (state = initialState, action) => {
                 profileFailed: true,
             }
         }
+        case GET_ACTIVE_TABLE: {
+            return {
+                ...state,
+                activeTableRequest: true,
+                activeTableRequestSuccess: false,
+                activeTableRequestFailed: false,
+            }
+        }
+        case GET_ACTIVE_TABLE_SUCCESS: {
+            return {
+                ...state,
+                activeTableRequest: false,
+                activeTableRequestSuccess: true,
+                activeTableRequestFailed: false,
+                activeTable: action.payload.map((record, index) => {
+                    return {
+                        ...record,
+                        id: index
+                    }
+                })
+            }
+        }
+        case GET_ACTIVE_TABLE_FAILED: {
+            return {
+                ...state,
+                activeTableRequest: false,
+                activeTableRequestSuccess: false,
+                activeTableRequestFailed: true,
+            }
+        }
         case CHANGE_PROFILE: {
             return {
                 ...state,
@@ -106,51 +158,11 @@ export const profileReducer = (state = initialState, action) => {
                 nextProfile: null,
             }
         }
-        case GET_PROCESSES: {
-            return {
-                ...state,
-                processRequest: true,
-                processRequestSuccess: false,
-                processRequestFailed: false,
-            }
-        }
-        case GET_PROCESSES_SUCCESS: {
-
-            const {processes, editable} = action.payload;
-
-            if(editable){
-                return {
-                    ...state,
-                    processRequest: false,
-                    processRequestSuccess: true,
-                    processRequestFailed: false,
-                    editableProcesses: processes,
-                }
-            }else{
-                return {
-                    ...state,
-                    processRequest: false,
-                    processRequestSuccess: true,
-                    processRequestFailed: false,
-                    processes: processes
-                }
-            }
-
-
-        }
-        case GET_PROCESSES_FAILED: {
-            return {
-                ...state,
-                processRequest: false,
-                processRequestSuccess: false,
-                processRequestFailed: true,
-            }
-        }
         case CHANGE_PROCESS_STATUS: {
             const processId = action.payload;
 
             if (Array.isArray(processId)) {
-                const changedProcesses = state.processes.map(process => {
+                const changedProcesses = state.activeTable.map(process => {
                     return {
                         ...process,
                         status: 'loading'
@@ -160,11 +172,11 @@ export const profileReducer = (state = initialState, action) => {
 
                 return {
                     ...state,
-                    processes: changedProcesses,
+                    activeTable: changedProcesses,
                 }
 
             } else {
-                const changedProcesses = state.processes.map(process => {
+                const changedProcesses = state.activeTable.map(process => {
                     if (process.id === processId) {
                         return {
                             ...process,
@@ -176,8 +188,7 @@ export const profileReducer = (state = initialState, action) => {
 
                 return {
                     ...state,
-                    processes: changedProcesses,
-
+                    activeTable: changedProcesses,
                 }
             }
 
@@ -188,7 +199,7 @@ export const profileReducer = (state = initialState, action) => {
             if (Array.isArray(action.payload)) {
 
                 const newProcesses = [];
-                state.processes.forEach((process) => {
+                state.activeTable.forEach((process) => {
 
                     let isProcessConsist = false;
 
@@ -211,14 +222,14 @@ export const profileReducer = (state = initialState, action) => {
 
                 return {
                     ...state,
-                    processes: newProcesses
+                    activeTable: newProcesses
 
                 }
 
             } else {
                 const { pid, status } = action.payload;
 
-                const changedProcesses = state.processes.map((process) => {
+                const changedProcesses = state.activeTable.map((process) => {
                     if (process.id === pid) {
                         return {
                             ...process,
@@ -230,7 +241,7 @@ export const profileReducer = (state = initialState, action) => {
 
                 return {
                     ...state,
-                    processes: changedProcesses
+                    activeTable: changedProcesses
                 }
             }
 
@@ -242,7 +253,7 @@ export const profileReducer = (state = initialState, action) => {
         }
         case ADD_NEW_PROCESS: {
 
-            const newProcesses = [...state.editableProcesses];
+            const newProcesses = [...state.editableTable];
 
             newProcesses.push({
                 main: null,
@@ -251,11 +262,23 @@ export const profileReducer = (state = initialState, action) => {
                 id: newProcesses.length
             })
 
-            console.log(newProcesses);
+            return {
+                ...state,
+                editableTable: newProcesses
+            }
+        }
+        case DELTE_PROCESS_BY_ID: {
+
+            const newTable = [...state.editableTable].filter((_, id) => id !== action.payload)
 
             return {
                 ...state,
-                editableProcesses: newProcesses
+                editableTable: newTable.map((record, id) => {
+                    return {
+                        ...record,
+                        id
+                    }
+                })
             }
         }
         case SET_EDITABLE_ROW_ID: {
@@ -271,9 +294,8 @@ export const profileReducer = (state = initialState, action) => {
             const {field, value} = action.payload;
             const currentEditableRow = state.editableRow;
 
-            const newProcesses = [...state.editableProcesses].map((process) => {
+            const newProcesses = [...state.editableTable].map((process) => {
                 if(process.id === currentEditableRow){
-                    console.log(process);
                     return {
                         ...process,
                         [field]: value,
@@ -283,11 +305,84 @@ export const profileReducer = (state = initialState, action) => {
                 }
             })
 
-            console.log(newProcesses);
-
             return {
                 ...state,
-                editableProcesses: newProcesses
+                editableTable: newProcesses
+            }
+        }
+        case GET_TABLE_BY_PROFILE_NAME: {
+            return {
+                ...state,
+                editableTableRequest: true,
+                editableTableRequestSuccess: false,
+                editableTableRequestFailed: false,
+            }
+        }
+        case GET_TABLE_BY_PROFILE_NAME_SUCCESS: {
+            return {
+                ...state,
+                editableTableRequest: false,
+                editableTableRequestSuccess: true,
+                editableTableRequestFailed: false,
+                editableTable: action.payload
+            }
+        }
+        case GET_TABLE_BY_PROFILE_NAME_FAILED: {
+            return {
+                ...state,
+                editableTableRequest: false,
+                editableTableRequestSuccess: false,
+                editableTableRequestFailed: true,
+            }
+        }
+        case SET_EDITABLE_PROFILE: {
+            return {
+                ...state,
+                editableProfile: action.payload,
+            }
+        }
+        case RESET_EDITABLE_ROW_ID: {
+            return {
+                ...state,
+                editableRow: null
+            }
+        }
+        case SET_EDITABLE_COMMENT: {
+            return {
+                ...state,
+                editableComment: action.payload,
+            }
+        }
+        case CHANGE_TABLE_COMMENT: {
+            return {
+                ...state,
+                editableTable: [...state.editableTable].map(record => {
+                    if(record.id === state.editableRow){
+                        return {
+                            ...record,
+                            comment: action.payload
+                        }
+                    }else{
+                        return record
+                    }
+                })
+            }
+            
+            
+        } 
+        case SAVE_PROFILE: {
+            return {
+                ...state,
+            }
+        }
+        case SAVE_PROFILE_SUCCESS: {
+            return {
+                ...state,
+            }
+        }
+        case SAVE_PROFILE_FAILED: {
+            return {
+                ...state,
             }
         }
         default: {
