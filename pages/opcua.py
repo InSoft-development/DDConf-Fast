@@ -133,7 +133,54 @@ def validate_url(url:str) -> str:
 
 
 def make_file(data: dict, fname="/etc/dd/opcua/config.ini") -> str:
-	#TODO
+	#WARNING god help you who reads this
+	#TODO certs
+	
+	try:
+		if Path(fname).is_file():
+			Path(fname).unlink()
+		msg = f'''receiver
+address=192.168.100.10
+port=48110
+
+
+restore={data["restore"]}
+
+'''
+		for sv in data['servers']:
+			msg = msg + f'''server
+id = {data["servers"].index(sv)+1}
+url1={sv["url1"]}
+{"url2="+sv["url2"] if "url2" in sv and sv["url2"] else '# no url2'}
+usertokentype={sv['utoken_type']}
+{'username='+sv["utoken_data"]["username"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous' else "#no certs rn, sorry"}
+{'password='+sv["utoken_data"]["password"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous' else "#no certs rn, sorry"}
+
+secpolicy={sv["secpolicy"]}
+mesmode={sv["mesmode"]}
+'''
+			for sub in sv["subscriptions"]:
+				msg = msg + f'''
+subscription
+id={sv["subscriptions"].index(sub)+1}
+interval={sub['interval']}
+items
+{sub["items"]}
+
+'''
+		
+		Path(fname).write_text(msg)
+		print(f"ddconf.opcua.make_file: file {fname} was written. ")
+		syslog.syslog(syslog.LOG_INFO, f"ddconf.opcua.make_file: file {fname} was written. ")
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
+		print(f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
+		print(f"traceback:", traceback.format_exc())
+		
+		
+		
+	
+	
 	return "success"
 
 
@@ -141,7 +188,7 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 	#TODO
 	
 	try:
-		data = {"restore":None, "servers": [], "servers_len":None}
+		data = {"restore":None, "servers": [], "servers_len":0}
 		if Path(path).is_file():
 			cont = Path(path).read_text().strip().split('\n')
 			block = ""

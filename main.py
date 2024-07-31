@@ -21,8 +21,77 @@ import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
 # import pages.login as Login
 import models as Models
+<<<<<<< HEAD
+=======
+
+_mode = 'tx'
+
+class ConnectionManager:
+	def __init__(self):
+		self.active_connections: list[WebSocket] = []
+
+	async def connect(self, websocket: WebSocket):
+		await websocket.accept()
+		self.active_connections.append(websocket)
+
+	def disconnect(self, websocket: WebSocket):
+		self.active_connections.remove(websocket)
+
+	async def send(self, message: str, websocket: WebSocket):
+		await websocket.send_text(message)
+
+	# async def broadcast(self, message: str):
+	# 	for connection in self.active_connections:
+	# 		await connection.send_text(message)
+>>>>>>> backend-Mezin
 
 
+CManager = ConnectionManager()
+
+
+class SyslogFSHandler(FileSystemEventHandler):
+	
+	websocket = None
+	pid = None
+	last_modified = None
+	
+	def __init__(self, WS: WebSocket, PID: str):
+		self.last_modified = datetime.now()
+		self.websocket = WS
+		self.pid = PID
+	
+	async def on_modified(self, event):
+		if datetime.now() - self.last_modified < timedelta(seconds=1):
+			return
+		# elif not self.websocket or self.websocket.connected:
+		# 	return
+		else:
+			self.last_modified = datetime.now()
+		
+		data = DD104.get_logs(self.pid, 0)
+		if self.websocket and self.websocket.connected:
+			try:
+				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
+				await CManager.send(json.dumps(payload), WS)
+			except Exception as e:
+				tb = traceback.format_exc().strip().split('\n')[1::]
+				syslog.syslog(syslog.LOG_ERR, f"main.syslogfshandler: error occured, details: {tb}")
+		
+		# print(f'Event type: {event.event_type}  path : {event.src_path}')
+	
+
+def prime_observer(WS: WebSocket, PID: str) -> Observer: 
+	try:
+		event_handler = SyslogFSHandler(WS, PID)
+		observer = Observer()
+		syslog.syslog(syslog.LOG_INFO, f"main.prime_observer: observer {observer} created. ")
+		observer.schedule(event_handler, "/var/log/syslog", recursive=True)
+		return observer
+	except Exception as e:
+		tb = traceback.format_exc().strip().split('\n')[1::]
+		msg = f"main.prime_observer: unexpected exception caught, details: {tb}"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		raise RuntimeError(msg)
 
 class ConnectionManager:
 	def __init__(self):
