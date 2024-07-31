@@ -128,12 +128,17 @@ app.add_middleware(
 )
 
 
-app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "build"), html=True), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), html=True), name="static")
 
 
 # @app.post("/token")
 # async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
 # 	return Login.login_for_access_token(form_data)
+
+
+@app.get("/")
+def greet():
+	return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
 
 
 @app.post("/dashboard")
