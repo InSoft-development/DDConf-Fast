@@ -146,7 +146,7 @@ port=48110
 
 restore={data["restore"]}
 
-		'''
+'''
 		for sv in data['servers']:
 			msg = msg + f'''server
 id = {data["servers"].index(sv)+1}
