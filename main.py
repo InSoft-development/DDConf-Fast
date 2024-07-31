@@ -194,7 +194,7 @@ app.add_middleware(
 )
 
 
-app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), html=True), name="static")
+app.mount("/client", StaticFiles(directory=os.path.join(os.getcwd(), "client"), html=True), name="client")
 
 
 # @app.post("/token")
@@ -204,7 +204,7 @@ app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), 
 
 @app.get("/")
 def greet():
-	return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
+	return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
 
 
 @app.post("/dashboard")
