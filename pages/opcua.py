@@ -144,7 +144,7 @@ address=192.168.100.10
 port=48110
 
 
-restore={data["restore"]}
+restore={int(data["restore"])}
 
 '''
 		for sv in data['servers']:
@@ -209,7 +209,7 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 						block = "subscription"
 						if "subscriptions" not in data["servers"][sercount].keys():
 							data["servers"][sercount]["subscriptions"] = []
-						data["servers"][sercount]["subscriptions"].append(dict)
+						data["servers"][sercount]["subscriptions"].append(dict())
 					
 					if block == "receiver":
 						if "restore" in line:

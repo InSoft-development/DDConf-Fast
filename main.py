@@ -11,7 +11,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from time import sleep
-import sqlite3, json, syslog, traceback, datetime
+import sqlite3, json, syslog, traceback, datetime, os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -194,12 +194,17 @@ app.add_middleware(
 )
 
 
-app.mount("/static", StaticFiles(directory="build", html=True), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), html=True), name="static")
 
 
 # @app.post("/token")
 # async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
 # 	return Login.login_for_access_token(form_data)
+
+
+@app.get("/")
+def greet():
+	return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
 
 
 @app.post("/dashboard")
