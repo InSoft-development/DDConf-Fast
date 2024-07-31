@@ -24,8 +24,6 @@ import models as Models
 
 _mode = 'tx'
 
-print(os.getcwd())
-
 class ConnectionManager:
 	def __init__(self):
 		self.active_connections: list[WebSocket] = []
