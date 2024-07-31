@@ -1,5 +1,5 @@
 // 8000
-export const BASE_URL = 'http://127.0.0.1:8000';
+export const BASE_URL = window.location.origin;
 
 
 export const request = (endpoint, method, params = null) => {
