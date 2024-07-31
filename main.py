@@ -11,7 +11,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from time import sleep
-import sqlite3, json, syslog, traceback, datetime
+import sqlite3, json, syslog, traceback, datetime, os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -128,7 +128,7 @@ app.add_middleware(
 )
 
 
-app.mount("/static", StaticFiles(directory="build", html=True), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(current_dir, "build"), html=True), name="static")
 
 
 # @app.post("/token")
