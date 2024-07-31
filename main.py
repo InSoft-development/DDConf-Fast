@@ -22,7 +22,7 @@ import pages.opcua as OPCUA
 # import pages.login as Login
 import models as Models
 
-
+_mode = 'tx'
 
 class ConnectionManager:
 	def __init__(self):
