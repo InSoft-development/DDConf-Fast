@@ -21,8 +21,6 @@ import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
 # import pages.login as Login
 import models as Models
-<<<<<<< HEAD
-=======
 
 _mode = 'tx'
 
@@ -43,7 +41,6 @@ class ConnectionManager:
 	# async def broadcast(self, message: str):
 	# 	for connection in self.active_connections:
 	# 		await connection.send_text(message)
->>>>>>> backend-Mezin
 
 
 CManager = ConnectionManager()
