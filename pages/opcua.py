@@ -175,6 +175,7 @@ items
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
 		print(f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
+		print(f"traceback:", traceback.format_exc())
 		
 		
 		
@@ -187,7 +188,7 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 	#TODO
 	
 	try:
-		data = {"restore":None, "servers": [], "servers_len":None}
+		data = {"restore":None, "servers": [], "servers_len":0}
 		if Path(path).is_file():
 			cont = Path(path).read_text().strip().split('\n')
 			block = ""
