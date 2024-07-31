@@ -149,7 +149,7 @@ restore={data["restore"]}
 		'''
 		for sv in data['servers']:
 			msg = msg + f'''server
-id = {data["server"].index(sv)+1}
+id = {data["servers"].index(sv)+1}
 url1={sv["url1"]}
 {"url2="+sv["url2"] if "url2" in sv and sv["url2"] else '# no url2'}
 usertokentype={sv['utoken_type']}
