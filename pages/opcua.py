@@ -144,7 +144,7 @@ address=192.168.100.10
 port=48110
 
 
-restore={data["restore"]}
+restore={int(data["restore"])}
 
 '''
 		for sv in data['servers']:
