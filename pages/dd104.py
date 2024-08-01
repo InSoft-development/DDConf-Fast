@@ -96,7 +96,7 @@ def create_services(count:int):
 			syslog.syslog(syslog.LOG_INFO, msg)
 			print(msg)
 		
-		stat = subprocess.run(f"systemcts daemon-reload".split())
+		stat = subprocess.run(f"systemctl daemon-reload".split())
 		
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_services: couldn't create services; Details:  {str(e)}\n")
