@@ -17,9 +17,9 @@ def fetch_net() -> dict:
 				if f"{name}:" in line:
 					sub['status'] = line.split(' ')[8]
 				elif "link/" in line:
-					sub['mac'] = line.split(' ')[1]
+					sub['mac'] = line.strip().split(' ')[1]
 				elif "inet " in line:
-					sub['ip'] = line.split(' ')[1]
+					sub['ip'] = line.strip().split(' ')[1]
 			if "ip" not in sub:
 				sub['ip'] = None
 			data.append(sub)
