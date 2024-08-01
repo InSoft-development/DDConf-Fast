@@ -1,10 +1,10 @@
-import syslog, subprocess, time, tarfile, json
+import syslog, subprocess, time, tarfile, json, netifaces
 from shutil import move, copy2, unpack_archive, make_archive
 from pathlib import Path
 from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
-import netifaces
+
 
 def fetch_net() -> dict:
 	# {'mac':'', 'ip':'', 'status':''}
