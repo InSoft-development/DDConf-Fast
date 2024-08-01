@@ -14,7 +14,7 @@ def fetch_net() -> dict:
 		for name in netifaces.interfaces():
 			iface = subprocess.run(f"ip a show {name}".split(), text=True, capture_output=True).stdout.strip().split('\n')
 			for line in iface:
-				if name in line:
+				if f"{name}:" in line:
 					sub['status'] = line.split(' ')[8]
 				elif "link/" in line:
 					sub['mac'] = line.split(' ')[1]
