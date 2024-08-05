@@ -1,0 +1,43 @@
+.titleSub{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 600;  
+    margin-top: 33px;    
+}
+.publicMC{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 450;  
+    margin-top: 16px;   
+}
+.inputPublic{
+    width: 235px;    
+    border-radius: 4px; 
+    left: 21px;
+}
+.positionPlaceholder{
+    margin-top: 5px;
+}
+.placeholderteg{
+    width: 440px;
+}
+.btn{
+    margin-top: 5px;
+}
+.buttonAdd{
+    left: 167px;
+    background-color: var(--status-success);
+    color: #fff;
+    font-weight: 500;
+    left: 0px;
+    bottom: 37px;     
+}
+.buttonDel{
+    left: 380px;
+    background-color: var(--status-danger);
+    color: #fff;
+    font-weight: 500;
+    left: 268px; 
+}
