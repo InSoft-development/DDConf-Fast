@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse, PlainTextResponse, HTMLResponse, FileResponse
+from fastapi.responses import RedirectResponse, PlainTextResponse, HTMLResponse, FileResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates 
 from fastapi.middleware.cors import CORSMiddleware
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -139,6 +139,14 @@ app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), 
 @app.get("/")
 def greet():
 	return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
+
+
+@app.get("/{_path}")
+def redirect_root(_path: str):
+	msg = f"ddconf.main.redirect_root: GET request detected to {_path}, redirecting to \"/\"."
+	print(msg)
+	syslog.syslog(syslog.LOG_INFO, msg)
+	return RedirectResponse("/", status_code=302)
 
 
 @app.post("/dashboard")
