@@ -209,7 +209,7 @@ def greet():
 
 @app.get("/{_path}")
 def redirect_root(_path: str):
-	msg = f"ddconf.main.redirect_root: GET request detected to {_path}, redirecting to \"/\"."
+	msg = f"ddconf.main.redirect_root: GET request detected to /{_path}, redirecting to \"/\"."
 	print(msg)
 	syslog.syslog(syslog.LOG_INFO, msg)
 	return RedirectResponse("/", status_code=302)
