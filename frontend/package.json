@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "cross-env REACT_APP_API=\"http://127.0.0.1:8000\" react-scripts start",
-    "build": "cross-env PUBLIC_URL='/client/' react-scripts build",
+    "build": "cross-env BUILD_PATH='../client' cross-env PUBLIC_URL='/client/' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
