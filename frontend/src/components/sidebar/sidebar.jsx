@@ -42,7 +42,7 @@ const Sidebar = () => {
                     <h2 className='text text_type_main mt-10 ml-20'>ДД Конфигуртор</h2>
                     <nav className='mt-40'>
                         <ul className={styles.navigationLink}>
-                            <NavLink to='/dashboard' className={navLink} onClick={e => closeSidebar()}>
+                            <NavLink to='/' className={navLink} onClick={e => closeSidebar()}>
                                 <HomeOutlined style={{marginRight: 10}}/>
                                 Дашборд
                             </NavLink>
