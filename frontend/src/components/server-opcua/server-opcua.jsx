@@ -10,6 +10,7 @@ import Authorization from '../authorization/authorization';
 import Certificatee from '../certificatee/certificatee';
 import Subscription from '../subscription/subscription';
 import {Select} from 'antd';
+import { Option } from 'antd/es/mentions';
 import {Form} from 'antd';
 
 
@@ -21,6 +22,16 @@ import {Form} from 'antd';
 
 export const Serveropcua = () => {
    // const fruits = ['banana', 'mango','apple'];
+//    const [value, setValue] = useState('');
+//    const options = [
+//     {label: "red", value: 1},
+//     {label: "green", value: 2},
+//     {label: "yellow", value: 3},
+//    ]
+//    function handleSelect(event){
+//     setValue(event.target.value)
+
+//    }
 
 
     
@@ -39,6 +50,9 @@ export const Serveropcua = () => {
         deletLine.splice(i,1)
         setLines(deletLine)
     }
+    const onFinish=(values)=>{
+        console.log({values});
+    }
     
 
   return (
@@ -46,19 +60,39 @@ export const Serveropcua = () => {
     {lines.map((line,i) =>{
         return(
             <div className={style.wrapper}>
+              
         <div className={style.Address}>Сервер {line} 
             <div className={style.AddressButton}>
               
                 <Button onClick={() => handleDelete(i)}  className={style.buttonDel} type="Success" Success icon={<DeleteOutlined />}>Удалить сервер</Button> 
             </div>
 
-            <div className={style.URL1}>URL 1
-                <Input className={style.input1} placeholder='Введите URL 1'/>          
-            </div>
-            
-            <div className={style.URL1}>URL 2
+
+            <Form onFinish={onFinish} style={{width: 500}}>  
+                          
+            <Form.Item name="URL 1" label="URL 1" rules={[
+                {
+                   
+                    required:true,
+                    message: 'URL 1 не заполнен',  
+                }
+            ]} >
+                        {/* <div className={style.URL1}>URL 1 */}                        
+                                <Input className={style.input1} placeholder='Введите URL 1'/>                                            
+                        {/* </div> */}
+            </Form.Item>
+              
+
+            <Form.Item rules={[
+                {
+                    required:true,
+                    message: "URL 2 не заполнен", 
+                }
+            ]} name={"URL 2"} label="URL 2">
+            {/* <div className={style.URL1}>URL 2 */}
                 <Input className={style.input2} placeholder='Введите URL 2'/>          
-            </div> 
+            {/* </div>  */}
+            </Form.Item>
 
 
             <div value={selected} onChange={(e) => handleChange(e)} className={style.TypeAvt}>Тип авторизации
@@ -86,11 +120,24 @@ export const Serveropcua = () => {
 
             </Select> */}
 
-           
+</Form>    
 
             <div className={style.subscription}>
                 <Subscription/>             
             </div> 
+           
+
+
+
+            {/* <select className={style.TypeAvt} onChange={handleSelect}>
+                {options.map(option => (
+                    <option value={option.value}>{option.label}</option>
+                ) )}
+
+
+            </select>
+
+            <p>{label}</p> */}
 
            
 
@@ -99,6 +146,7 @@ export const Serveropcua = () => {
 
             
         </div>
+         
     </div>
             
         )

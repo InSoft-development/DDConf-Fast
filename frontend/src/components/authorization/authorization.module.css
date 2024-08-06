@@ -7,14 +7,17 @@
     padding-top: 40px;
 }
 .input1{   
-    width: 300px;    
+    width: 382px;    
     border-radius: 4px; 
-    left: 143px;
-    bottom: 50px;    
+    margin-left: 63px;
+    bottom: 90px;
+    
+      
 }
 .input2{
-    width: 300px;
+    width: 382px;
     border-radius: 4px;
-    left: 143px;
-    bottom: 30px;
+    margin-left: 63px;
+    bottom: 0px;
 }
+
