@@ -11,31 +11,36 @@ html {margin-right: calc(-1 * (100vw - 100%));}
 @font-face {
     font-family: 'Inter';
     font-weight: 700;
-    src: url('./fonts/Inter/Inter-Bold.ttf');
+    src: local('Inter'),
+         url('./fonts/Inter/Inter-Bold.ttf');
 }
 
 @font-face {
     font-family: 'Inter';
     font-weight: 400;
-    src: url('./fonts/Inter/Inter-Regular.ttf');
+    src: local('Inter'),
+         url('./fonts/Inter/Inter-Regular.ttf');
 }
 
 @font-face {
     font-family: 'Helvetica Neue';
     font-weight: 700;
-    src: url('./fonts/HelveticaNeue/HelveticaNeueCyr-Bold.ttf');
+    src: local('HelveticaNeue'),
+         url('./fonts/HelveticaNeue/HelveticaNeueCyr-Bold.ttf');
 }
 
 @font-face {
     font-family: 'Helvetica Neue';
     font-weight: 500;
-    src: url('./fonts/HelveticaNeue/HelveticaNeueCyr-Medium.ttf');
+    src: local('HelveticaNeue'),
+         url('./fonts/HelveticaNeue/HelveticaNeueCyr-Medium.ttf');
 }
 
 @font-face {
     font-family: 'Helvetica Neue';
     font-weight: 400;
-    src: url('./fonts/HelveticaNeue/HelveticaNeueCyr-Roman.ttf');
+    src: local('HelveticaNeue'),
+         url('./fonts/HelveticaNeue/HelveticaNeueCyr-Roman.ttf');
 }
 
 /* constants */
@@ -162,3 +167,13 @@ html {margin-right: calc(-1 * (100vw - 100%));}
 .ml-30{margin-left: calc(30 * var(--margin-index))}
 .ml-40{margin-left: calc(40 * var(--margin-index))}
 .ml-auto{margin-left: auto;}
+
+/* Переопределение Antd-Design стилей */
+/* Исправление отсутсвсия props'а для Drawer - невозможность позиционировать кнопку справа */
+.ant-drawer-header-title{
+    flex-direction: row-reverse;
+}
+
+.ant-drawer-header-title > button{
+    margin-right: 0;
+}

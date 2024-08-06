@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDeviceFeatures, getDevicesNet } from '../../services/actions/dashboard';
+import { Link } from 'react-router-dom';
+import {getDevicesNet } from '../../services/actions/dashboard';
 import {Flex, Table} from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import styles from './dashboard.module.css';
@@ -33,7 +34,7 @@ const Dashboard = () => {
             dataIndex: 'ip',
             key: 'ip',
             render: (text) => {
-                if(text !== ''){
+                if(text !== null){
                     return <div className='text'>{text}</div>
                 }else{
                     return <div className='text'>—</div>
@@ -92,15 +93,18 @@ const Dashboard = () => {
                     )}
                 </Flex>
             </div>
-            <div className='mt-20'>
-                {/* <div>
+            <div className='mt-20 text'>
+                <div>
                     <div className='text_type_main'>Протоколы:</div>
-                    <Flex vertical={true}>
-                        {availableProtocols?.map(protocol => (
-                            <div className='ml-8 mt-4'>{protocol.name}</div>
-                        ))}
-                    </Flex>
-                </div> */}
+                    <ul className={styles.protocolsList}>
+                        <li>
+                            <Link to='/dd104'>МЭК 104</Link>
+                        </li>
+                        <li>
+                            <Link to='/opcua'>OPC UA</Link> 
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div className='mt-20'>
                 <div className='text_type_main'>Сетевые интерфейсы:</div>
