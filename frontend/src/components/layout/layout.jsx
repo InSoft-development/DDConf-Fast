@@ -31,6 +31,7 @@ const Layout = () => {
                 <NavLink
                         to='/'
                         onClick={onCloseHandler}
+                        className='text'
                         end
                     >
                         <HomeOutlined style={{marginRight: 10}}/>
