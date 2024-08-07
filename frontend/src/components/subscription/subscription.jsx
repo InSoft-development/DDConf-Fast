@@ -6,6 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import {Input} from 'antd';
 import { useCallback } from 'react';
+import { Form } from 'antd';
 import { spaceChildren } from 'antd/es/button';
 const {TextArea} = Input;
 
@@ -24,6 +25,11 @@ export const Subscription = () => {
       deletLin.splice(i,1)
       setLines(deletLin)
     }
+
+    const onFinish=(values)=>{
+      console.log({values});
+  }
+  
   
   
     return (
@@ -32,10 +38,23 @@ export const Subscription = () => {
       {lines.map((line,i) =>{
         return(
           <div className={style.titleSub} >Подписка {line}
+          
+          <Form onFinish={onFinish}>
+              <Form.Item name="Интервал" label="Интервал публикации в мс" rules={[
+                {
+                  required: true,
+                  message: 'Интервал не заполнен'
+                }
+              ]}>
+                 <Input className={style.inputPublic} placeholder='Введите интервал'/> 
+              </Form.Item>
+
+               
+          </Form>
   
-           <div className={style.publicMC}>Интервал публикации в мс
-                <Input className={style.inputPublic} placeholder='Введите интервал'/>          
-           </div>
+           {/* <div className={style.publicMC}>Интервал публикации в мс */}
+                        
+           {/* </div> */}
      
            <div className={style.publicMC}>Секция запроса тега</div>
            <div className={style.positionPlaceholder}>

@@ -98,8 +98,8 @@ export const Serveropcua = () => {
             <div value={selected} onChange={(e) => handleChange(e)} className={style.TypeAvt}>Тип авторизации
                 <select className={style.select}>
                     <option value="Без авторизации">Без авторизации</option>
-                    <option value="Авторизация">Авторизация</option>
-                    <option value="Сертификат">Сертификат</option>
+                    <option value="Авторизация">По имени пользователя</option>
+                    <option value="Сертификат">По сертификату</option>
                 </select> 
                           
             </div> 
