@@ -9,6 +9,8 @@ import Notauthorization from '../not_authorization/notauthorization';
 import Authorization from '../authorization/authorization';
 import Certificatee from '../certificatee/certificatee';
 import Subscription from '../subscription/subscription';
+import Urls from '../URL/urls';
+import {MinusOutlined} from '@ant-design/icons';
 import {Select} from 'antd';
 import { Option } from 'antd/es/mentions';
 import {Form} from 'antd';
@@ -21,39 +23,38 @@ import {Form} from 'antd';
 
 
 export const Serveropcua = () => {
-   // const fruits = ['banana', 'mango','apple'];
-//    const [value, setValue] = useState('');
-//    const options = [
-//     {label: "red", value: 1},
-//     {label: "green", value: 2},
-//     {label: "yellow", value: 3},
-//    ]
-//    function handleSelect(event){
-//     setValue(event.target.value)
-
-//    }
-
-
     
     const [selected, setSelected] = useState('Без авторизации');
     const handleChange = (e) => {
         setSelected(e.target.value);
     }
-    
+    // ////////////// Добавление сервреа /////////////////////
     const [lines, setLines] = useState([1]);
     const addLine = useCallback(() => {
         setLines(lines => [...lines, lines.length+1])
-    });
-    
+    });    
     const handleDelete = (i) =>{
         const deletLine = [...lines]
         deletLine.splice(i,1)
         setLines(deletLine)
     }
+
+
     const onFinish=(values)=>{
         console.log({values});
     }
     
+
+       // ////////////////// Добавление URL 2 ////////////////////////
+       const [URLL, setUrls] = useState([]);
+       const addURL = useCallback(()=>{
+           setUrls(URLL => [...URLL, URLL.length]) 
+       });
+       const UrlDelete = (u) =>{
+        const deleteUrl = [...URLL]
+        deleteUrl.splice(u,1)
+        setUrls(deleteUrl)
+       }
 
   return (
     <>
@@ -66,33 +67,50 @@ export const Serveropcua = () => {
               
                 <Button onClick={() => handleDelete(i)}  className={style.buttonDel} type="Success" Success icon={<DeleteOutlined />}>Удалить сервер</Button> 
             </div>
+          <Urls/>
 
 
             <Form onFinish={onFinish} style={{width: 500}}>  
-                          
-            <Form.Item name="URL 1" label="URL 1" rules={[
-                {
-                   
-                    required:true,
-                    message: 'URL 1 не заполнен',  
-                }
-            ]} >
-                        {/* <div className={style.URL1}>URL 1 */}                        
-                                <Input className={style.input1} placeholder='Введите URL 1'/>                                            
-                        {/* </div> */}
-            </Form.Item>
-              
 
-            <Form.Item rules={[
+                
+            
+                          
+                    <Form.Item name={"URL 1"} label="URL 1" rules={[
+                        {
+                        
+                            required:true,
+                            message: 'URL 1 не заполнен',  
+                        }
+                    ]} >
+                                {/* <div className={style.URL1}>URL 1 */}                        
+                                        <Input className={style.input1} placeholder='Введите URL 1'/>     
+                                        
+                                {/* </div> */}
+                    </Form.Item>
+                    <Button shape="circle" onClick={() => addURL()}  className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button>
+
+                {URLL.map((Url, u) =>{
+                    return(
+                        <>
+                         <Form.Item rules={[
                 {
                     required:true,
                     message: "URL 2 не заполнен", 
                 }
             ]} name={"URL 2"} label="URL 2">
-            {/* <div className={style.URL1}>URL 2 */}
+           
                 <Input className={style.input2} placeholder='Введите URL 2'/>          
-            {/* </div>  */}
-            </Form.Item>
+            
+            </Form.Item> 
+            <Button shape="circle" onClick={() => UrlDelete()}  className={style.deleturl} type="Success" Success icon={<MinusOutlined />}></Button>
+            </>
+
+                    )
+                })}    
+                   
+              
+
+           
 
 
             <div value={selected} onChange={(e) => handleChange(e)} className={style.TypeAvt}>Тип авторизации
