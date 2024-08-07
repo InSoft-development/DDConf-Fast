@@ -18,11 +18,11 @@ def rm_inis():
 		dest = Path(DEFAULTS.INIDIR)
 		for ini in listdir(dest):
 			(dest/ini).unlink()
-			syslog.syslog(syslog.LOG_INFO, f"opcua.rm_inis: {str(dest/ini)} file was removed")
-			print(f"opcua.rm_inis: {str(dest/ini)} file was removed")
+			syslog.syslog(syslog.LOG_INFO, f"ddconf.opcua.rm_inis: {str(dest/ini)} file was removed")
+			print(f"ddconf.opcua.rm_inis: {str(dest/ini)} file was removed")
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"opcua.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
-		print(f"opcua.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
+		print(f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
 
 
 def validate_numbers(lines:list) -> bool:
@@ -36,7 +36,7 @@ def validate_numbers(lines:list) -> bool:
 		
 	except Exception as e:
 		tb = traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"opcua.validate_numbers: {str(e)}, traceback: {tb}")
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.validate_numbers: {str(e)}, traceback: {tb}")
 		raise RuntimeError(e)
 
 
@@ -77,14 +77,14 @@ def parse_subs(subs:list) -> dict:
 				
 				_lbi = int(sub["items"][-1].split(";")[0])
 		else:
-			msg = "opcua.parse_subs: Error - received subs list is empty!"
+			msg = "ddconf.opcua.parse_subs: Error - received subs list is empty!"
 			print(msg)
 			# syslog.syslog(syslog.LOG_ERR, msg)
 			raise ValueError(msg)
 	except Exception as e:
 		tb = traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"opcua.parse_subs: {str(e)}, traceback: {tb}")
-		return {"result":None, "error":f"opcua.parse_subs: {str(e)}, traceback: {tb}"}
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.parse_subs: {str(e)}, traceback: {tb}")
+		return {"result":None, "error":f"ddconf.opcua.parse_subs: {str(e)}, traceback: {tb}"}
 
 
 def validate_url(url:str) -> str:
@@ -264,7 +264,7 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 				
 				
 	except Exception as e:
-		msg = f"DDConf.opcua.fetch_file: error fetching file ({path}); details: \n{traceback.format_exc()}\n"
+		msg = f"ddconf.opcua.fetch_file: error fetching file ({path}); details: \n{traceback.format_exc()}\n"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		print(msg)
 		raise RuntimeError(e)

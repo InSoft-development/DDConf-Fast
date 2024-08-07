@@ -72,7 +72,7 @@ class SyslogFSHandler(FileSystemEventHandler):
 				await CManager.send(json.dumps(payload), WS)
 			except Exception as e:
 				tb = traceback.format_exc().strip().split('\n')[1::]
-				syslog.syslog(syslog.LOG_ERR, f"main.syslogfshandler: error occured, details: {tb}")
+				syslog.syslog(syslog.LOG_ERR, f"ddconf.main.syslogfshandler: error occured, details: {tb}")
 		
 		# print(f'Event type: {event.event_type}  path : {event.src_path}')
 	
@@ -81,12 +81,12 @@ def prime_observer(WS: WebSocket, PID: str) -> Observer:
 	try:
 		event_handler = SyslogFSHandler(WS, PID)
 		observer = Observer()
-		syslog.syslog(syslog.LOG_INFO, f"main.prime_observer: observer {observer} created. ")
+		syslog.syslog(syslog.LOG_INFO, f"ddconf.main.prime_observer: observer {observer} created. ")
 		observer.schedule(event_handler, "/var/log/syslog", recursive=True)
 		return observer
 	except Exception as e:
 		tb = traceback.format_exc().strip().split('\n')[1::]
-		msg = f"main.prime_observer: unexpected exception caught, details: {tb}"
+		msg = f"ddconf.main.prime_observer: unexpected exception caught, details: {tb}"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		raise RuntimeError(msg)
 
@@ -235,7 +235,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 		
 	except Exception as e:
 		tb = traceback.format_exc().strip().split('\n')[1::]
-		msg = f"DDConf.dashboard_post: Error: {tb}"
+		msg = f"ddconf.main.dashboard_post: Error: {tb}"
 		syslog.syslog(syslog.LOG_CRIT, msg)
 		return {"result": None, "error": msg}
 
@@ -252,7 +252,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 			data["active"] = DD104.get_active_ld()
 			data["loadout_names"] = DD104.list_ld()
 			
-			print(f"dd104.fetch_initial: {data}")
+			print(f"ddconf.dd104.fetch_initial: {data}")
 			
 		
 		elif REQ.method == "fetch_table":
@@ -261,10 +261,10 @@ def dd104_post(REQ: Models.POST) -> dict:
 				data = DD104.get_processes(DD104.get_active_ld())
 				for item in data:
 					item['status'] = DD104.get_status(data.index(item)+1) #WARNING this implies there are no duplicate entries, but there's no check for that in ld creation, beware
-				print(f"dd104.fetch_table({DD104.get_active_ld()}): {data}")
+				print(f"ddconf.dd104.fetch_table({DD104.get_active_ld()}): {data}")
 			
 			else:
-				print("dd104.fetch_table: there is no active loadout!")
+				print("ddconf.dd104.fetch_table: there is no active loadout!")
 				data = None
 				errs = None
 			
@@ -288,10 +288,10 @@ def dd104_post(REQ: Models.POST) -> dict:
 					data = {"pid": REQ.params['pid'], "status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
 					
 				else:
-					raise TypeError(f"process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
+					raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
 				
 			else:
-				raise ValueError(f"dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
+				raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
 		
 		elif REQ.method == "profile_save": #TODO validation
 			
@@ -299,12 +299,12 @@ def dd104_post(REQ: Models.POST) -> dict:
 				try:
 					data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
 				except Exception as e:
-					msg = f"main.dd104_save_ld_handler: Error: {str(e)}"
+					msg = f"ddconf.dd104.dd104_save_ld_handler: Error: {str(e)}"
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
 					errs.append(msg)
 			else:
-				errs = f"dd104.profile_save: incorrect ld name; data: {REQ.params['name']}\n"
+				errs = f"ddconf.dd104.profile_save: incorrect ld name; data: {REQ.params['name']}\n"
 				data = None
 		
 		elif REQ.method == "profile_apply": #TODO validation
@@ -314,8 +314,8 @@ def dd104_post(REQ: Models.POST) -> dict:
 					data = DD104.apply_ld(REQ.params['name'])
 				except Exception as e:
 					tb=traceback.format_exc().strip().split('\n')[1::]
-					msg = f"dd104.profile_apply: Error: {str(e)}"
-					print(f"dd104.profile_apply: Error: {tb}")
+					msg = f"ddconf.dd104.profile_apply: Error: {str(e)}"
+					print(f"ddconf.dd104.profile_apply: Error: {tb}")
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
 					if type(errs) == list:
@@ -323,7 +323,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 					elif type(errs) == type(None):
 						errs = [msg]
 			else:
-				errs = f"dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
+				errs = f"ddconf.dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
 				data = None
 		
 		elif REQ.method == "fetch_ld":
@@ -331,18 +331,18 @@ def dd104_post(REQ: Models.POST) -> dict:
 			if REQ.params['name']:
 				if REQ.params['name'] in DD104.list_ld():
 					data = DD104.get_processes(REQ.params['name'])
-					print(f"/dd104.fetch_ld({REQ.params['name']}): {data}")
+					print(f"ddconf.dd104.fetch_ld({REQ.params['name']}): {data}")
 				else:
-					errs = f"dd104.fetch_ld: incorrect ld name; data: {REQ.params['name']}\n"
+					errs = f"ddconf.dd104.fetch_ld: incorrect ld name; data: {REQ.params['name']}\n"
 					data = None
 			else:
-				errs = f"dd104.fetch_ld: incorrect data: {REQ.params}\n"
+				errs = f"ddconf.dd104.fetch_ld: incorrect data: {REQ.params}\n"
 				data = None
 		
 	except Exception as e:
 		tb=traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.dd104_post: ERROR: {tb}")
-		print(f"DDConf.main.dd104_post: ERROR: {tb}")
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.dd104_post: ERROR: {tb}")
+		print(f"ddconf.main.dd104_post: ERROR: {tb}")
 		return {"result":None, "error":str(e)}
 	else:
 		return {"result": data, "error":None if not errs else errs}
@@ -364,8 +364,8 @@ def handle_opcua(REQ:Models.POST):
 		
 	except Exception as e:
 		tb=traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"DDConf.main.handle_opcua: ERROR: {tb}")
-		print(f"DDConf.main.handle_opcua: ERROR: {tb}")
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_opcua: ERROR: {tb}")
+		print(f"ddconf.main.handle_opcua: ERROR: {tb}")
 		return {"result":None, "error":str(e)}
 	
 	return {"result": data, "error":None if not errs else errs}
@@ -384,7 +384,7 @@ async def websocket_logs_104(WS: WebSocket):
 	while True:
 		try:
 			RQ = await WS.receive_text()
-			syslog.syslog(syslog.LOG_INFO, f"Client sent request: {RQ}")
+			syslog.syslog(syslog.LOG_INFO, f"ddconf.main.ws_logs_104: Client sent request: {RQ}")
 			RQ = json.loads(RQ)
 			
 			if _RQ != RQ:
@@ -393,7 +393,7 @@ async def websocket_logs_104(WS: WebSocket):
 					try:
 						observer.start()
 					except RuntimeError:
-						syslog.syslog(syslog.LOG_INFO, f"main.websocket_logs_104: reinitializing observer upon user request")
+						syslog.syslog(syslog.LOG_INFO, f"ddconf.main.websocket_logs_104: reinitializing observer upon user request")
 						observer.stop()
 						observer = prime_observer(WS, RQ['pid'])
 						observer.start()
@@ -413,8 +413,8 @@ async def websocket_logs_104(WS: WebSocket):
 			break
 		except Exception as e:
 			tb=traceback.format_exc().strip().split('\n')[1::]
-			syslog.syslog(syslog.LOG_ERR, f"Error while handling WS request; {tb}")
+			syslog.syslog(syslog.LOG_ERR, f"ddconf.main.ws_logs_104: Error while handling WS request; {tb}")
 			await CManager.send(json.dumps({"response":None, "errors":str(e)}))
 	
 	observer.join()
-	syslog.syslog(syslog.LOG_INFO, "WS function shutdown")
+	syslog.syslog(syslog.LOG_INFO, "ddconf.main.ws_logs_104: WS function shutdown")

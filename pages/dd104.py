@@ -23,7 +23,7 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 			utime = f"{rtime.tm_year}-{rtime.tm_mon}-{rtime.tm_mday}-{rtime.tm_hour}-{rtime.tm_min}-{rtime.tm_sec}"
 			copy2(filepath, f"{location}/{filename[:-4:]}-{utime}.{filename[-3::]}")
 		except Exception as e:
-			syslog.syslog(syslog.LOG_CRIT, f"dd104: провал при создании архивного файла конфигурации, операция не может быть продолжена.")
+			syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.archive_d: провал при создании архивного файла конфигурации, операция не может быть продолжена.")
 			raise e
 		
 	else:
@@ -74,14 +74,14 @@ def create_inis(data: list):
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
 				(Path(Defaults.DD["INIDIR"])/f"dd104client{COUNT}.ini").write_text(msg)
-				syslog.syslog(syslog.LOG_INFO, f'dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
-				print(f'dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
+				syslog.syslog(syslog.LOG_INFO, f'ddconf.dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
+				print(f'ddconf.dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
 			else:
 				raise ValueError(f"process {COUNT} data is invalid ({proc})")
 	
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
-		print(f"dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {traceback.print_exception(e)}\n")
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
+		print(f"ddconf.dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {traceback.print_exception(e)}\n")
 
 
 def create_services(count:int):
@@ -124,7 +124,7 @@ def get_status(PID: int) -> int:
 				else:
 					return -2
 	except Exception as e:
-		syslog.syslog(syslog.LOG_WARNING, f"dd104.status: {str(e)}")
+		syslog.syslog(syslog.LOG_WARNING, f"ddconf.dd104.status: {str(e)}")
 		return -2
 	# return randrange(-2, 3)
 
@@ -136,7 +136,7 @@ def save_ld(filename: str, data : dict) -> None:
 		(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
 		return "success"
 	except Exception as e:
-		msg = f"dd104.save_ld: an error occured: {str(e)}"
+		msg = f"ddconf.dd104.save_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		raise RuntimeError(msg)
 		
@@ -171,7 +171,7 @@ def apply_ld(filename: str) -> None:
 		
 		return "success"
 	except Exception as e:
-		msg = f"dd104.apply_ld: an error occured: {str(e)}"
+		msg = f"ddconf.dd104.apply_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		raise RuntimeError(msg)
 
@@ -193,7 +193,7 @@ def get_active_ld() -> str:
 	try:
 		return ((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[:-1:])) if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().is_file() else None
 	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"dd104.get_active_ld: Error: {str(e)}")
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.get_active_ld: Error: {str(e)}")
 		return f"Ошибка: {str(e)}"
 
 
@@ -212,7 +212,7 @@ def process_handle(PID: int, OP:str) -> int:
 				raise RuntimeError(std.stderr)
 			return get_status(PID)
 		else:
-			raise TypeError(f"dd104.process_handle: PID must be a single instance of int, str, got {type(PID)}.")
+			raise TypeError(f"ddconf.dd104.process_handle: PID must be a single instance of int, str, got {type(PID)}.")
 	except RuntimeError:
 		return -1
 	except Exception as e:
@@ -260,11 +260,11 @@ def get_logs(PID: str, LEN: int):
 			else:
 				LOGS="\n".join(lines)
 		else:
-			raise ValueError(f"dd104.get_logs: PID={PID} was not 'syslog', 'dd104*', or a number.")
+			raise ValueError(f"ddconf.dd104.get_logs: PID={PID} was not 'syslog', 'dd104*', or a number.")
 	except Exception as e:
-		syslog.syslog(syslog.LOG_ERR, f"dd104.get_logs: {str(e)}")
-		print(f"dd104.get_logs: {traceback.print_exception(e)}")
-		return {'error':f"dd104.get_logs: error handling {PID} {traceback.print_exception(e)}"}
+		syslog.syslog(syslog.LOG_ERR, f"ddconf.dd104.get_logs: {str(e)}")
+		print(f"ddconf.dd104.get_logs: {traceback.print_exception(e)}")
+		return {'error':f"ddconf.dd104.get_logs: error handling {PID} {traceback.print_exception(e)}"}
 	else:
 		return {"pid": PID, "logs":LOGS}
 
