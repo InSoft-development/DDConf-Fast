@@ -45,6 +45,6 @@ class Defaults:
 			
 		
 		except Exception as e:
-			msg = f"DDConf.defaults: failed to init defaults, details: {str(e)}"
+			msg = f"ddconf.models.defaults: failed to init defaults, details: {str(e)}"
 			syslog.syslog(syslog.LOG_CRIT, msg)
 			raise RuntimeError(msg) from e
