@@ -1,0 +1,20 @@
+.textSert{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 500;  
+    margin-left: 0px;
+    padding-top: 40px;
+}
+.input1{   
+    width: 300px;    
+    border-radius: 4px; 
+    left: 143px;
+    bottom: 50px;    
+}
+.input2{
+    width: 300px;
+    border-radius: 4px;
+    left: 143px;
+    bottom: 30px;
+}
