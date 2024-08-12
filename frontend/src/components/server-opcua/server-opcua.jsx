@@ -67,7 +67,7 @@ export const Serveropcua = () => {
               
                 <Button onClick={() => handleDelete(i)}  className={style.buttonDel} type="Success" Success icon={<DeleteOutlined />}>Удалить сервер</Button> 
             </div>
-          <Urls/>
+          <Urls/> 
 
 
             <Form onFinish={onFinish} style={{width: 500}}>  
@@ -75,17 +75,17 @@ export const Serveropcua = () => {
                 
             
                           
-                    <Form.Item name={"URL 1"} label="URL 1" rules={[
+                    {/* <Form.Item name={"URL 1"} label="URL 1" rules={[
                         {
                         
                             required:true,
                             message: 'URL 1 не заполнен',  
                         }
                     ]} >
-                                {/* <div className={style.URL1}>URL 1 */}                        
+                                                  
                                         <Input className={style.input1} placeholder='Введите URL 1'/>     
                                         
-                                {/* </div> */}
+                             
                     </Form.Item>
                     <Button shape="circle" onClick={() => addURL()}  className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button>
 
@@ -106,7 +106,7 @@ export const Serveropcua = () => {
             </>
 
                     )
-                })}    
+                })}     */}
                    
               
 
