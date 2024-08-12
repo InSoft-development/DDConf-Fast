@@ -14,6 +14,17 @@ import {MinusOutlined} from '@ant-design/icons';
 
 export const Urls = () => {
 
+  // const [bt2, setBt2] = useState(true);
+
+  // const [bt1, setBt1] = useState(false);
+  // const anvisibleClick = () =>{
+  //   setBt1( <Button shape="circle"   className={style.anVisibleaddUrl} type="Success" Success icon={<PlusOutlined />}></Button> )
+  // }
+  const [show, setShow] = useState(true);
+
+  
+  
+
     
     const onFinish=(values)=>{
         console.log({values});
@@ -51,7 +62,7 @@ const handleClick = () =>{
         <Input className={style.input2} placeholder='Введите URL 2'/>          
        
     </Form.Item> 
-    <Button shape="circle" onClick={() => Udelete()}  className={style.deleturl} type="Success" Success icon={<MinusOutlined />}></Button>
+    <Button  shape="circle"  onClick={() => {Udelete();setShow(show)}}  className={style.deleturl} type="Success" Success icon={<MinusOutlined />}></Button>
     </>);
 }
 
@@ -69,7 +80,10 @@ const handleClick = () =>{
                                         
                              
             </Form.Item>
-            <Button shape="circle" onClick={()=>{handleClick()}}  className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button> 
+            {show && <Button shape="circle" onClick={()=>{handleClick(); setShow(!show)}}  className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button>}
+            {/* <Button shape="circle" onClick={()=>{handleClick()}}  className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button>  */}
+            {/* {bt1} */}
+          
          
 
                 <p>{name}</p>
