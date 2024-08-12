@@ -72,7 +72,7 @@ const handleClick = () =>{
         <Form.Item name={"URL 1"} label="URL 1" rules={[
             {                     
               required:true,
-              message: 'URL 1 не заполнен',  
+              message: 'URL 1 не заполнен' ,  
             }
             ]}>
                                    
