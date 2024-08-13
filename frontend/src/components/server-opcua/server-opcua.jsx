@@ -19,12 +19,23 @@ import Urls from '../URL/urls';
 
 export const Serveropcua = () => {
     
+    
+    const [servers, setServers] = useState([]);
+
     const [selected, setSelected] = useState('Без авторизации');
     const handleChange = (e) => {
         setSelected(e.target.value);
     }
     // ////////////// Добавление сервреа /////////////////////
     const [lines, setLines] = useState([1]);
+
+    const addServer = () => {
+        setServers([...servers, {
+            'url1': '',
+            'url2': ''
+        }])
+    }
+
     const addLine = useCallback(() => {
         setLines(lines => [...lines, lines.length+1])
     });    
@@ -71,8 +82,12 @@ export const Serveropcua = () => {
             
         )
     })}
+    
 
             <div className={style.AddressButton}>
+                {/* <button className="button btn-green" onClick={e => {console.log(servers)}}>Сохранить</button> */}
+                {/* <button className="button btn-green" onClick={addServer}>Добавить сервер</button> */}
+
                 <Button onClick={() => addLine()} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button>
             </div>     
     </>  
