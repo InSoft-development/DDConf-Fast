@@ -20,7 +20,7 @@ import Urls from '../URL/urls';
 export const Serveropcua = () => {
     
     
-    const [servers, setServers] = useState([]);
+    const [servers, setServers] = useState(['']);
 
     const [selected, setSelected] = useState('Без авторизации');
     const handleChange = (e) => {
@@ -32,7 +32,7 @@ export const Serveropcua = () => {
     const addServer = () => {
         setServers([...servers, {
             'url1': '',
-            'url2': ''
+            'url2': 'null'
         }])
     }
 
@@ -76,7 +76,9 @@ export const Serveropcua = () => {
             <Typeavt/>       
             <div className={style.subscription}>
                 <Subscription/>             
-            </div>                   
+            </div> 
+
+             {/* <button className="button btn-green" onClick={e => {console.log(servers)}}>Сохранить</button>               */}
         </div>        
     </div>
             
@@ -89,7 +91,10 @@ export const Serveropcua = () => {
                 {/* <button className="button btn-green" onClick={addServer}>Добавить сервер</button> */}
 
                 <Button onClick={() => addLine()} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button>
-            </div>     
+            </div>   
+              {/* <button className="button btn-green" onClick={addServer}>Добавить сервер</button>  */}
+
+
     </>  
   )
 }

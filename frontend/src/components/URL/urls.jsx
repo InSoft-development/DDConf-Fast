@@ -14,12 +14,7 @@ import {MinusOutlined} from '@ant-design/icons';
 
 export const Urls = () => {
 
-  // const [bt2, setBt2] = useState(true);
-
-  // const [bt1, setBt1] = useState(false);
-  // const anvisibleClick = () =>{
-  //   setBt1( <Button shape="circle"   className={style.anVisibleaddUrl} type="Success" Success icon={<PlusOutlined />}></Button> )
-  // }
+ 
   const [show, setShow] = useState(true);
 
   
@@ -81,12 +76,12 @@ const handleClick = () =>{
                              
             </Form.Item>
             {show && <Button shape="circle" onClick={()=>{handleClick(); setShow(!show)}}  className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button>}
-            {/* <Button shape="circle" onClick={()=>{handleClick()}}  className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button>  */}
-            {/* {bt1} */}
+          
           
          
 
                 <p>{name}</p>
+                <button className="button btn-green">Сохранить</button>
                
                                       
 
