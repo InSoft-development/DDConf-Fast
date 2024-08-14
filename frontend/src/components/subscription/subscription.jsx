@@ -11,10 +11,38 @@ import { spaceChildren } from 'antd/es/button';
 const {TextArea} = Input;
 
 const onChange = (e) => {
+
     console.log(e);
   }
 
 export const Subscription = () => {
+  const [intervl, setIntrvl] = useState([]);
+  const addIntervl = () =>{
+    setIntrvl([...intervl,{
+      'subscriptions':[
+        {
+          'interval': '',
+          
+        }
+      ]
+    }])
+  }
+  const [tag, setTag] = useState([]);
+  const addTag = ()=> {
+    setTag([...tag,{
+      'subscriptions':[
+        {
+          'items':'',
+        }        
+      ]
+    }])
+  }
+
+
+
+
+
+
     const [lines, setLines] = useState([1]);
     const addLine = useCallback(() => {
       setLines(lines => [...lines, lines.length + 1])
@@ -48,18 +76,18 @@ export const Subscription = () => {
               ]}>
                  <Input className={style.inputPublic} placeholder='Введите интервал'/> 
               </Form.Item>
+              <button className="button btn-green"onClick={e=>{console.log(intervl)}} >Сохранить</button>
 
                
           </Form>
   
-           {/* <div className={style.publicMC}>Интервал публикации в мс */}
-                        
-           {/* </div> */}
+           
      
            <div className={style.publicMC}>Секция запроса тега</div>
            <div className={style.positionPlaceholder}>
-                <TextArea className={style.placeholderteg} placeholder="Введите тег" allowClear onChange={onChange} />
+                <TextArea onClick={addTag} className={style.placeholderteg} placeholder="Введите тег" allowClear onChange={onChange} />
            </div>
+           <button className="button btn-green"onClick={e=>{console.log(tag)}} >Сохранить</button>
      
            <div className={style.btn}>
                 {/* <Button onClick={() => addLine()} className={styles.buttonAdd} type="success" danger icon={<PlusOutlined />}>Добавить подписку</Button> */}
