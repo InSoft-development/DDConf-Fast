@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input, Form } from 'antd';
+import { useState } from 'react';
 import style from './authorization.module.css';
 const onFinish = (values) => {
   console.log('Success:', values);
@@ -9,22 +10,9 @@ const onFinishFailed = (errorInfo) => {
 }
 
 export const Authorization = () => {
-  return (
-    // <div className={style.textAuto}>Авторизация
-    // <div>
-    //     <Input className={style.input1} placeholder='Введите Логин'/>
-    // </div>
-
-    // <div>
-    //     <Input className={style.input2} placeholder='Введите пароль'/>
-    // </div>
-    
-    // </div>
-
-
-    
-
-   
+ 
+  return ( 
+    <>
     <Form
     name="basic"
     labelCol={{
@@ -75,13 +63,18 @@ export const Authorization = () => {
     >
       <Input.Password placeholder='Введите пароль' />
     </Form.Item>
+    
     </div>
+    
    
 
     
 
 
   </Form>
+  
+  </> 
+  
  
   )
 }

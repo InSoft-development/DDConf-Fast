@@ -16,27 +16,27 @@ const onChange = (e) => {
   }
 
 export const Subscription = () => {
-  const [intervl, setIntrvl] = useState([]);
-  const addIntervl = () =>{
-    setIntrvl([...intervl,{
-      'subscriptions':[
-        {
-          'interval': '',
+  // const [intervl, setIntrvl] = useState([]);
+  // const addIntervl = () =>{
+  //   setIntrvl([...intervl,{
+  //     'subscriptions':[
+  //       {
+  //         'interval': '',
           
-        }
-      ]
-    }])
-  }
-  const [tag, setTag] = useState([]);
-  const addTag = ()=> {
-    setTag([...tag,{
-      'subscriptions':[
-        {
-          'items':'',
-        }        
-      ]
-    }])
-  }
+  //       }
+  //     ]
+  //   }])
+  // }
+  // const [tag, setTag] = useState([]);
+  // const addTag = ()=> {
+  //   setTag([...tag,{
+  //     'subscriptions':[
+  //       {
+  //         'items':'',
+  //       }        
+  //     ]
+  //   }])
+  // }
 
 
 
@@ -76,7 +76,7 @@ export const Subscription = () => {
               ]}>
                  <Input className={style.inputPublic} placeholder='Введите интервал'/> 
               </Form.Item>
-              <button className="button btn-green"onClick={e=>{console.log(intervl)}} >Сохранить</button>
+              {/* <button className="button btn-green"onClick={e=>{console.log(intervl)}} >Сохранить</button> */}
 
                
           </Form>
@@ -85,9 +85,9 @@ export const Subscription = () => {
      
            <div className={style.publicMC}>Секция запроса тега</div>
            <div className={style.positionPlaceholder}>
-                <TextArea onClick={addTag} className={style.placeholderteg} placeholder="Введите тег" allowClear onChange={onChange} />
+                <TextArea  className={style.placeholderteg} placeholder="Введите тег" allowClear onChange={onChange} />
            </div>
-           <button className="button btn-green"onClick={e=>{console.log(tag)}} >Сохранить</button>
+           {/* <button className="button btn-green"onClick={e=>{console.log(tag)}} >Сохранить</button> */}
      
            <div className={style.btn}>
                 {/* <Button onClick={() => addLine()} className={styles.buttonAdd} type="success" danger icon={<PlusOutlined />}>Добавить подписку</Button> */}
