@@ -103,8 +103,8 @@ export const Serveropcua = () => {
     {lines.map((line,i) =>{
         return(
             <div className={style.wrapper}>
-                 <button className="button btn-green" onClick={e => {console.log(servers,typename,type,typeCert,intervl,items)}}>Сохранить</button>
-                 <button className="button btn-green" onClick={()=>{addTypename();addServer();addType();addTypecert();addIntervl();addItems()}}>Добавить сервер</button> 
+                 {/* <button className="button btn-green" onClick={e => {console.log(servers,typename,type,typeCert,intervl,items)}}>Сохранить</button> */}
+                 {/* <button className="button btn-green" onClick={()=>{addTypename();addServer();addType();addTypecert();addIntervl();addItems()}}>Добавить сервер</button>  */}
               
         <div className={style.Address}>Сервер {line} 
 
@@ -126,14 +126,8 @@ export const Serveropcua = () => {
     
 
             <div className={style.AddressButton}>
-                {/* <button className="button btn-green" onClick={e => {console.log(typename)}}>Сохранить</button> */}
-                {/* <button className="button btn-green" onClick={addServer}>Добавить сервер</button> */}
-
-                <Button onClick={() => addLine()} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button>
-            </div>   
-              {/* <button className="button btn-green" onClick={addTypename}>Добавить сервер</button>  */}
-
-
+                <Button onClick={() => {addLine();addTypename();addServer();addType();addTypecert();addIntervl();addItems(); {console.log(servers,typename,type,typeCert,intervl,items)}}} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button>
+            </div>
     </>  
   )
 }

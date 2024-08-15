@@ -81,7 +81,7 @@ const handleClick = () =>{
          
 
                 <p>{name}</p>
-                <button className="button btn-green">Сохранить</button>
+                
                
                                       
 
