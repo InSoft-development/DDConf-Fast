@@ -18,43 +18,43 @@ import Urls from '../URL/urls';
 
 
 export const Serveropcua = () => {
-      const [typename, setTypename] = useState(['']);
-    const addTypename = () =>{
-        setTypename([...typename,{
-            'utoken_data':{
-                'username':'',
-                'password':''
-            } 
-        }])
-    }
-    const [type, setType] = useState([]);
-    const addType = () =>{
-        setType([...type,{
-            'utoken_type':'string',
+    //   const [typename, setTypename] = useState(['']);
+    // const addTypename = () =>{
+    //     setTypename([...typename,{
+    //         'utoken_data':{
+    //             'username':'',
+    //             'password':''
+    //         } 
+    //     }])
+    // }
+    // const [type, setType] = useState([]);
+    // const addType = () =>{
+    //     setType([...type,{
+    //         'utoken_type':'string',
             
-        }])
-    }
-    const [typeCert, setTypecert] = useState([]);
-    const addTypecert = () => {
-        setTypecert([...typeCert,{
-            'utoken_cert':{
-                'cert':'',
-                'pkey':''
-            }
-        }])
-    }
-    const [intervl, setIntrvl] = useState([]);
-    const addIntervl = () =>{
-        setIntrvl([...intervl,{
-            'interval':'',
-        }])
-    }
-    const [items, setItems] = useState([]);
-    const addItems =()=>{
-        setItems(...items,{
-            'items':'',
-        })
-    }
+    //     }])
+    // }
+    // const [typeCert, setTypecert] = useState([]);
+    // const addTypecert = () => {
+    //     setTypecert([...typeCert,{
+    //         'utoken_cert':{
+    //             'cert':'',
+    //             'pkey':''
+    //         }
+    //     }])
+    // }
+    // const [intervl, setIntrvl] = useState([]);
+    // const addIntervl = () =>{
+    //     setIntrvl([...intervl,{
+    //         'interval':'',
+    //     }])
+    // }
+    // const [items, setItems] = useState([]);
+    // const addItems =()=>{
+    //     setItems(...items,{
+    //         'items':'',
+    //     })
+    // }
     
     const [servers, setServers] = useState(['']);
 
@@ -65,12 +65,12 @@ export const Serveropcua = () => {
     // ////////////// Добавление сервреа /////////////////////
     const [lines, setLines] = useState([1]);
 
-    const addServer = () => {
-        setServers([...servers, {
-            'url1': '',
-            'url2': 'null'
-        }])
-    }
+    // const addServer = () => {
+    //     setServers([...servers, {
+    //         'url1': '',
+    //         'url2': 'null'
+    //     }])
+    // }
 
     const addLine = useCallback(() => {
         setLines(lines => [...lines, lines.length+1])
@@ -126,7 +126,8 @@ export const Serveropcua = () => {
     
 
             <div className={style.AddressButton}>
-                <Button onClick={() => {addLine();addTypename();addServer();addType();addTypecert();addIntervl();addItems(); {console.log(servers,typename,type,typeCert,intervl,items)}}} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button>
+                {/* <Button onClick={() => {addLine();addTypename();addType();addTypecert();addIntervl();addItems(); {console.log(typename,type,typeCert,intervl,items)}}} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button> */}
+                <Button onClick={() => {addLine()}} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button>
             </div>
     </>  
   )
