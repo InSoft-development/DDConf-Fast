@@ -86,8 +86,8 @@
 .deleturl{
     color: #fff;
     background-color: var(--status-danger);
-    left: 411px;
-    bottom: 56px;
+    left: 15px;
+    bottom: -3px;
 
 }
 .anVisibleaddUrl{
