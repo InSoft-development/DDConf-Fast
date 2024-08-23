@@ -7,15 +7,25 @@ import { useState } from 'react';
 import {PlusOutlined} from '@ant-design/icons';
 import {MinusOutlined} from '@ant-design/icons';
 import { Controller } from 'react-hook-form';
+import {Select} from 'antd';
 
-export const UrlFormurl = () => {
+// const defaultValues ={
+//   resett: false,
+//   servers:[
+//     {
+//       url1:"q",
+//       url2:"q"
+//     }
+//   ]
+// }
+export const UrlFormurl = ({control}) => {
     const {
         register,
         formState:{
           errors,     
         },
         handleSubmit,
-        control,
+       
         reset,
       } = useForm();
     
@@ -23,7 +33,7 @@ export const UrlFormurl = () => {
         alert(JSON.stringify(data));
         reset();    
       }
-      // ---------------------------------
+
     
       const [show, setShow] = useState(true);
     
@@ -51,7 +61,7 @@ export const UrlFormurl = () => {
     
     const handleClick  = () =>{
       setName(<>
-       <form onSubmit={handleSubmit(onSubmit)}>
+       {/* <form onSubmit={handleSubmit(onSubmit)}> */}
             <div className={style.URL1}>URL 2
             <label >        
               <Controller          
@@ -67,7 +77,11 @@ export const UrlFormurl = () => {
     
             
            
-          </form>
+          {/* </form> */}
+
+
+
+          
       
       
       
@@ -90,7 +104,7 @@ export const UrlFormurl = () => {
               {/* <input
               {...register('url1',{required: "Url 1 не заполнен"})}/> */}
               <Controller 
-              // name='url1'
+              name='url1'
               {...register('url1',{required: "Url 1 не заполнен"})}
               control={control}
               render={({field})=><Input placeholder='Введите URL-1' className={style.input1} {...field}/>}
@@ -101,8 +115,13 @@ export const UrlFormurl = () => {
             </div>
             <div  style={{height:40}}>{errors?.url1 && <p className={style.mes}>{errors?.url1?.message || "Error!"}</p>}</div>
             <p>{name}</p>
+
+
+   
+
+
     
-            <input type="submit" className={style.buttonAdd}/>
+            
                    
     
     

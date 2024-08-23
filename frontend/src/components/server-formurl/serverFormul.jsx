@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import style from './serverFormurl.module.css';
-import UrlFormurl from '../urlFormurl/urlFormurl';
+
 import { Controller, useForm } from 'react-hook-form';
 import { Checkbox } from 'antd';
 import {ConfigProvider} from 'antd';
