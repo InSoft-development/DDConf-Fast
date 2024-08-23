@@ -1,6 +1,11 @@
 import React from 'react';
 import style from './formurl.module.css'
 import ServerFormul from '../../components/server-formurl/serverFormul';
+import ServeruseForm from '../../components/SERVERUseForm/serveruseForm';
+
+
+
+
 
 
 
@@ -10,9 +15,12 @@ import ServerFormul from '../../components/server-formurl/serverFormul';
 
 
 export const Formurl = () => {
+
+
   return (
     <> 
-      <ServerFormul/>    
+      {/* <ServerFormul/>     */}
+      <ServeruseForm/>
     </>
    
   )

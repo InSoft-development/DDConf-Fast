@@ -82,44 +82,34 @@ export const Serveropcua = () => {
     }
 
 
-    const onFinish=(values)=>{
-        console.log({values});
-    }
+  
     
 
        // ////////////////// Добавление URL 2 ////////////////////////
-       const [URLL, setUrls] = useState([]);
-       const addURL = useCallback(()=>{
-           setUrls(URLL => [...URLL, URLL.length]) 
-       });
-       const UrlDelete = (u) =>{
-        const deleteUrl = [...URLL]
-        deleteUrl.splice(u,1)
-        setUrls(deleteUrl)
-       }
+   
 
   return (
     <>
     {lines.map((line,i) =>{
         return(
             <div className={style.wrapper}>
-                 <button className="button btn-green" onClick={e => {console.log(servers,typename,type,typeCert,intervl,items)}}>Сохранить</button>
-                 <button className="button btn-green" onClick={()=>{addTypename();addServer();addType();addTypecert();addIntervl();addItems()}}>Добавить сервер</button> 
+                 {/* <button className="button btn-green" onClick={e => {console.log(servers,typename,type,typeCert,intervl,items)}}>Сохранить</button>
+                 <button className="button btn-green" onClick={()=>{addTypename();addServer();addType();addTypecert();addIntervl();addItems()}}>Добавить сервер</button>  */}
               
-        <div className={style.Address}>Сервер {line} 
+                <div className={style.Address}>Сервер {line} 
 
-            <div className={style.AddressButton}>              
-                <Button onClick={() => handleDelete(i)}  className={style.buttonDel} type="Success" Success icon={<DeleteOutlined />}>Удалить сервер</Button> 
+                    <div className={style.AddressButton}>              
+                        <Button onClick={() => handleDelete(i)}  className={style.buttonDel} type="Success" Success icon={<DeleteOutlined />}>Удалить сервер</Button> 
+                    </div>
+                    <Urls/> 
+                    <Typeavt/>       
+                    <div className={style.subscription}>
+                        <Subscription/>             
+                    </div> 
+
+                    
+                </div>        
             </div>
-            <Urls/> 
-            <Typeavt/>       
-            <div className={style.subscription}>
-                <Subscription/>             
-            </div> 
-
-            
-        </div>        
-    </div>
             
         )
     })}
@@ -127,7 +117,7 @@ export const Serveropcua = () => {
 
             <div className={style.AddressButton}>
                 {/* <Button onClick={() => {addLine();addServer();addTypename();addType();addTypecert();addIntervl();addItems(); {console.log(typename,servers,type,typeCert,intervl,items)}}} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button> */}
-                {/* <Button onClick={() => {addLine()}} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button> */}
+                <Button onClick={() => {addLine()}} className={style.buttonAdd} type="Success" Success icon={<PlusOutlined />}>Добавить сервер</Button>
             </div>
     </>  
   )

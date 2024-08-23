@@ -28,9 +28,9 @@ export const UrlFormurl = () => {
       const [show, setShow] = useState(true);
     
           
-      const onFinish=(values)=>{
-        console.log({values});
-    }
+    //   const onFinish=(values)=>{
+    //     console.log({values});
+    // }
     const [URLL, setUrls] = useState([]);
     const addURL = useCallback(()=>{
     setUrls(URLL => [...URLL, URLL.length]) 
