@@ -7,6 +7,7 @@ import RestoreFormurl from '../restore-formurl/restoreFormurl';
 import {DeleteOutlined} from '@ant-design/icons';
 import {PlusOutlined} from '@ant-design/icons';
 import { Button,Select } from 'antd';
+import { Input} from 'antd';
 
 
 
@@ -14,26 +15,29 @@ import { Button,Select } from 'antd';
 
 // -----------------Структура -----------------------
 const defaultValues ={
-    resett: false,
-    servers:[
-      {
+    resett: false,  
+    servers:
+       {
         url1:"",
-        url2:""
+        url2:"",
       }
-    ]
     
     
-    // servers:
-    //   {
-    //     url1:" ",
-    //     url2:" ",
-    //   }
+     
+    
+    
+ 
     
 }
+
 // ---------------------------------------------------
 
 export const ServeruseForm = () => {
-    const { handleSubmit, register, reset, setValue, control } = useForm({ defaultValues });
+    const { handleSubmit, register, reset, setValue, control,
+      formState:{
+        errors,
+      },
+     } = useForm({ defaultValues});
     const [data, setData] = useState(null);
     // const onSubmit = data => console.log(data);
    
@@ -42,6 +46,7 @@ export const ServeruseForm = () => {
     reset();
    
   }
+ 
  // ------------- Функция добавления СЕРВЕРА ------------------------
  const [server, setServer] = useState([1]);
  const addServer = useCallback(()=>{
@@ -59,7 +64,9 @@ export const ServeruseForm = () => {
 
   return (
     <>
+    {/* <form onSubmit={handleSubmit(onSubmit)} className={style.wrapper}> */}
     <form onSubmit={handleSubmit(onSubmit)} className={style.wrapper}>
+      
         <RestoreFormurl control={control} />
         
         {/* ------------------ Сервер ----------------------------  */}
@@ -70,8 +77,13 @@ export const ServeruseForm = () => {
                 <Button onClick={()=> handleDelete(i)} className={style.buttonDel} type="Success" Success icon={<DeleteOutlined />}>Удалить Сервер</Button>
               </div>
               {/* ---------------------- URL ----------------------------- */}
-              <UrlFormurl control={control} />
-         
+
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <UrlFormurl control={control}    />
+                {/* {...register('servers.url1',{required: true})} */}
+              </form>
+           
+              
 
               {/* -------------------------------------------------------- */}
 
@@ -86,6 +98,7 @@ export const ServeruseForm = () => {
        
       
         <input type="submit" {...{ data, setValue }} /> 
+        {/* <input type="submit"  />  */}
     </form>
      
     </>

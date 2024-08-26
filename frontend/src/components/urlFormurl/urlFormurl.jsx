@@ -7,20 +7,14 @@ import { useState } from 'react';
 import {PlusOutlined} from '@ant-design/icons';
 import {MinusOutlined} from '@ant-design/icons';
 import { Controller } from 'react-hook-form';
-import {Select} from 'antd';
 
-// const defaultValues ={
-//   resett: false,
-//   servers:[
-//     {
-//       url1:"q",
-//       url2:"q"
-//     }
-//   ]
-// }
+
+
 export const UrlFormurl = ({control}) => {
     const {
         register,
+       
+        
         formState:{
           errors,     
         },
@@ -38,9 +32,7 @@ export const UrlFormurl = ({control}) => {
       const [show, setShow] = useState(true);
     
           
-    //   const onFinish=(values)=>{
-    //     console.log({values});
-    // }
+ 
     const [URLL, setUrls] = useState([]);
     const addURL = useCallback(()=>{
     setUrls(URLL => [...URLL, URLL.length]) 
@@ -61,23 +53,27 @@ export const UrlFormurl = ({control}) => {
     
     const handleClick  = () =>{
       setName(<>
-       {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+       <form onSubmit={handleSubmit(onSubmit)}>
             <div className={style.URL1}>URL 2
-            <label >        
-              <Controller          
-              {...register('url2',{required: "Url 2 не заполнен"})}
+         
+              <Controller 
+              id = "url2"         
+              {...register('servers.url2',{ required: "Url 2 не заполнен"})}
               control={control}
-              render={({field})=><Input placeholder='Введите URL-2' className={style.input1} {...field}/>}
+              render={({field})=><Input  placeholder='Введите URL-2' className={style.input1} {...field}
+              
+             
+              />}
               
               />      
-            </label>
+         
             <Button onClick={()=>{{Udelete();setShow(show)}}}  shape="circle" className={style.deleturl} type="Success" Success icon={<MinusOutlined />}></Button>
             </div>
-            <div  style={{height:40}}>{errors?.url2 && <p className={style.mes}>{errors?.url2?.message || "Error!"}</p>}</div>   
+            <div  style={{height:40}}>{errors?.url2 && <p className={style.mes}>{errors?.url2?.message}</p>}</div>   
     
             
            
-          {/* </form> */}
+          </form>
 
 
 
@@ -101,33 +97,25 @@ export const UrlFormurl = ({control}) => {
             <div className={style.URL1}>URL 1
             <label >
             
-              {/* <input
-              {...register('url1',{required: "Url 1 не заполнен"})}/> */}
+              
               <Controller 
-              name='url1'
-              {...register('url1',{required: "Url 1 не заполнен"})}
+             
+            
+              id="url1"
+             
+              {...register('servers.url1',{required: "Url 1 не заполнен"})}
               control={control}
-              render={({field})=><Input placeholder='Введите URL-1' className={style.input1} {...field}/>}
+              render={({field})=><Input placeholder='Введите URL-1' className={style.input1} {...field}
+             
+              />}
               
               />      
             </label>
             {show && <Button onClick={()=>{{handleClick(); setShow(!show)}}} shape="circle"   className={style.addUrl} type="Success" Success icon={<PlusOutlined />}></Button>}
             </div>
             <div  style={{height:40}}>{errors?.url1 && <p className={style.mes}>{errors?.url1?.message || "Error!"}</p>}</div>
-            <p>{name}</p>
-
-
-   
-
-
-    
+            <p>{name}</p>  
             
-                   
-    
-    
-    
-    
-    
           </form>
           
           

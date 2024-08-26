@@ -131,25 +131,3 @@
     font-weight: 600;  
     
 }
-input[type="submit"],
-.button {
-  /* position: relative; */
-  background: #15cd31;
-  color: white;
-  text-transform: uppercase;
-  border: none;
-  /* font-weight: 400; */
-  /* margin-top: 20px; */
-  padding: 10px;
-  /* font-size: 16px; */
-  letter-spacing: 2px;
-  /* display: block; */
-  /* appearance: none; */
-  border-radius: 5px;
-  /* width: 100%; */
-  /* font-weight: 400; */
-  /* letter-spacing: 0.5rem; */
-  /* transition: 0.3s all; */
-  cursor: pointer;
-  margin-left: 0px;
-}
