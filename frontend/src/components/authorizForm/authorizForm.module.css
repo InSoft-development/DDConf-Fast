@@ -1,0 +1,32 @@
+.textAutoLogin{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 500;  
+    margin-left: 90px;
+    padding-top: 0px;
+   
+}
+.input1{   
+    width: 305px;    
+    border-radius: 4px; 
+    margin-left: 10px;
+    bottom: 0px;
+    
+      
+}
+.input2{
+    width: 305px;
+    border-radius: 4px;
+    margin-left: 5px;
+    bottom: 0px;
+}
+.textAutoPass{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 500;  
+    margin-left: 85px;
+    padding-top: 10px;
+
+}
