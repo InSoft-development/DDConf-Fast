@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useState } from 'react';
+import TypeAvtForm from '../typeAvtForm/typeAvtForm';
 import style from './serveruseForm.module.css';
 import UrlFormurl from '../urlFormurl/urlFormurl';
 import { useForm, Controller } from "react-hook-form";
@@ -20,6 +21,14 @@ const defaultValues ={
        {
         url1:"",
         url2:"",
+        utoken_type:"Без авторизации", 
+        utoken_data: {
+        username: "",
+        password: "",
+      } | {
+        cert: "",
+        pkey: "",
+      } | null,
       }
     
     
@@ -82,9 +91,9 @@ export const ServeruseForm = () => {
                 <UrlFormurl control={control}    />
                 {/* {...register('servers.url1',{required: true})} */}
               </form>
-           
-              
-
+              {/* -------------------------------------------------------- */}
+              {/* --------------- Выбор авторизации ---------------------- */}
+                <TypeAvtForm control={control}/>
               {/* -------------------------------------------------------- */}
 
             </div>
