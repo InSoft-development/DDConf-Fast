@@ -3,6 +3,7 @@ import { useState } from 'react';
 import TypeAvtForm from '../typeAvtForm/typeAvtForm';
 import style from './serveruseForm.module.css';
 import UrlFormurl from '../urlFormurl/urlFormurl';
+import SecuritySettings from '../securitySettinns/securitySettings';
 import { useForm, Controller } from "react-hook-form";
 import RestoreFormurl from '../restore-formurl/restoreFormurl';
 import {DeleteOutlined} from '@ant-design/icons';
@@ -20,6 +21,7 @@ const defaultValues ={
     servers:
        {
         url1:"",
+
         url2:"",
         utoken_type:"Без авторизации", 
         utoken_data: {
@@ -29,14 +31,8 @@ const defaultValues ={
         cert: "",
         pkey: "",
       } | null,
+      secpolicy: "None-None (uatcp-uasc-uabinary)",
       }
-    
-    
-     
-    
-    
- 
-    
 }
 
 // ---------------------------------------------------
@@ -94,6 +90,14 @@ export const ServeruseForm = () => {
               {/* -------------------------------------------------------- */}
               {/* --------------- Выбор авторизации ---------------------- */}
                 <TypeAvtForm control={control}/>
+              {/* -------------------------------------------------------- */}
+
+
+              {/* ------------------- Политика безопасности -------------- */}
+              <SecuritySettings control={control}/>
+              {/* -------------------------------------------------------- */}
+
+              {/* --------------- Режим безопасности сообщений ----------- */}
               {/* -------------------------------------------------------- */}
 
             </div>
