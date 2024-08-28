@@ -1,0 +1,13 @@
+.secutity{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 600;  
+    margin-left: 0px;
+    padding-top: 33px;
+}
+.select{
+    width: 190px;
+    margin-left: 23px;
+    margin-bottom: 50px;
+}

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import TypeAvtForm from '../typeAvtForm/typeAvtForm';
 import style from './serveruseForm.module.css';
 import UrlFormurl from '../urlFormurl/urlFormurl';
+import Msmform from '../MSM/msmform';
 import SecuritySettings from '../securitySettinns/securitySettings';
 import { useForm, Controller } from "react-hook-form";
 import RestoreFormurl from '../restore-formurl/restoreFormurl';
@@ -32,6 +33,7 @@ const defaultValues ={
         pkey: "",
       } | null,
       secpolicy: "None-None (uatcp-uasc-uabinary)",
+      mesmode: "none",
       }
 }
 
@@ -44,13 +46,18 @@ export const ServeruseForm = () => {
       },
      } = useForm({ defaultValues});
     const [data, setData] = useState(null);
-    // const onSubmit = data => console.log(data);
+    const onSubmit = (data) => {
+      console.log(data);
+      reset();
+    }
+  
+    
    
-    const onSubmit = (data) =>{
-    console.log(JSON.stringify(data));
-    reset();
+  //   const onSubmit = (data) =>{
+  //   console.log(JSON.stringify(data));
+  //   reset();
    
-  }
+  // }
  
  // ------------- Функция добавления СЕРВЕРА ------------------------
  const [server, setServer] = useState([1]);
@@ -98,6 +105,7 @@ export const ServeruseForm = () => {
               {/* -------------------------------------------------------- */}
 
               {/* --------------- Режим безопасности сообщений ----------- */}
+              <Msmform control={control}/>
               {/* -------------------------------------------------------- */}
 
             </div>
