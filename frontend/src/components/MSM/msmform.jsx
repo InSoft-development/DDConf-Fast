@@ -20,8 +20,9 @@ export const Msmform = ({control}) => {
     control={control}
     render={({ field }) => (
         <Select   className={style.select} {...field}>
+          <Option value="none">none</Option>
           <Option value="Sign">Sign</Option>
-          <Option value="Sign & Encrypt (значение тега “SignAndEncrypt”)">Sign & Encrypt (значение тега “SignAndEncrypt”)</Option>
+          <Option value="Sign & Encrypt">Sign & Encrypt (значение тега “SignAndEncrypt”)</Option>
           
         </Select>
       )}

@@ -18,12 +18,13 @@ export const SecuritySettings = ({control}) => {
     control={control}
     render={({ field }) => (
       <Select   className={style.select} {...field}>
-        <Option value="Basic256Sha256 - Sign (uatcp-uasc-uabinary)">Basic256Sha256 - Sign (uatcp-yasc-uabinary)</Option>
-        <Option value="Basic256Sha256 - Sign & Encrypt (uatcp-uasc-uabinary)">Basic256Sha256 - Sign & Encrypt (uatcp-uasc-uabinary)</Option>
-        <Option value="Aes128_Sha256_RasOaep - Sign (uatcp-uasc-uabinary)">Aes128_Sha256_RasOaep - Sign (uatcp-uasc-uabinary)</Option>
-        <Option value="Aes128_Sha256_RasOaep - Sign & Encrypt (uatcp-uasc-uabinary)">Aes128_Sha256_RasOaep - Sign & Encrypt (uatcp-uasc-uabinary)</Option>
-        <Option value="Aes256_Sha256_RsaPss - Sign (uatcp-uasc-uabinary)">Aes256_Sha256_RsaPss - Sign (uatcp-uasc-uabinary)</Option>
-        <Option value="Aes256_Sha256_RsaPss - Sign & Encrypt (uatcp-uasc-uabinary)">Aes256_Sha256_RsaPss - Sign & Encrypt (uatcp-uasc-uabinary)</Option>
+        <Option value="None-None">None-None</Option>
+        <Option value="Basic256Sha256 - Sign">Basic256Sha256 - Sign (uatcp-yasc-uabinary)</Option>
+        <Option value="Basic256Sha256 - Sign & Encrypt">Basic256Sha256 - Sign & Encrypt (uatcp-uasc-uabinary)</Option>
+        <Option value="Aes128_Sha256_RasOaep - Sign">Aes128_Sha256_RasOaep - Sign (uatcp-uasc-uabinary)</Option>
+        <Option value="Aes128_Sha256_RasOaep - Sign & Encrypt">Aes128_Sha256_RasOaep - Sign & Encrypt (uatcp-uasc-uabinary)</Option>
+        <Option value="Aes256_Sha256_RsaPss - Sign">Aes256_Sha256_RsaPss - Sign (uatcp-uasc-uabinary)</Option>
+        <Option value="Aes256_Sha256_RsaPss - Sign & Encrypt">Aes256_Sha256_RsaPss - Sign & Encrypt (uatcp-uasc-uabinary)</Option>
       </Select>
     )}
     

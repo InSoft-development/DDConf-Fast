@@ -4,6 +4,7 @@ import TypeAvtForm from '../typeAvtForm/typeAvtForm';
 import style from './serveruseForm.module.css';
 import UrlFormurl from '../urlFormurl/urlFormurl';
 import Msmform from '../MSM/msmform';
+import SubscriptionForm from '../subscriptionForm/subscriptionForm';
 import SecuritySettings from '../securitySettinns/securitySettings';
 import { useForm, Controller } from "react-hook-form";
 import RestoreFormurl from '../restore-formurl/restoreFormurl';
@@ -18,22 +19,27 @@ import { Input} from 'antd';
 
 // -----------------Структура -----------------------
 const defaultValues ={
-    resett: false,  
+    restore: false,  
     servers:
        {
         url1:"",
-
         url2:"",
-        utoken_type:"Без авторизации", 
+        utoken_type: 'Anonymous', 
         utoken_data: {
-        username: "",
-        password: "",
+        username: null,
+        password: null,
       } | {
-        cert: "",
-        pkey: "",
+        cert: null,
+        pkey: null,
       } | null,
-      secpolicy: "None-None (uatcp-uasc-uabinary)",
+      secpolicy: "None-None",
       mesmode: "none",
+      subscriptions: 
+        {
+          interval: '',
+          items: String,
+        },
+
       }
 }
 
@@ -46,18 +52,18 @@ export const ServeruseForm = () => {
       },
      } = useForm({ defaultValues});
     const [data, setData] = useState(null);
-    const onSubmit = (data) => {
-      console.log(data);
-      reset();
-    }
+    // const onSubmit = (data) => {
+    //   console.log(data);
+    //   reset();
+    // }
   
     
    
-  //   const onSubmit = (data) =>{
-  //   console.log(JSON.stringify(data));
-  //   reset();
+    const onSubmit = (data) =>{
+    console.log(JSON.stringify(data));
+    reset();
    
-  // }
+  }
  
  // ------------- Функция добавления СЕРВЕРА ------------------------
  const [server, setServer] = useState([1]);
@@ -106,6 +112,10 @@ export const ServeruseForm = () => {
 
               {/* --------------- Режим безопасности сообщений ----------- */}
               <Msmform control={control}/>
+              {/* -------------------------------------------------------- */}
+
+              {/* -------------------- Подписка -------------------------- */}
+              <SubscriptionForm control={control}/>
               {/* -------------------------------------------------------- */}
 
             </div>

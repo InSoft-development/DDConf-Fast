@@ -5,9 +5,10 @@
     font-weight: 600;  
     margin-left: 0px;
     padding-top: 33px;
+    word-break: break-all;
 }
 .select{
-    width: 190px;
+    width: 390px;
     margin-left: 23px;
     margin-bottom: 50px;
 }

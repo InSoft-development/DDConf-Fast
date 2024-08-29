@@ -10,7 +10,7 @@ export const RestoreFormurl = ({control}) => {
     <div className={style.Restore}> Восстановить соединение после падения
     <Controller
       control={control}
-      name="resett"
+      name="restore"
       render={({ field: { value, onChange } }) => (
         <ConfigProvider theme={{
           token:{

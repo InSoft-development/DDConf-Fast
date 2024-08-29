@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import NotAuthorizationForm from '../NotAuthorizationForm/NotAuthorizationForm';
 import AuthorizForm from '../authorizForm/authorizForm';
 import CertForm from '../certForm/certForm';
+import { Select } from 'antd';
+import { Option } from 'antd/es/mentions';
 
 export const TypeAvtForm = ({control}) => {
     const {
@@ -19,23 +21,41 @@ export const TypeAvtForm = ({control}) => {
 
 
 
-    const [selected, setSelected] = useState('Без авторизации');
+    const [selected, setSelected] = useState('Anonymous');
     const handleChange = (e) => {
         setSelected(e.target.value);
     }
   return (
         <>
         <div value={selected} onChange={(e) => handleChange(e)} className={style.TypeAvt}>Тип авторизации
-            <select className={style.select}>
-                <option  value="Без авторизации">Без авторизации</option>
-                <option  value="Авторизация">По имени пользователя</option>
-                <option  value="Сертификат">По сертификату</option>
-            </select>                           
+          <Controller
+          id = "utoken_type"
+          {...register('servers.utoken_type')}
+          control={control}
+          render={({field}) =>(
+             <select className={style.select} {...field}>
+                <option   value="Anonymous">Без авторизации</option>
+                <option   value="username">По имени пользователя</option>
+                <option   value="cert">По сертификату</option>
+            </select>
+
+          )}
+          
+          />
+
+              {/* <select className={style.select}>
+                <option   value="Без авторизации">Без авторизации</option>
+                <option   value="username">По имени пользователя</option>
+                <option   value="cert">По сертификату</option>
+              </select> */}
+          
+           
+
         </div>            
         <div className={style.AotoPol}>
-            {selected == "Без авторизации"?<NotAuthorizationForm control={control}/>:""}
-            {selected == "Авторизация"?<AuthorizForm control={control}/>:""}
-            {selected == "Сертификат"?<CertForm control={control}/>:""}             
+            {selected == "Anonymous"?<NotAuthorizationForm control={control}/>:""}
+            {selected == "username"?<AuthorizForm control={control}/>:""}
+            {selected == "cert"?<CertForm control={control}/>:""}             
         </div>
     </>
 

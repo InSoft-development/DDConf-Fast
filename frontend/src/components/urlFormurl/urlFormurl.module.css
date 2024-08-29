@@ -80,13 +80,13 @@
 .addUrl{
     color: #fff;
     background-color: var(--status-success);
-    left: 15px;
+    left: 30px;
     bottom: -3px;
 }
 .deleturl{
     color: #fff;
     background-color: var(--status-danger);
-    left: 15px;
+    left: 30px;
     bottom: -3px;
 
 }
