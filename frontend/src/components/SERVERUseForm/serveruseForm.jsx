@@ -6,6 +6,9 @@ import UrlFormurl from '../urlFormurl/urlFormurl';
 import Msmform from '../MSM/msmform';
 import SubscriptionForm from '../subscriptionForm/subscriptionForm';
 import SecuritySettings from '../securitySettinns/securitySettings';
+
+import TestForm from '../testForm/testForm';
+
 import { useForm, Controller } from "react-hook-form";
 import RestoreFormurl from '../restore-formurl/restoreFormurl';
 import {DeleteOutlined} from '@ant-design/icons';
@@ -37,7 +40,7 @@ const defaultValues ={
       subscriptions: 
         {
           interval: '',
-          items: String,
+          items: '',
         },
 
       }
@@ -45,7 +48,24 @@ const defaultValues ={
 
 // ---------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const ServeruseForm = () => {
+
+
+
     const { handleSubmit, register, reset, setValue, control,
       formState:{
         errors,
@@ -116,6 +136,10 @@ export const ServeruseForm = () => {
 
               {/* -------------------- Подписка -------------------------- */}
               <SubscriptionForm control={control}/>
+              {/* -------------------------------------------------------- */}
+
+              {/* -------------------- TestForm -------------------------- */}
+              {/* <TestForm/> */}
               {/* -------------------------------------------------------- */}
 
             </div>

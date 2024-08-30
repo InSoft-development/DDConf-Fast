@@ -57,7 +57,7 @@ export const UrlFormurl = ({control}) => {
             <div className={style.URL1}>URL 2
          
               <Controller 
-              id = "url2"         
+              id = "url2"        
               {...register('servers.url2',{ required: "Url 2 не заполнен"})}
               control={control}
               render={({field})=><Input  placeholder='Введите URL-2' className={style.input1} {...field}
