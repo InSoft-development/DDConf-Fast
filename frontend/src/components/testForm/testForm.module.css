@@ -1,0 +1,133 @@
+.wrapper{
+    padding: 10px 15px;   
+}
+
+.Address{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 700; 
+    margin-top: 30px;
+    border-bottom: 1px solid;
+    
+    /* height: 400px;    */
+}
+.buttonDel{
+    left: 380px;
+    /* width: 160px; */
+    background-color: var(--status-danger);
+    color: #fff;
+    font-weight: 500;
+    left: 173px;
+    bottom: 25px;
+}
+.buttonAdd{
+    left: 160px;
+    /* width: 165px; */
+    background-color: var(--status-success);
+    color: #fff;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 10px; 
+    margin-left: 13px;   
+}
+
+.AddressButton{
+    margin-left: 115px;
+}
+.URL1{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 450;  
+    margin-top: 16px;   
+}
+.input1{
+    width: 340px;    
+    border-radius: 4px; 
+    left: 2px;
+}
+.input2{
+    width: 340px;
+    border-radius: 4px;
+    left: 2px;
+}
+.TypeAvt{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 600;  
+    margin-top: 33px;
+}
+.select{
+   box-sizing: border-box;
+   border: 1px solid rgb(206, 212, 218);
+   border-radius: 4px;
+   height: 35px;
+   width: 300px; 
+   padding: 6px 12px 6px 12px;
+   margin-left: 23px;
+   cursor: pointer;
+   /* color: rgb(217, 217, 217); */
+}
+.AotoPol{
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+.subscription{  
+    margin-bottom: 30px;
+}
+.addUrl{
+    color: #fff;
+    background-color: var(--status-success);
+    left: 30px;
+    bottom: -3px;
+}
+.deleturl{
+    color: #fff;
+    background-color: var(--status-danger);
+    left: 30px;
+    bottom: -3px;
+
+}
+.anVisibleaddUrl{
+    color: #fff;
+    background-color: var(--gray-500);
+    left: 379px;
+    bottom: 56px;
+}
+.buttonAdd{
+    left: 160px;
+    /* width: 165px; */
+    background-color: var(--status-success);
+    color: #fff;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 10px; 
+    margin-left: 13px;  
+   
+}
+.wrapper{
+    padding: 10px 15px;   
+}
+.URL1{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 450;  
+    margin-top: 16px;   
+}
+
+.input1{
+    width: 330px;    
+    border-radius: 4px; 
+    left: 10px;
+}
+.mes{
+    font-family: Inter, sans-serif;  
+    color: red;
+    margin-left: 40px;
+    margin-top: 5px;
+    font-weight: 600;  
+    
+}

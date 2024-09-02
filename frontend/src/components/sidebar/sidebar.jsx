@@ -50,6 +50,14 @@ const Sidebar = () => {
                                 <ProfileOutlined style={{marginRight: 10}}/>
                                 МЭК 104
                             </NavLink>
+                            <NavLink to='/opcua' className={navLink} onClick={e => closeSidebar()}>
+                                <ProfileOutlined style={{marginRight: 10}}/>
+                                OPC UA
+                            </NavLink>
+                            <NavLink to='/formurl' className={navLink} onClick={e => closeSidebar()}>
+                                <ProfileOutlined style={{marginRight: 10}}/>
+                                formurl
+                            </NavLink>
                         </ul>
                     </nav>
                 </div>

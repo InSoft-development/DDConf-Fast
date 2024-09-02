@@ -1,0 +1,23 @@
+.textAuto{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 500;  
+    margin-left: 0px;
+    padding-top: 40px;
+}
+.input1{   
+    width: 382px;    
+    border-radius: 4px; 
+    margin-left: 63px;
+    bottom: 90px;
+    
+      
+}
+.input2{
+    width: 382px;
+    border-radius: 4px;
+    margin-left: 63px;
+    bottom: 0px;
+}
+

@@ -1,0 +1,16 @@
+.secutity{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 600;  
+    margin-left: 0px;
+    padding-top: 33px;
+}
+.select{
+    width: 450px;
+    /* position: relative; */
+    margin-left: 23px;
+    margin-bottom: 50px;
+    word-break: break-all;
+
+}
