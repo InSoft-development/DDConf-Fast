@@ -273,10 +273,18 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 		return data
 
 def fetch_certs():
-	#TODO: save archive copies as user.[der | pem].[datetime]
+	#WARNING: assumes the archive copies are saved as user.[der | pem].[datetime]
 	try:
 		dest = Path("/etc/dd/opcua/.archcerts")
 		return [f"user-{x.split('.')[-1]} ({x.split('.')[1]})" for x in listdir(dest) if x.split('.')[-1] in {".pem", ".der"}]
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
 		print(f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+
+
+def save_certs():
+	#TODO: save archive copies as user.[der | pem].[datetime]
+	
+	
+	
+	
