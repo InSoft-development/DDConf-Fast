@@ -1,0 +1,169 @@
+.Restore{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 700;  
+    padding-top: 50px;
+    margin-bottom: 30px;
+    padding-left: 7px;
+}
+.checkbox{
+    margin-left: 20px;
+    cursor: pointer;
+    
+    
+    
+   
+}
+.wrapper{
+    padding: 10px 15px;   
+}
+.Address{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 700; 
+    margin-top: 30px;
+    border-bottom: 1px solid;
+    
+    /* height: 400px;    */
+}
+.buttonDel{
+    left: 380px;
+    /* width: 160px; */
+    background-color: var(--status-danger);
+    color: #fff;
+    font-weight: 500;
+    left: 173px;
+    bottom: 25px;
+}
+.buttonAdd{
+    left: 160px;
+    /* width: 165px; */
+    background-color: var(--status-success);
+    color: #fff;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 10px; 
+    margin-left: 13px;   
+}
+
+.AddressButton{
+    margin-left: 115px;
+}
+.URL1{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 450;  
+    margin-top: 16px;   
+}
+.input1{
+    width: 340px;    
+    border-radius: 4px; 
+    left: 2px;
+}
+.input2{
+    width: 340px;
+    border-radius: 4px;
+    left: 2px;
+}
+.TypeAvt{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 600;  
+    margin-top: 33px;
+}
+.select{
+   box-sizing: border-box;
+   border: 1px solid rgb(206, 212, 218);
+   border-radius: 4px;
+   height: 35px;
+   width: 300px; 
+   padding: 6px 12px 6px 12px;
+   margin-left: 23px;
+   cursor: pointer;
+   /* color: rgb(217, 217, 217); */
+}
+.AotoPol{
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+.subscription{  
+    margin-bottom: 30px;
+}
+.addUrl{
+    color: #fff;
+    background-color: var(--status-success);
+    left: 411px;
+    bottom: 56px;
+}
+.deleturl{
+    color: #fff;
+    background-color: var(--status-danger);
+    left: 411px;
+    bottom: 56px;
+
+}
+/* ------------------------------- CheckBox -------------- */
+.Restore{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 700;  
+    padding-top: 50px;
+    margin-bottom: 30px;
+    padding-left: 7px;
+}
+
+.checkbox{
+    margin-left: 15px;
+    padding-top: 10px;
+    
+}
+
+.titleSub{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 600;  
+    margin-top: 33px;    
+}
+.publicMC{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 450;  
+    margin-top: 16px;   
+}
+.inputPublic{
+    width: 235px;    
+    border-radius: 4px; 
+    margin-left: 10px;
+    
+}
+.positionPlaceholder{
+    margin-top: 5px;
+}
+.placeholderteg{
+    width: 440px;
+}
+.btn{
+    margin-top: 5px;
+}
+.buttonAdd{
+    left: 167px;
+    background-color: var(--status-success);
+    color: #fff;
+    font-weight: 500;
+    left: 0px;
+    bottom: 37px;     
+}
+.buttonDel{
+    left: 380px;
+    background-color: var(--status-danger);
+    color: #fff;
+    font-weight: 500;
+    left: 268px; 
+}
