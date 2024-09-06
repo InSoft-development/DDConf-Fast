@@ -9,7 +9,8 @@ import Dd104 from '../../pages/dd104/dd104';
 import Dashboard from '../../pages/dashboard/dashboard';
 import ProfileEditor from '../../pages/profile-editor/profile-editor';
 import Opcua from '../../pages/opcua/opcua';
-import Formurl from '../../pages/formurl/formurl';
+
+
 
 // services
 import {getDeviceFeatures, getAvailableProtocols} from '../../services/actions/dashboard'
@@ -34,7 +35,8 @@ const App = () => {
                     <Route path='dd104' element={<Dd104/>}></Route>
                     <Route path='profile-editor' element={<ProfileEditor/>}></Route>
                     <Route path='opcua' element={<Opcua/>}></Route>                 
-                    <Route path='formurl' element={<Formurl/>}></Route>
+                  
+               
                     
                 </Route>
                 <Route path='/sign-in' element={<SignIn/>}></Route>
