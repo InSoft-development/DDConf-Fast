@@ -4,6 +4,7 @@ from pathlib import Path
 from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
+from tempfile import SpooledTemporaryFile
 
 from models import Defaults
 # Globals
@@ -282,9 +283,90 @@ def fetch_certs():
 		print(f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
 
 
-def save_certs():
-	#TODO: save archive copies as user.[der | pem].[datetime]
+def upload_certs(data: dict):
+	#{"cert":"<file upload>", "pkey":"<file upload>"}
 	
+	if type(data["cert"]) == UploadFile: 
+		
+		with data['cert'].file.open() as F:
+			buff = ''
+			assert N>0
+			for chunk in iter(lambda: F.read(N), ''):
+				buff += chunk
+		F.close()
+		Path(DEFAULTS.CERT).write_text(buff)
 	
+	if type(data["pkey"]) == UploadFile: 
+		
+		with data['pkey'].file.open() as F:
+			buff = ''
+			assert N>0
+			for chunk in iter(lambda: F.read(N), ''):
+				buff += chunk
+		F.close()
+		Path(DEFAULTS.PKEY).write_text(buff)
+		
 	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
