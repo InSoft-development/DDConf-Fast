@@ -20,7 +20,8 @@ const AppHeader = () => {
         const headerText = {
             '/': 'Дашборд',
             '/dd104': 'Протокол МЭК 104',
-            '/profile-editor': 'Протокол МЭК 104'
+            '/profile-editor': 'Протокол МЭК 104',
+            '/opcua': 'OPC UA'
         }
 
         setHeaderTitle(headerText[location.pathname])

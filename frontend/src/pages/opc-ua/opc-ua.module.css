@@ -1,0 +1,30 @@
+.form{
+    width: 650px;
+    border: 1px solid grey;
+}
+
+.restore{
+    display: flex;
+    align-items: center;
+}
+
+.restore > input[type="checkbox"]{
+    width: 15px;
+    height: 15px;
+}
+
+.serverTitle{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ulrWrapper{
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.authorizationType{
+    margin-top: 40px;
+}
