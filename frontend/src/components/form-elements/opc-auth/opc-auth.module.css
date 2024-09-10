@@ -1,9 +1,0 @@
-.authByLogin{
-
-    display: flex;
-    flex-direction: column;
-}
-
-.authByLogin > div{
-    margin-top: 20px;
-}
