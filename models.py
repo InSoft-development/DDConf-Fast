@@ -33,8 +33,9 @@ class Defaults:
 		#turned off by default, if the value is not-null, turn on archiving
 		"ARCDIR" : None, #'/etc/dd/dd104/archive.d/'
 		"LOADOUTDIR" : '/etc/dd/opcua/loadouts/',
-		"CERT" : "",
-		"PKEY" : ""
+		"BINBASE" : "/opt/dd/ddOPCUAclient/bin"
+		"CERT" : f"",
+		"PKEY" : f""
 	}
 	
 	def __init__(self, confile = "/etc/dd/DDConf.json"):
@@ -51,8 +52,9 @@ class Defaults:
 			conf = json.loads(Path(self.DEFAULTS_FILE).read_text())['opcua']
 			self.OPCUA["INIDIR"] = conf['confdir'] if 'confdir' in conf and conf['confdir'] else '/etc/dd/opcua/configs/'
 			self.OPCUA["ARCDIR"] = conf['archdir'] if 'archdir' in conf and conf['archdir'] else None 
-			self.OPCUA["CERTDIR"] = conf['certpath'] if 'certpath' in conf and conf['certpath'] else None 
-			self.OPCUA["PKDIR"] = conf['pkpath'] if 'pkpath' in conf and conf['pkpath'] else None 
+			self.OPCUA["BINBASE"] = conf['base'] if 'base' in conf and conf['base'] else "/opt/dd/ddOPCUAclient/bin" 
+			self.OPCUA["CERT"] = self.OPCUA['BINBASE']+"/pki/user/certs/user.der"
+			self.OPCUA["PKEY"] = self.OPCUA['BINBASE']+"/pki/user/private/user.pem" 
 		
 		except Exception as e:
 			msg = f"ddconf.models.defaults: failed to init defaults, details: {str(e)}"

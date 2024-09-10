@@ -116,7 +116,7 @@ def validate_url(url:str) -> str:
 	if 'opc.tcp://' in url:
 		url = url.strip()[10::]
 	
-	
+	#WARNING the code below is unsafe to attacks that have a name in hosts somewhere in the payload
 	hostflag = False
 	try:
 		lines = Path("/etc/hosts").read_text().strip().split('\n')
@@ -219,16 +219,17 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 						if "id" in line:
 							data["servers"][sercount]["id"] = line.split('=')[1]
 						elif "url1" in line:
-							data["servers"][sercount]["main"] = validate_url(line.split("=")[1])
+							data["servers"][sercount]["url1"] = validate_url(line.split("=")[1])
 						
 						elif "url2" in line:
-							data["servers"][sercount]["second"] = validate_url(line.split("=")[1])
+							data["servers"][sercount]["url2"] = validate_url(line.split("=")[1])
+							data["servers"][sercount]["url2_exists"] = bool(data["servers"][sercount]["url2"])
 						
 						elif "usertokentype" in line:
 							data["servers"][sercount]["utoken_type"] = line.split('=')[1]
-							data["servers"][sercount]["utoken_data"] = None if line.split('=')[1] == "anonymous" or line.split('=')[1] == "certificate" else {}
+							data["servers"][sercount]["utoken_data"] = {} if line.split('=')[1] == "username" else None
 						
-						elif "username" in line:
+						elif "username" in line and data["servers"][sercount]["utoken_type"] == 'username':
 							data["servers"][sercount]["utoken_data"]["username"] = line.split("=")[1]
 						
 						elif "password" in line:
