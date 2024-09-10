@@ -7,12 +7,27 @@ html {margin-right: calc(-1 * (100vw - 100%));}
     width: 95%;
 }
 
+/* 
+    Font weight      usWeightClass
+    Regular          400
+    Medium           500
+    SemiBold         600
+    Bold             700
+*/
+
 /* fonts */
 @font-face {
     font-family: 'Inter';
     font-weight: 700;
     src: local('Inter'),
          url('./fonts/Inter/Inter-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 500;
+    src: local('Inter'),
+         url('./fonts/Inter/Inter-Medium.ttf');
 }
 
 @font-face {
@@ -76,6 +91,10 @@ html {margin-right: calc(-1 * (100vw - 100%));}
    color: var(--gray-900);
 }
 
+.text-18{
+    font-size: 18px;
+}
+
 .text_type_main{
     font-size: 20px;
     font-weight: 700;
@@ -109,6 +128,10 @@ html {margin-right: calc(-1 * (100vw - 100%));}
     font-size: 16px;
 }
 
+.fw-r{font-weight: 400;}
+.fw-m{font-weight: 500;}
+.fw-b{font-weight: 700;}
+
 .editable{
     cursor: text;
 }
@@ -140,21 +163,19 @@ html {margin-right: calc(-1 * (100vw - 100%));}
     align-items: center;
 }
 
-/* input */
+/* OPC-UA general styles*/
 
-.input{
-    width: 450px;
-    padding: 10px 15px;
-    border: 1px solid grey;
-    border-radius: 5px;
+.opc-input{
+    width: 400px;
+    height: 40px;
+    border: 1px solid var(--gray-500);
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 0 10px;
+    color: var(--gray-600);
 }
 
-.select{
-    width: 337px;
-    padding: 10px 15px;
-    border: 1px solid grey;
-    border-radius: 5px;
-}
 
 /* margin */
 
