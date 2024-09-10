@@ -1,6 +1,7 @@
 import React from 'react';
 import { useWatch } from 'react-hook-form';
-import { Flex } from 'antd';
+import { Flex, Upload} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 const AuthSection = ({ register, index, control, unregister, setValue }) => {
 
@@ -20,7 +21,7 @@ const AuthSection = ({ register, index, control, unregister, setValue }) => {
                         <Flex align='center' justify='space-between'>
                             <label
                                 htmlFor={`servers.${index}.utoken_data.username`}
-                                className='fw-b'
+                                className='fw-m ml-4'
                             >Логин:</label>
                             <input
                                 id={`servers.${index}.utoken_data.username`}
@@ -34,7 +35,7 @@ const AuthSection = ({ register, index, control, unregister, setValue }) => {
                         <Flex align='center' justify='space-between'>
                             <label
                                 htmlFor={`servers.${index}.utoken_data.username`}
-                                className='fw-b'
+                                className='fw-m ml-4'
                             >Пароль:</label>
                             <input
                                 id={`servers.${index}.utoken_data.password`}
@@ -46,6 +47,20 @@ const AuthSection = ({ register, index, control, unregister, setValue }) => {
                             />
                         </Flex>
                     </>
+                )
+            }
+            case 'certificate': {
+                return (
+                <>
+                <Flex align='center' justify='space-between'>
+                    <label className='fw-m ml-4'>Сертификат:</label>
+
+                </Flex>
+                <Flex align='center' justify='space-between'>
+                    <label className='fw-m ml-4'>Приватный ключ:</label>
+
+                </Flex>
+                </>
                 )
             }
             default: {
