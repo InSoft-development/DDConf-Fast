@@ -4,6 +4,7 @@ from pathlib import Path
 from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
+from tempfile import SpooledTemporaryFile
 
 from models import Defaults
 # Globals
@@ -115,7 +116,7 @@ def validate_url(url:str) -> str:
 	if 'opc.tcp://' in url:
 		url = url.strip()[10::]
 	
-	
+	#WARNING the code below is unsafe to attacks that have a name in hosts somewhere in the payload
 	hostflag = False
 	try:
 		lines = Path("/etc/hosts").read_text().strip().split('\n')
@@ -218,16 +219,17 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 						if "id" in line:
 							data["servers"][sercount]["id"] = line.split('=')[1]
 						elif "url1" in line:
-							data["servers"][sercount]["main"] = validate_url(line.split("=")[1])
+							data["servers"][sercount]["url1"] = validate_url(line.split("=")[1])
 						
 						elif "url2" in line:
-							data["servers"][sercount]["second"] = validate_url(line.split("=")[1])
+							data["servers"][sercount]["url2"] = validate_url(line.split("=")[1])
+							data["servers"][sercount]["url2_exists"] = bool(data["servers"][sercount]["url2"])
 						
 						elif "usertokentype" in line:
 							data["servers"][sercount]["utoken_type"] = line.split('=')[1]
-							data["servers"][sercount]["utoken_data"] = None if line.split('=')[1] == "anonymous" else {}
+							data["servers"][sercount]["utoken_data"] = {} if line.split('=')[1] == "username" else None
 						
-						elif "username" in line:
+						elif "username" in line and data["servers"][sercount]["utoken_type"] == 'username':
 							data["servers"][sercount]["utoken_data"]["username"] = line.split("=")[1]
 						
 						elif "password" in line:
@@ -271,3 +273,101 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 	else:
 		
 		return data
+
+def fetch_certs():
+	#WARNING: assumes the archive copies are saved as user.[der | pem].[datetime]
+	try:
+		dest = Path("/etc/dd/opcua/.archcerts")
+		return [f"user-{x.split('.')[-1]} ({x.split('.')[1]})" for x in listdir(dest) if x.split('.')[-1] in {".pem", ".der"}]
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
+		print(f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+
+
+def upload_certs(data: dict):
+	#{"cert":"<file upload>", "pkey":"<file upload>"}
+	
+	if type(data["cert"]) == UploadFile: 
+		
+		with data['cert'].file.open() as F:
+			buff = ''
+			assert N>0
+			for chunk in iter(lambda: F.read(N), ''):
+				buff += chunk
+		F.close()
+		Path(DEFAULTS.CERT).write_text(buff)
+	
+	if type(data["pkey"]) == UploadFile: 
+		
+		with data['pkey'].file.open() as F:
+			buff = ''
+			assert N>0
+			for chunk in iter(lambda: F.read(N), ''):
+				buff += chunk
+		F.close()
+		Path(DEFAULTS.PKEY).write_text(buff)
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

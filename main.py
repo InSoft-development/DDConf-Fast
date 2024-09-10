@@ -1,6 +1,6 @@
 from typing import Union, Annotated
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, PlainTextResponse, HTMLResponse, FileResponse, RedirectResponse
@@ -361,6 +361,14 @@ def handle_opcua(REQ:Models.POST):
 			data = OPCUA.make_file(REQ.params, f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
 		elif REQ.method == 'fetch_ua':
 			data = OPCUA.fetch_file(f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
+		elif REQ.method == 'upload_certs':
+			data = OPCUA.upload_certs(REQ.params)
+		#
+		#WARNING: the function below assumes the existence of a cert archive
+		#
+		# elif REQ.method == 'fetch_certs':
+		# 	data = OPCUA.fetch_certs()
+		
 		
 	except Exception as e:
 		tb=traceback.format_exc().strip().split('\n')[1::]
@@ -369,6 +377,21 @@ def handle_opcua(REQ:Models.POST):
 		return {"result":None, "error":str(e)}
 	
 	return {"result": data, "error":None if not errs else errs}
+
+
+# @app.post('/opcua/certupload')
+# async def cert_uploader(files: list[UploadFile]):
+# 	data = {}
+# 	errs = []
+# 	try:
+# 		if not files:
+# 			data = "No files were uploaded!"
+# 		else:
+# 			
+# 	except Exception as e:
+# 		pass
+# 	
+# 	return {"result": data, "error":None if not errs else errs}
 
 
 #TODO very jank, but better already
