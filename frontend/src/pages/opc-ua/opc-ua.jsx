@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './opc-ua.module.css';
-import { Flex } from 'antd';
+import { Flex, Divider } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm, useFieldArray, useWatch } from 'react-hook-form';
 import AuthSection from '../../components/form-elements/opc-ua/auth-section';
@@ -73,6 +73,7 @@ const OpcUa = () => {
                                         {...register(`servers.${index}.url2_exists`)}
                                     />
                                 </Flex>
+                                <Divider/>
                                 {/* Registration Type */}
                                 <Flex align='center' justify='space-between'>
                                     <label
@@ -98,18 +99,54 @@ const OpcUa = () => {
                                     unregister={unregister}
                                     setValue={setValue}
                                 />
+                                <Divider/>
+                                {/* Security Policy */}
                                 <Flex align='center' justify='space-between'>
-                                    
+                                    <label
+                                        htmlFor={`servers.${index}.secpolicy`}
+                                        className='fw-b'
+                                    >Политика безопасности:</label>
+                                    <select
+                                        defaultValue={'None'}
+                                        id={`servers.${index}.secpolicy`}
+                                        {...register(`servers.${index}.secpolicy`)}
+                                        className='opc-input'
+                                    >
+                                        <option value="None">None</option>
+                                        <option value="Basic256Sha256 - Sign">Basic256Sha256 - Sign</option>
+                                        <option value="Basic256Sha256 - Sign & Encrypt">Basic256Sha256 - Sign & Encrypt</option>
+                                        <option value="Aes128_Sha256_RsaOaep - Sign">Aes128_Sha256_RsaOaep - Sign</option>
+                                        <option value="Aes128_Sha256_RsaOaep - Sign & Encrypt">Aes128_Sha256_RsaOaep - Sign & Encrypt</option>
+                                        <option value="Aes256_Sha256_RsaPss - Sign">Aes256_Sha256_RsaPss - Sign</option>
+                                        <option value="Aes256_Sha256_RsaPss - Sign & Encrypt">Aes256_Sha256_RsaPss - Sign & Encrypt</option>
+                                    </select>
                                 </Flex>
-
+                                <Flex align='center' justify='space-between'>
+                                    <label
+                                        htmlFor={`servers.${index}.mesmode`}
+                                        className='fw-b'
+                                    >Режим шифрования <br/> сообщений:</label>
+                                    <select
+                                        defaultValue={'None'}
+                                        id={`servers.${index}.mesmode`}
+                                        {...register(`servers.${index}.mesmode`)}
+                                        className='opc-input'
+                                    >
+                                        <option value="None">None</option>
+                                        <option value="Sign">Sign</option>
+                                        <option value="Sign">Sign & Encrypt</option>
+                                    </select>
+                                </Flex>
+                                <Divider/>
+                                {/* Subscriptions */}
                             </div>
                         </div>
                     ))
                 }
             </div>
 
-            <div>
-                <button type="button" className="button btn-green" onClick={e => append()}>Добавить сервер</button>
+            <div className='mt-10'>
+                <button type="button" className="button btn-green mr-4" onClick={e => append()}>Добавить сервер</button>
                 <button type="submit" className='button btn-green'>Отправить</button>
             </div>
         </form>
