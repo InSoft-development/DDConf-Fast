@@ -2,9 +2,10 @@ import React from 'react';
 import styles from './opc-ua.module.css';
 import { Flex, Divider } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { useForm, useFieldArray, useWatch } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import AuthSection from '../../components/form-elements/opc-ua/auth-section';
-
+import SubscriptionsSection from '../../components/form-elements/opc-ua/subscriptions-section';
+import UrlSection from '../../components/form-elements/opc-ua/url-section';
 
 const OpcUa = () => {
 
@@ -17,8 +18,6 @@ const OpcUa = () => {
     const onSubmit = (data) => {
         console.log(data);
     }
-
-
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}
@@ -47,34 +46,13 @@ const OpcUa = () => {
                             </button>
                             {/* URL's */}
                             <div className={styles.serverInputsRows}>
-                                <Flex align='center' justify='space-between'>
-                                    <label
-                                        htmlFor={`servers.${index}.url1`}
-                                        className='fw-b'
-                                    >URL 1:</label>
-                                    <input
-                                        id={`servers.${index}.url1`}
-                                        type="text"
-                                        {...register(`servers.${index}.url1`)}
-                                        placeholder='Введите URL 1'
-                                        className='opc-input'
-                                        autoComplete="off"
-                                    />
-                                    <label htmlFor={`servers.${index}.url2_exists`}
-                                        className={`${styles.urlCheckboxLabel}`}
-                                        title='Добавить url 2'
-                                    >
-                                        <PlusOutlined style={{ color: 'white' }} />
-                                    </label>
-                                    <input
-                                        id={`servers.${index}.url2_exists`}
-                                        className={styles.urlCheckbox}
-                                        type="checkbox"
-                                        {...register(`servers.${index}.url2_exists`)}
-                                    />
-                                </Flex>
-                                <Divider/>
-                                {/* Registration Type */}
+                                <UrlSection
+                                    index={index}
+                                    register={register}
+                                    control={control}
+                                />
+                                <Divider />
+                                {/* Authorization Type */}
                                 <Flex align='center' justify='space-between'>
                                     <label
                                         htmlFor={`servers.${index}.utoken_type`}
@@ -99,7 +77,7 @@ const OpcUa = () => {
                                     unregister={unregister}
                                     setValue={setValue}
                                 />
-                                <Divider/>
+                                <Divider />
                                 {/* Security Policy */}
                                 <Flex align='center' justify='space-between'>
                                     <label
@@ -125,7 +103,7 @@ const OpcUa = () => {
                                     <label
                                         htmlFor={`servers.${index}.mesmode`}
                                         className='fw-b'
-                                    >Режим шифрования <br/> сообщений:</label>
+                                    >Режим шифрования <br /> сообщений:</label>
                                     <select
                                         defaultValue={'None'}
                                         id={`servers.${index}.mesmode`}
@@ -134,11 +112,18 @@ const OpcUa = () => {
                                     >
                                         <option value="None">None</option>
                                         <option value="Sign">Sign</option>
-                                        <option value="Sign">Sign & Encrypt</option>
+                                        <option value="Sign & Encrypt">Sign & Encrypt</option>
                                     </select>
                                 </Flex>
-                                <Divider/>
+                                <Divider />
                                 {/* Subscriptions */}
+                                <SubscriptionsSection
+                                    register={register}
+                                    index={index}
+                                    control={control}
+                                    unregister={unregister}
+                                    setValue={setValue}
+                                />
                             </div>
                         </div>
                     ))
