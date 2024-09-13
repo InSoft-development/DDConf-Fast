@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Flex } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useWatch } from 'react-hook-form';
@@ -54,11 +54,13 @@ const UrlSection = ({ register, index: parentIndex, control }) => {
                     <>
                         <Flex align='center' justify='space-between'>
                             <label className='fw-b'
-                                htmlFor=""
+                                htmlFor={`servers.${parentIndex}.url2`}
                             >URL 2:</label>
                             <input type="text"
+                                id={`servers.${parentIndex}.url2`}
                                 placeholder='Введите URL 2'
                                 className='opc-input'
+                                {...register(`servers.${parentIndex}.url2`)}
                             />
                         </Flex>
                     </>

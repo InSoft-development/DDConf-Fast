@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useWatch } from 'react-hook-form';
-import { Flex, Upload } from 'antd';
-import { UploadOutlined, PaperClipOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Flex } from 'antd';
+import { UploadOutlined, PaperClipOutlined } from '@ant-design/icons';
 
-const AuthSection = ({ register, index, control, unregister, setValue }) => {
+const AuthSection = ({ register, index, control }) => {
 
     const watchAuthType = useWatch({
         control,
@@ -64,7 +64,7 @@ const AuthSection = ({ register, index, control, unregister, setValue }) => {
                 return (
                     <>
                         <Flex align='center' justify='space-between'>
-                            <label className='fw-m ml-4'>Сертификат: </label>
+                            <label className='fw-m ml-4 '>Сертификат: </label>
                             <div className='opc-uload-wrapper'>
                                 <label htmlFor={`servers.${index}.utoken_data.cert`}
                                     className='opc-label-upload mr-6'
@@ -83,7 +83,7 @@ const AuthSection = ({ register, index, control, unregister, setValue }) => {
                                     className='opc-input-file'
                                     {...register(`servers.${index}.utoken_data.cert`)}
                                     type="file"
-                                    accept='.txt'                                    
+                                    accept='text/plain/, .txt'                                    
                                 />
                             </div>
 

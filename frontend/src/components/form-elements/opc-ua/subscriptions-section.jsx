@@ -3,7 +3,7 @@ import { useFieldArray } from 'react-hook-form';
 import { Flex, Divider } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
-const SubscriptionsSection = ({ register, index: parentIndex, control, unregister, setValue }) => {
+const SubscriptionsSection = ({ register, index: parentIndex, control}) => {
     const { fields, append, remove } = useFieldArray({
         control,
         name: `servers.${parentIndex}.subscriptions`
@@ -14,7 +14,7 @@ const SubscriptionsSection = ({ register, index: parentIndex, control, unregiste
             {fields.map((field, index) => (
                 <div key={field.id}>
                     <Flex align='center' justify='space-between'>
-                        <h2 className='text_type_main'>Подписка {index + 1}</h2>
+                        <h2 className={`text_type_main ${index === 0 && 'label-required-symbol'}`}>Подписка {index + 1}</h2>
                         <button className='button btn-red btn-circle'
                             onClick={e => remove(index)}
                         >
@@ -24,7 +24,7 @@ const SubscriptionsSection = ({ register, index: parentIndex, control, unregiste
                     <Flex align='center' justify='space-between' className='mt-20'>
                         <label
                             htmlFor={`servers.${parentIndex}.subscriptions.${index}.interval`}
-                            className='fw-b label-required-symbol'
+                            className='fw-b'
                         >Интервал публикации в мс:</label>
                         <input
                             id={`servers.${parentIndex}.subscriptions.${index}.interval`}
@@ -55,7 +55,10 @@ const SubscriptionsSection = ({ register, index: parentIndex, control, unregiste
                 <Flex justify='space-between' align='center'>
                     <button type="button"
                         className='button btn-green'
-                        onClick={e => append()}
+                        onClick={e => append({
+                            interval: 0,
+                            items: ''
+                        })}
                     >
                         <PlusOutlined />
                         <span className='ml-4'>Добавить подписку</span>
