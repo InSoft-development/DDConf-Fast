@@ -205,6 +205,7 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 						block = "receiver"
 					elif "server" in line:
 						sercount += 1
+						subcount = 0
 						block = "server"
 						data["servers"].append(dict())
 					elif "subscription" in line:
