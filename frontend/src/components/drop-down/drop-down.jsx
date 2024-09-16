@@ -23,7 +23,8 @@ const DropDown = ({
                 <div>
                     <CaretDownOutlined
                         onClick={onArrowClickHandler}
-                        className={`${menuIsOpen ? `${styles.arrowActive}` : ''}`} />
+                        className={`${menuIsOpen ? `${styles.arrowActive}` : ''}`} 
+                    />
                     <ul className={`${styles.availablePoints} ${menuIsOpen ? '' : `${styles.availablePointsInActive}`}`}>
                         {availableProfiles.map(profile => (
                             <li key={profile}
@@ -31,7 +32,6 @@ const DropDown = ({
                                 onClick={e => onClick(profile)}
                             >
                                 <div className={styles.listContent}>{profile}</div>
-
                             </li>
                         ))}
                     </ul>
