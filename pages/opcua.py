@@ -166,7 +166,7 @@ mesmode={sv["mesmode"]}
 				msg = msg + f'''
 subscription
 id={sv["subscriptions"].index(sub)+1}
-interval={sub['interval']}
+interval={sub['interval'] if sub['interval'] != 'None' else 0}
 items
 {sub["items"]}
 
