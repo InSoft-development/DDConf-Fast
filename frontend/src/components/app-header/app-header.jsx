@@ -5,7 +5,6 @@ import { MenuOutlined } from '@ant-design/icons';
 import styles from './app-header.module.css';
 import { OPEN_SIDEBAR } from '../../services/actions/modals';
 
-
 const AppHeader = () => {
 
     const dispatch = useDispatch();
@@ -22,7 +21,7 @@ const AppHeader = () => {
             '/': 'Дашборд',
             '/dd104': 'Протокол МЭК 104',
             '/profile-editor': 'Протокол МЭК 104',
-	    '/opcua': 'OPC UA'
+            '/opcua': 'OPC UA'
         }
 
         setHeaderTitle(headerText[location.pathname])
