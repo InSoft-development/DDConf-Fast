@@ -170,12 +170,17 @@ interval={sub['interval'] if sub['interval'] != 'None' else 0}
 items
 
 '''
-				for line in sub["items"]:
+				if type(sub['items']) == list:
+					for line in sub["items"]:
+						msg = msg + f'''{line}
+'''
+				elif type(sub['items']) == str:
 					msg = msg + f'''{line}
 '''
 		
 		Path(fname).write_text(msg)
 		print(f"ddconf.opcua.make_file: file {fname} was written. ")
+		Path('/home/txhost/.EOUT').write_text(str(data))
 		syslog.syslog(syslog.LOG_INFO, f"ddconf.opcua.make_file: file {fname} was written. ")
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
