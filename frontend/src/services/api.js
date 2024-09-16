@@ -1,6 +1,5 @@
-// 8000
-export const BASE_URL = window.location.origin;
 
+const BASE_URL = process.env.REACT_APP_API || window.location.origin;
 
 export const request = (endpoint, method, params = null) => {
 
@@ -10,7 +9,6 @@ export const request = (endpoint, method, params = null) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify(bodyStructure)
     })
