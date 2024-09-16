@@ -19,17 +19,12 @@ const AppHeader = () => {
 
     useEffect(() => {
         const headerText = {
-            dashboard: 'Дашбоард',
-            dd104: 'Протокол МЭК 104',
-            'profile-editor': 'Протокол МЭК 104',
-            opcua:'OPC UA',
-            formurl:'formurl',
-            
-            
-            
+            '/': 'Дашбоард',
+            '/dd104': 'Протокол МЭК 104',
+            '/profile-editor': 'Протокол МЭК 104'
         }
 
-        setHeaderTitle(headerText[location.pathname.slice(1)])
+        setHeaderTitle(headerText[location.pathname])
     }, [location])
    
 
