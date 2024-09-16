@@ -1,0 +1,18 @@
+.tableWrapper{
+    max-width: 600px;
+}
+
+.protocolsList{
+    padding-left: 20px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.protocolsList > li{
+    margin-top: 10px;
+}
+
+.protocolsList a{
+    color: black;
+    text-decoration: none;
+}

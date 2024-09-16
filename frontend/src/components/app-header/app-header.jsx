@@ -18,10 +18,10 @@ const AppHeader = () => {
 
     useEffect(() => {
         const headerText = {
-            '/': 'Дашбоард',
+            '/': 'Дашборд',
             '/dd104': 'Протокол МЭК 104',
             '/profile-editor': 'Протокол МЭК 104',
-	    '/opcua': 'OPC UA'
+            '/opcua': 'OPC UA'
         }
 
         setHeaderTitle(headerText[location.pathname])
