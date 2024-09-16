@@ -84,8 +84,10 @@ def parse_subs(subs:list) -> dict:
 			raise ValueError(msg)
 	except Exception as e:
 		tb = traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.parse_subs: {str(e)}, traceback: {tb}")
-		return {"result":None, "error":f"ddconf.opcua.parse_subs: {str(e)}, traceback: {tb}"}
+		msg = f"ddconf.opcua.parse_subs: {str(e)}, traceback: {tb}"
+		print(msg)
+		syslog.syslog(syslog.LOG_CRIT, msg)
+		return {"result":None, "error":msg}
 
 
 def validate_url(url:str) -> str:
@@ -274,38 +276,6 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 		
 		return data
 
-def fetch_certs():
-	#WARNING: assumes the archive copies are saved as user.[der | pem].[datetime]
-	try:
-		dest = Path(DEFAULTS.OPCUA["ARCDIR"])
-		return [f"user-{x.split('.')[-1]} ({x.split('.')[1]})" for x in listdir(dest) if x.split('.')[-1] in {".pem", ".der"}]
-	except Exception as e:
-		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
-		print(f"ddconf.opcua.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
-
-
-def upload_certs(data: dict):
-	#{"cert":"<file upload>", "pkey":"<file upload>"}
-	
-	if type(data["cert"]) == UploadFile: 
-		
-		with data['cert'].file.open() as F:
-			buff = ''
-			assert N>0
-			for chunk in iter(lambda: F.read(N), ''):
-				buff += chunk
-		F.close()
-		Path(DEFAULTS.CERT).write_text(buff)
-	
-	if type(data["pkey"]) == UploadFile: 
-		
-		with data['pkey'].file.open() as F:
-			buff = ''
-			assert N>0
-			for chunk in iter(lambda: F.read(N), ''):
-				buff += chunk
-		F.close()
-		Path(DEFAULTS.PKEY).write_text(buff)
 		
 	
 
