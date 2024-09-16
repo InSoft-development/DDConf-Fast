@@ -8,14 +8,9 @@ import SignIn from '../../pages/sign-in/sign-in';
 import Dd104 from '../../pages/dd104/dd104';
 import Dashboard from '../../pages/dashboard/dashboard';
 import ProfileEditor from '../../pages/profile-editor/profile-editor';
-<<<<<<< HEAD
-import Opcua from '../../pages/opcua/opcua';
 
-
-
-=======
 import OpcUa from '../../pages/opc-ua/opc-ua';
->>>>>>> frontend-Nekrasov
+
 // services
 import {getDeviceFeatures} from '../../services/actions/dashboard'
 import { getProfiles } from '../../services/actions/profile';
