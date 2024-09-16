@@ -42,4 +42,5 @@
 .menu{
     font-size: 32px;
     cursor: pointer;
+    outline: unset;
 }

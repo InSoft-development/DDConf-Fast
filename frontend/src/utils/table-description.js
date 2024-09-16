@@ -99,7 +99,7 @@ export const columns = [
                 value: 1,
             },
             {
-                text: 'В процессе',
+                text: 'Запускается',
                 value: 2,
             },
             {
@@ -118,7 +118,7 @@ export const columns = [
                     return <Badge status='success' text="запущен" />
                 }
                 case '2': {
-                    return <Badge status='processing' text="в процессе" />
+                    return <Badge status='processing' text="запускается" />
                 }
                 case 'loading': {
                     return <LoadingOutlined />

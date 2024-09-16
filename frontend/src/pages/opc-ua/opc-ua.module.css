@@ -1,0 +1,73 @@
+.form{
+    width: 780px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    position: relative;
+    /* border: 1px solid grey; */
+}
+
+.formFooter{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid var(--gray-300);
+    background-color: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+    overflow-x: hidden;
+}
+
+.restore{
+    display: flex;
+    align-items: center;
+}
+
+.server{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--gray-500);
+    padding: 50px 25px 30px;
+    border-radius: 15px;
+    position: relative;
+}
+
+.server:not(:first-child){
+    margin-top: 50px;
+}
+
+.serverInputsRows > *:not(:first-child){
+    margin-top: 20px;
+}
+
+.serverTitle{
+    position: absolute;
+    top: -13px;
+    left: 25px;
+    background-color: #fff;
+    padding: 0 15px;
+}
+
+.serverDeleteBtn{
+    position: absolute;
+    top: -17px;
+    right: -17px;
+}
+
+.urlCheckbox{
+    display: none;
+}
+
+.urlCheckboxLabel{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    position: absolute;  
+    top: 56px;
+    right: -37px;
+    background-color: var(--status-success);
+    border-radius: 50%;
+    cursor: pointer;
+}
