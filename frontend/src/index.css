@@ -10,6 +10,21 @@ html {
     box-sizing: border-box;
 }
 
+*::-webkit-scrollbar{
+    width: 10px;
+}
+
+/* Дорожка скробара */
+*::-webkit-scrollbar-track{
+    background-color: var(--gray-200);
+}
+
+*::-webkit-scrollbar-thumb{
+    background-color: var(--gray-500);
+    border-radius: 10px;
+}
+
+
 /* 
     Font weight      usWeightClass
     Regular          400
