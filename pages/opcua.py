@@ -166,7 +166,7 @@ mesmode={sv["mesmode"]}
 				msg = msg + f'''
 subscription
 id={sv["subscriptions"].index(sub)+1}
-interval={sub['interval']}
+interval={sub['interval'] if sub['interval'] != 'None' else 0}
 items
 {sub["items"]}
 
@@ -205,6 +205,7 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 						block = "receiver"
 					elif "server" in line:
 						sercount += 1
+						subcount = 0
 						block = "server"
 						data["servers"].append(dict())
 					elif "subscription" in line:
