@@ -1,10 +1,11 @@
 .form{
-    width: 780px;
+    width: 840px;
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
+    margin-top: 25px;
     position: relative;
-    /* border: 1px solid grey; */
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
 }
 
 .formFooter{
@@ -30,11 +31,13 @@
     padding: 50px 25px 30px;
     border-radius: 15px;
     position: relative;
+    margin-right: 25px;
 }
 
 .server:not(:first-child){
     margin-top: 50px;
 }
+
 
 .serverInputsRows > *:not(:first-child){
     margin-top: 20px;
