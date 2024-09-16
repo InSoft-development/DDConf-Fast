@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import styles from './opc-ua.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOpcUaForm } from '../../services/actions/opc-ua';
-import { Flex, Divider, Spin } from 'antd';
-import { DeleteOutlined} from '@ant-design/icons';
+import { getOpcUaForm, sendOpcUaForm } from '../../services/actions/opc-ua';
+import { Flex, Divider, Spin, message } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { useForm, useFieldArray } from 'react-hook-form';
 import AuthSection from '../../components/form-elements/opc-ua/auth-section';
 import SubscriptionsSection from '../../components/form-elements/opc-ua/subscriptions-section';
@@ -11,8 +11,9 @@ import UrlSection from '../../components/form-elements/opc-ua/url-section';
 
 const OpcUa = () => {
 
+    const [messageApi, messageHolder] = message.useMessage();
     const dispatch = useDispatch();
-    const { form, getFormRequest } = useSelector(store => store.opcua);
+    const { form, getFormRequest, sendFormRequestSuccess } = useSelector(store => store.opcua);
 
     const { register, handleSubmit, control, unregister, setValue, reset } = useForm({
         shouldUnregister: true
@@ -24,24 +25,31 @@ const OpcUa = () => {
 
     useEffect(() => {
         dispatch(getOpcUaForm())
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
-        console.log(form);
-
         reset(form)
-    }, [form])
+    }, [reset, form])
+
+    useEffect(() => {
+        if (sendFormRequestSuccess) {
+            messageApi.open({
+                type: 'success',
+                content: 'Данные успешно получены сервером'
+            })
+        }
+    }, [messageApi, sendFormRequestSuccess])
 
     const onSubmit = (data) => {
-        console.log(data);
-        console.log(JSON.stringify(data));
+        dispatch(sendOpcUaForm(data))
     }
 
     return (
         <>
+            {messageHolder}
             {getFormRequest ? (
                 <Flex
-                    align='center' 
+                    align='center'
                     className='text text_type_main mt-10'
                 >
                     <span className=' ml-10 mr-10'>Идёт загрузка формы</span>
@@ -97,7 +105,6 @@ const OpcUa = () => {
                                                 <option value="username">По логину и паролю</option>
                                             </select>
                                         </Flex>
-                                        {/*  */}
                                         <AuthSection
                                             register={register}
                                             index={index}
@@ -158,20 +165,25 @@ const OpcUa = () => {
                         }
                     </div>
 
-                    <div className='mt-10'>
-                        <button type="button"
-                            className="button btn-green mr-4"
-                            onClick={e => append({
-                                url1: '',
-                                url2_exists: false,
-                                utoken_type: "anonymous",
-                                secpolicy: "None",
-                                mesmode: "None",
-                                subscriptions: []
-                            })}
-                        >Добавить сервер</button>
-                        <button type="submit" className='button btn-green'>Отправить</button>
-                    </div>
+                    <footer className={`mt-10 ${styles.formFooter}`}>
+                        <div className=' mt-10 mb-10 wrapper'>
+                            <button type="button"
+                                className="button btn-green mr-4"
+                                onClick={e => append({
+                                    url1: '',
+                                    url2_exists: false,
+                                    utoken_type: "anonymous",
+                                    secpolicy: "None",
+                                    mesmode: "None",
+                                    subscriptions: [{
+                                        interval: 0,
+                                        items: ''
+                                    }]
+                                })}
+                            >Добавить сервер</button>
+                            <button type="submit" className='button btn-green'>Отправить</button>
+                        </div>
+                    </footer>
                 </form>
             )}
         </>

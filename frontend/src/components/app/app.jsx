@@ -21,7 +21,7 @@ const App = () => {
     useEffect(() => {
         dispatch(getProfiles());
         dispatch(getDeviceFeatures())
-    }, [])
+    }, [dispatch])
 
     return (
         <>
