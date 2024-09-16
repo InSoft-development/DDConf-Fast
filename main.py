@@ -361,13 +361,6 @@ def handle_opcua(REQ:Models.POST):
 			data = OPCUA.make_file(REQ.params, f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
 		elif REQ.method == 'fetch_ua':
 			data = OPCUA.fetch_file(f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
-		elif REQ.method == 'upload_certs':
-			data = OPCUA.upload_certs(REQ.params)
-		#
-		#WARNING: the function below assumes the existence of a cert archive
-		#
-		# elif REQ.method == 'fetch_certs':
-		# 	data = OPCUA.fetch_certs()
 		
 		
 	except Exception as e:

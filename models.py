@@ -33,7 +33,7 @@ class Defaults:
 		#turned off by default, if the value is not-null, turn on archiving
 		"ARCDIR" : None, #'/etc/dd/dd104/archive.d/'
 		"LOADOUTDIR" : '/etc/dd/opcua/loadouts/',
-		"BINBASE" : "/opt/dd/ddOPCUAclient/bin"
+		"BINBASE" : "/opt/dd/ddOPCUAclient/bin",
 		"CERT" : f"",
 		"PKEY" : f""
 	}
