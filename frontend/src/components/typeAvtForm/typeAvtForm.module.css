@@ -1,0 +1,23 @@
+.TypeAvt{
+    font-family: Inter, sans-serif;    
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 600;  
+    margin-top: 33px;
+    
+    
+}
+.select{
+   box-sizing: border-box;
+   border: 1px solid rgb(206, 212, 218);
+   border-radius: 4px;
+   height: 35px;
+   width: 300px; 
+   padding: 6px 12px 6px 12px;
+   margin-left: 23px;
+   cursor: pointer;
+}
+.AotoPol{
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
