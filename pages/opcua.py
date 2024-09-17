@@ -168,14 +168,13 @@ subscription
 id={sv["subscriptions"].index(sub)+1}
 interval={sub['interval'] if sub['interval'] != 'None' else 0}
 items
-
 '''
 				if type(sub['items']) == list:
 					for line in sub["items"]:
 						msg = msg + f'''{line}
 '''
 				elif type(sub['items']) == str:
-					msg = msg + f'''{line}
+					msg = msg + f'''{sub['items']}
 '''
 		
 		Path(fname).write_text(msg)
