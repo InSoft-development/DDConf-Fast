@@ -1,7 +1,5 @@
-import syslog, subprocess, time, tarfile, json, netifaces
-from shutil import move, copy2, unpack_archive, make_archive
+import syslog, subprocess, time, json, netifaces
 from pathlib import Path
-from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 
