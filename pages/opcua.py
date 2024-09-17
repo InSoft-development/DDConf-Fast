@@ -155,8 +155,8 @@ id={data["servers"].index(sv)+1}
 url1={sv["url1"]}
 {"url2="+sv["url2"] if "url2" in sv and sv["url2"] else '# no url2'}
 usertokentype={sv['utoken_type']}
-{'username='+sv["utoken_data"]["username"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous'}
-{'password='+sv["utoken_data"]["password"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous'}
+{'username='+sv["utoken_data"]["username"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous' else ''}
+{'password='+sv["utoken_data"]["password"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous' else ''}
 
 secpolicy={sv["secpolicy"]}
 mesmode={sv["mesmode"]}
