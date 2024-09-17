@@ -146,7 +146,6 @@ def make_file(data: dict, fname="/etc/dd/opcua/config.ini") -> str:
 address=192.168.100.10
 port=48110
 
-
 restore={int(data["restore"])}
 
 '''
@@ -171,20 +170,20 @@ items
 '''
 				if type(sub['items']) == list:
 					for line in sub["items"]:
-						msg = msg + f'''{line}
-'''
+						msg = msg + f'{line}\n'
+					
 				elif type(sub['items']) == str:
-					msg = msg + f'''{sub['items']}
-'''
+					msg = msg + f'{sub['items']}\n\n'
 		
 		Path(fname).write_text(msg)
 		print(f"ddconf.opcua.make_file: file {fname} was written. ")
-		Path('/home/txhost/.EOUT').write_text(str(data))
+		Path('/home/txhost/.SOUT').write_text(str(data))
 		syslog.syslog(syslog.LOG_INFO, f"ddconf.opcua.make_file: file {fname} was written. ")
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
 		print(f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
 		print(f"traceback:", traceback.format_exc())
+		Path('/home/txhost/.EOUT').write_text(str(data) + '\n\n' + traceback.format_exc())
 		
 		
 		
