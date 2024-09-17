@@ -151,12 +151,12 @@ restore={int(data["restore"])}
 '''
 		for sv in data['servers']:
 			msg = msg + f'''server
-id = {data["servers"].index(sv)+1}
+id={data["servers"].index(sv)+1}
 url1={sv["url1"]}
 {"url2="+sv["url2"] if "url2" in sv and sv["url2"] else '# no url2'}
 usertokentype={sv['utoken_type']}
-{'username='+sv["utoken_data"]["username"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous' else "#no certs rn, sorry"}
-{'password='+sv["utoken_data"]["password"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous' else "#no certs rn, sorry"}
+{'username='+sv["utoken_data"]["username"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous'}
+{'password='+sv["utoken_data"]["password"] if sv["utoken_type"] == 'username' else '# anon' if sv['utoken_type']=='anonymous'}
 
 secpolicy={sv["secpolicy"]}
 mesmode={sv["mesmode"]}
@@ -173,7 +173,7 @@ items
 						msg = msg + f'{line}\n'
 					
 				elif type(sub['items']) == str:
-					msg = msg + f'{sub['items']}\n\n'
+					msg = msg + f"{sub['items']}\n\n"
 		
 		Path(fname).write_text(msg)
 		print(f"ddconf.opcua.make_file: file {fname} was written. ")
