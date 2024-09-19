@@ -10,20 +10,22 @@ html {
     box-sizing: border-box;
 }
 
+/* Кастомизация скроллбара в Chrome */
 *::-webkit-scrollbar{
-    width: 10px;
+    width: 8px;
+    height: 8px;
 }
 
-/* Дорожка скробара */
 *::-webkit-scrollbar-track{
     background-color: var(--gray-200);
+    border-radius: 15px;
 }
+
 
 *::-webkit-scrollbar-thumb{
-    background-color: var(--gray-500);
-    border-radius: 10px;
+    background-color: var(--gray-400);
+    border-radius: 15px;
 }
-
 
 /* 
     Font weight      usWeightClass
@@ -89,6 +91,7 @@ html {
     --gray-800: #343a40;
     --gray-900: #212529;
 
+    --green: #28a745;
     --purple: #7745F9;
     --blue: #0d6efd;
     --red: #dc3545;
@@ -183,7 +186,7 @@ html {
 }
 
 .btn-green {
-    background-color: var(--status-success);
+    background-color: var(--green);
 }
 
 .btn-blue {
@@ -199,7 +202,7 @@ html {
 }
 
 .btn-grey {
-    background-color: var(--gray-800);
+    background-color: var(--gray-500);
 }
 
 .btn-inactive {
@@ -309,6 +312,23 @@ html {
     color: var(--red);
 }
 
+/* inputs profile editor */
+
+.input_type_text {
+    width: 85%;
+    border: 1px solid transparent;
+    outline: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+.input_type_text:focus{
+    border: 1px solid rgb(136, 201, 255);
+    -webkit-box-shadow: 0px 0px 10px -5px rgb(136, 201, 255);
+    -moz-box-shadow: 0px 0px 10px -5px rgb(136, 201, 255);
+    box-shadow: 0px 0px 10px -5px rgb(136, 201, 255);
+}
 
 /* margin */
 
