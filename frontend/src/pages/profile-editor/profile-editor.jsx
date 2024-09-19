@@ -168,7 +168,7 @@ const ProfileEditor = () => {
                             <button type="button" className='button btn-green mr-2' title='Сохранить изменения в новый профиль'>Сохранить как</button>
                             <button type="button" className='button btn-red mr-2'>Удалить</button>
                             <button type="button" className='button btn-grey'>Отменить</button>
-                            <button type="submit" className='button btn-green mr-2'>Отправить</button>
+                            {/* <button type="submit" className='button btn-green mr-2'>Отправить</button> */}
                         </div>
                     </Flex>
                 </footer>
