@@ -1,3 +1,4 @@
+import json, syslog, traceback, datetime, os, jwt
 from typing import Union, Annotated
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket, UploadFile
@@ -11,18 +12,31 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from time import sleep
-import sqlite3, json, syslog, traceback, datetime, os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from jwt.exceptions import InvalidTokenError
+from passlib.context import CryptContext
+from datetime import datetime, timedelta, timezone
 
 # from pages.router import router as router_pages
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
-# import pages.login as Login
+import pages.login as Login
+
 import models as Models
+from models import Token, TokenData, User, POST
 
 _mode = 'tx'
+
+#Auth
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+#/Auth
 
 class ConnectionManager:
 	def __init__(self):
@@ -131,26 +145,103 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), html=True), name="static")
 
 
-# @app.post("/token")
-# async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),) -> Token:
-# 	return Login.login_for_access_token(form_data)
+def get_user_from_file(name:str) -> User: #TODO if there is a user, return user, else none
+	try:
+		
+	except Exception as e:
+		
+	else:
+		
+
+
+def verify_password(plain_password, hashed_password):
+	return pwd_context.verify(plain_password, hashed_password)
+
+
+def get_password_hash(password):
+	return pwd_context.hash(password)
+
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+	credentials_exception = HTTPException(
+		status_code=status.HTTP_401_UNAUTHORIZED,
+		detail="Could not validate credentials",
+		headers={"WWW-Authenticate": "Bearer"},
+	)
+	try:
+		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+		username: str = payload.get("sub")
+		if username is None:
+			raise credentials_exception
+		token_data = TokenData(username=username)
+	except InvalidTokenError:
+		raise credentials_exception
+	user = get_user_from_file(token_data.username)
+	if user is None:
+		raise credentials_exception
+	return user
+
+
+def authenticate_user(username: str, password: str):
+	user = get_user_from_file(username)
+	if not user:
+		return False
+	if not verify_password(password, user.hashed_password):
+		return False
+	return user
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+	to_encode = data.copy()
+	if expires_delta:
+		expire = datetime.now(timezone.utc) + expires_delta
+	else:
+		expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+	to_encode.update({"exp": expire})
+	encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+	return encoded_jwt
+
+
+@app.post("/token")
+async def login_for_access_token( form_data: Annotated[OAuth2PasswordRequestForm, Depends()], ) -> Token:
+	user = authenticate_user(form_data.username, form_data.password)
+	if not user:
+		raise HTTPException(
+			status_code=status.HTTP_401_UNAUTHORIZED,
+			detail="Incorrect username or password",
+			headers={"WWW-Authenticate": "Bearer"},
+		)
+	access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+	access_token = create_access_token(
+		data={"sub": user.username + f"|{user.level}"}, expires_delta=access_token_expires
+	)
+	return Token(access_token=access_token, token_type="bearer")
 
 
 @app.get("/")
-def greet():
-	return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
+def greet(token: Annotated[str, Depends(get_current_user)]):
+	if token:
+		return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
+	else:
+		return RedirectResponse('/login', status_code=200)
 
 
 @app.get("/{_path}")
-def redirect_root(_path: str):
-	msg = f"ddconf.main.redirect_root: GET request detected to /{_path}, redirecting to \"/\"."
-	print(msg)
-	syslog.syslog(syslog.LOG_INFO, msg)
-	return RedirectResponse("/", status_code=302)
+def get_any(_path: str, token: Annotated[str, Depends(get_current_user)]):
+	msg = f"ddconf.main.get_any: GET request detected to /{_path}."
+	if token:
+		print(msg)
+		syslog.syslog(syslog.LOG_INFO, msg)
+		return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
+	else:
+		msg = f"ddconf.main.get_any: auth timeout; redirecting to /login ."
+		print(msg)
+		syslog.syslog(syslog.LOG_INFO, msg)
+		return RedirectResponse('/login', status_code=200)
 
 
 @app.post("/dashboard")
-def dashboard_post(REQ: Models.POST) -> dict:
+def dashboard_post(REQ: POST, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
 		data = {}
 		errs = None
@@ -175,7 +266,7 @@ def dashboard_post(REQ: Models.POST) -> dict:
 
 
 @app.post("/dd104")
-def dd104_post(REQ: Models.POST) -> dict:
+def dd104_post(REQ: POST, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
 		data = {} #just in case
 		errs = None #just in case
@@ -194,7 +285,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 			if DD104.get_active_ld():
 				data = DD104.get_processes(DD104.get_active_ld())
 				for item in data:
-					item['status'] = DD104.get_status(data.index(item)+1) #WARNING this implies there are no duplicate entries, but there's no check for that in ld creation, beware
+					item['status'] = DD104.get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
 				print(f"ddconf.dd104.fetch_table({DD104.get_active_ld()}): {data}")
 			
 			else:
@@ -284,7 +375,7 @@ def dd104_post(REQ: Models.POST) -> dict:
 
 #TODO
 @app.post('/opcua')
-def handle_opcua(REQ:Models.POST):
+def handle_opcua(REQ: POST, token: Annotated[str, Depends(get_current_user)]):
 	
 	data = {}
 	errs = []
@@ -306,24 +397,9 @@ def handle_opcua(REQ:Models.POST):
 	return {"result": data, "error":None if not errs else errs}
 
 
-# @app.post('/opcua/certupload')
-# async def cert_uploader(files: list[UploadFile]):
-# 	data = {}
-# 	errs = []
-# 	try:
-# 		if not files:
-# 			data = "No files were uploaded!"
-# 		else:
-# 			
-# 	except Exception as e:
-# 		pass
-# 	
-# 	return {"result": data, "error":None if not errs else errs}
-
-
 #TODO very jank, but better already
 @app.websocket("/ws_logs_104")
-async def websocket_logs_104(WS: WebSocket):
+async def websocket_logs_104(WS: WebSocket, token: Annotated[str, Depends(get_current_user)]):
 	await WS.accept()
 	syslog.syslog(syslog.LOG_INFO, f"Client connected")
 	observer = prime_observer(WS)
