@@ -145,13 +145,22 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), html=True), name="static")
 
 
-def get_user_from_file(name:str) -> User: #TODO if there is a user, return user, else none
+def get_user_from_file(name:str) -> User: 
+	#expects a json list of dicts in file
 	try:
-		
+		data = {}
+		data = [User(**x) for x in json.loads(Path("/etc/dd/ddconf/.auth/webusers.list").read_text())]
+		if not data:
+			return None
+		for u in data:
+			if u.username == name:
+				return u
+		return None
 	except Exception as e:
-		
-	else:
-		
+		msg = f"ddconf.main.get_user_from_file: unexpected exception: {str(e)}"
+		syslog.syslog(syslog.LOG_CRIT, msg)
+		Path("/home/txhost/.EOUT").write_text(data)
+		print(msg)
 
 
 def verify_password(plain_password, hashed_password):

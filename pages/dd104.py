@@ -129,17 +129,32 @@ def get_status(PID: int) -> int:
 	# return randrange(-2, 3)
 
 
+def validate_ld_data(data: dict) -> bool:
+	flag = True
+	
+	for i in data:
+		if 'main' not in i or not i['main']:
+			flag = False
+		if i.keys() != ['main', 'second', 'comment']:
+			flag = False
+	
+	return flag
+
+
 def save_ld(filename: str, data : dict) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
-		return "success"
+		if validate_ld_data(data):
+			(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
+		else:
+			raise ValueError(f"dd104.save_ld: received malformed data, discarding changes.")
 	except Exception as e:
 		msg = f"ddconf.dd104.save_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		raise RuntimeError(msg)
-		
+	else:
+		return "success"
 
 
 def apply_ld(filename: str) -> None:
