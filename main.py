@@ -29,6 +29,7 @@ from models import Token, TokenData, User, POST
 _mode = 'tx'
 
 #Auth
+SECRET_KEY=Path('/etc/dd/ddconf/.auth/secret').read_text()
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
