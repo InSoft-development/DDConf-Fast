@@ -182,6 +182,17 @@ def get_processes(LD_ID: str) -> list:
 	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
 	if ID in loadouts:
 		data = json.loads((Path(Defaults.DD["LOADOUTDIR"])/ID).read_text())
+		for i in data:
+			if 'main' not in i or not i['main']:
+				if 'second' in i and i['second']:
+					i['main'] = i['second']
+					i['second'] = None
+				else:
+					raise ValueError(f'dd104: "main" and "second" fields are empty or don\'t exist! ld: {data} ')
+			if 'second' not in i or not i['second']:
+				i['second'] = None
+			if 'comment' not in i or not i['comment']:
+				i['comment'] = None
 		return data
 	else:
 		return None
