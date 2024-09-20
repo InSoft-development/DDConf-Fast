@@ -243,13 +243,6 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 						elif "password" in line:
 							data["servers"][sercount]["utoken_data"]["password"] = line.split("=")[1]
 						
-						#TODO certs should be files
-# 						elif "certificate" in line:
-# 							data["servers"][sercount]["utoken_data"]["cert"] = line.split("=")[1]
-# 						
-# 						elif "privatekey" in line:
-# 							data["servers"][sercount]["utoken_data"]["pkey"] = line.split("=")[1]
-						
 						elif "secpolicy" in line:
 							data["servers"][sercount]["secpolicy"] = line.split("=")[1]
 						
@@ -282,8 +275,6 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 		
 		return data
 
-		
-	
 
 
 

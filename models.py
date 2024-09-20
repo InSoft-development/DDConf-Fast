@@ -1,4 +1,3 @@
-from fastapi import UploadFile
 from pydantic import BaseModel
 from typing import Union, Annotated
 import syslog, json
@@ -11,7 +10,7 @@ from pathlib import Path
 
 class POST(BaseModel):
 	method: str
-	params: dict | None | str #| UploadFile | Upload
+	params: dict | None | str 
 
 
 class Upload(BaseModel):
@@ -20,8 +19,30 @@ class Upload(BaseModel):
 	
 
 
+class Token(BaseModel):
+	access_token: str
+	token_type: str
+
+
+class TokenData(BaseModel):
+	username: str | None = None
+
+
+class User(BaseModel):
+	username: str
+	hashed_password: str
+	level: str #'admin', 'user', 'disabled' TODO
+	logged_in: bool
+
+
+# class UserInDB(User):
+# 	hashed_password: str
+
+
+
+
 class Defaults:
-	RECVADDR = "192.168.100.10"
+	RXADDR = "192.168.100.10"
 	DD = {
 		"INIDIR" : '/etc/dd/dd104/configs/',
 		#turned off by default, if the value is not-null, turn on archiving
@@ -42,7 +63,7 @@ class Defaults:
 		try:
 			self.DEFAULTS_FILE = confile
 			conf = json.loads(Path(self.DEFAULTS_FILE).read_text())
-			self.RECVADDR = conf['recvaddr'] if 'recvaddr' in conf and conf['recvaddr'] else "192.168.100.10"
+			self.RXADDR = conf['recvaddr'] if 'recvaddr' in conf and conf['recvaddr'] else "192.168.100.10"
 			
 			conf = json.loads(Path(self.DEFAULTS_FILE).read_text())['dd104']
 			self.DD["INIDIR"] = conf['confdir'] if 'confdir' in conf and conf['confdir'] else '/etc/dd/dd104/configs/'

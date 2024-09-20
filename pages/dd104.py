@@ -69,7 +69,7 @@ def create_inis(data: list):
 				if not proc['main']:
 					proc['main'] = proc['second']
 					proc['second'] = None
-				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.RECVADDR}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
+				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.RXADDR}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
 				if proc['second']:
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
@@ -129,17 +129,32 @@ def get_status(PID: int) -> int:
 	# return randrange(-2, 3)
 
 
+def validate_ld_data(data: dict) -> bool:
+	flag = True
+	
+	for i in data:
+		if 'main' not in i or not i['main']:
+			flag = False
+		if i.keys() != ['main', 'second', 'comment']:
+			flag = False
+	
+	return flag
+
+
 def save_ld(filename: str, data : dict) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
-		return "success"
+		if validate_ld_data(data):
+			(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
+		else:
+			raise ValueError(f"dd104.save_ld: received malformed data, discarding changes.")
 	except Exception as e:
 		msg = f"ddconf.dd104.save_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
 		raise RuntimeError(msg)
-		
+	else:
+		return "success"
 
 
 def apply_ld(filename: str) -> None:
@@ -182,6 +197,17 @@ def get_processes(LD_ID: str) -> list:
 	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
 	if ID in loadouts:
 		data = json.loads((Path(Defaults.DD["LOADOUTDIR"])/ID).read_text())
+		for i in data:
+			if 'main' not in i or not i['main']:
+				if 'second' in i and i['second']:
+					i['main'] = i['second']
+					i['second'] = None
+				else:
+					raise ValueError(f'dd104: "main" and "second" fields are empty or don\'t exist! ld: {data} ')
+			if 'second' not in i or not i['second']:
+				i['second'] = None
+			if 'comment' not in i or not i['comment']:
+				i['comment'] = None
 		return data
 	else:
 		return None
