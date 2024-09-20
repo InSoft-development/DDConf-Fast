@@ -230,7 +230,7 @@ async def login_for_access_token( form_data: Annotated[OAuth2PasswordRequestForm
 @app.get("/")
 def greet(token: Annotated[str, Depends(get_current_user)]):
 	if token:
-		return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
+		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
 	else:
 		return RedirectResponse('/login', status_code=200)
 
@@ -241,7 +241,7 @@ def get_any(_path: str, token: Annotated[str, Depends(get_current_user)]):
 	if token:
 		print(msg)
 		syslog.syslog(syslog.LOG_INFO, msg)
-		return HTMLResponse(content=Path("./static/index.html").read_text(), status_code=200)
+		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
 	else:
 		msg = f"ddconf.main.get_any: auth timeout; redirecting to /login ."
 		print(msg)
