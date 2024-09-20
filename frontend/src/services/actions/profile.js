@@ -30,16 +30,6 @@ export const SAVE_PROFILE = "SAVE_PROFILE";
 export const SAVE_PROFILE_SUCCESS = "SAVE_PROFILE_SUCCESS";
 export const SAVE_PROFILE_FAILED = "SAVE_PROFILE_FAILED";
 
-// editabe profile
-export const ADD_NEW_PROCESS = 'ADD_NEW_PROCESS';
-export const DELTE_PROCESS_BY_ID = 'DELTE_PROCESS_BY_ID';
-export const SET_EDITABLE_PROFILE = 'SET_EDITABLE_PROFILE';
-export const SET_EDITABLE_ROW_ID = 'SET_EDITABLE_ROW_ID';
-export const SET_EDITABLE_COMMENT = 'SET_EDITABLE_COMMENT';
-export const RESET_EDITABLE_ROW_ID = 'RESET_EDITABLE_ROW_ID';
-export const CHANGE_TABLE_CELL = 'CHANGE_TABLE_CELL';
-export const CHANGE_TABLE_COMMENT = 'CHANGE_TABLE_COMMENT';
-
 
 export const getProfiles = () => (dispatch) => {
     dispatch({ type: PROFILE_REQUEST });

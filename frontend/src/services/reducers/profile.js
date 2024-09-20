@@ -17,22 +17,7 @@ import {
 
     CHANGE_PROCESS_STATUS,
     CHANGE_PROCESS_STATUS_SUCCESS,
-    CHANGE_PROCESS_STATUS_FAILED,
-
-    SAVE_PROFILE,
-    SAVE_PROFILE_SUCCESS,
-    SAVE_PROFILE_FAILED,
-    
-    ADD_NEW_PROCESS,
-    SET_EDITABLE_ROW_ID,
-    CHANGE_TABLE_CELL,
-    SET_EDITABLE_PROFILE,
-    DELTE_PROCESS_BY_ID,
-    RESET_EDITABLE_ROW_ID,
-    SET_EDITABLE_COMMENT,
-    CHANGE_TABLE_COMMENT
-
-
+    CHANGE_PROCESS_STATUS_FAILED    
 } from '../actions/profile';
 
 const initialState = {
@@ -53,21 +38,6 @@ const initialState = {
     changeProfileRequest: false,
     changeProfileSuccess: false,
     changeProfileFailed: false,
-
-    // editable page
-
-    editableProfile: null,
-    editableTable: [],
-    editableRow: null,
-    editableComment: '',
-
-    editableTableRequest: false,
-    editableTableRequestSuccess: false,
-    editableTableRequestFailed: false,
-
-    saveProfileRequest: false,
-    saveProfileRequestSuccess: false,
-    saveProfileRequestFailed: false,
 }
 
 export const profileReducer = (state = initialState, action) => {
@@ -251,65 +221,6 @@ export const profileReducer = (state = initialState, action) => {
                 ...state,
             }
         }
-        case ADD_NEW_PROCESS: {
-
-            const newProcesses = [...state.editableTable];
-
-            newProcesses.push({
-                main: null,
-                second: null,
-                comment: null,
-                id: newProcesses.length
-            })
-
-            return {
-                ...state,
-                editableTable: newProcesses
-            }
-        }
-        case DELTE_PROCESS_BY_ID: {
-
-            const newTable = [...state.editableTable].filter((_, id) => id !== action.payload)
-
-            return {
-                ...state,
-                editableTable: newTable.map((record, id) => {
-                    return {
-                        ...record,
-                        id
-                    }
-                })
-            }
-        }
-        case SET_EDITABLE_ROW_ID: {
-
-            const editableRow = action.payload.id;
-
-            return {
-                ...state,
-                editableRow
-            }
-        }
-        case CHANGE_TABLE_CELL: {
-            const {field, value} = action.payload;
-            const currentEditableRow = state.editableRow;
-
-            const newProcesses = [...state.editableTable].map((process) => {
-                if(process.id === currentEditableRow){
-                    return {
-                        ...process,
-                        [field]: value,
-                    }
-                }else{
-                    return process
-                }
-            })
-
-            return {
-                ...state,
-                editableTable: newProcesses
-            }
-        }
         case GET_TABLE_BY_PROFILE_NAME: {
             return {
                 ...state,
@@ -333,56 +244,6 @@ export const profileReducer = (state = initialState, action) => {
                 editableTableRequest: false,
                 editableTableRequestSuccess: false,
                 editableTableRequestFailed: true,
-            }
-        }
-        case SET_EDITABLE_PROFILE: {
-            return {
-                ...state,
-                editableProfile: action.payload,
-            }
-        }
-        case RESET_EDITABLE_ROW_ID: {
-            return {
-                ...state,
-                editableRow: null
-            }
-        }
-        case SET_EDITABLE_COMMENT: {
-            return {
-                ...state,
-                editableComment: action.payload,
-            }
-        }
-        case CHANGE_TABLE_COMMENT: {
-            return {
-                ...state,
-                editableTable: [...state.editableTable].map(record => {
-                    if(record.id === state.editableRow){
-                        return {
-                            ...record,
-                            comment: action.payload
-                        }
-                    }else{
-                        return record
-                    }
-                })
-            }
-            
-            
-        } 
-        case SAVE_PROFILE: {
-            return {
-                ...state,
-            }
-        }
-        case SAVE_PROFILE_SUCCESS: {
-            return {
-                ...state,
-            }
-        }
-        case SAVE_PROFILE_FAILED: {
-            return {
-                ...state,
             }
         }
         default: {
