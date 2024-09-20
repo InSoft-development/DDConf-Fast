@@ -22,7 +22,6 @@ from datetime import datetime, timedelta, timezone
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
-import pages.login as Login
 
 import models as Models
 from models import Token, TokenData, User, POST
