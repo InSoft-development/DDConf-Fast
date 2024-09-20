@@ -5,9 +5,14 @@ import { LoadingOutlined } from '@ant-design/icons';
 import styles from './dd104.module.css';
 import { columns } from '../../utils/table-description';
 import DropDown from '../../components/drop-down/drop-down';
-import { getProfiles, getActiveTable } from '../../services/actions/profile';
-import { changeProсess, changeProfile } from '../../services/actions/profile';
+import {
+    getProfiles,
+    getActiveTable,
+    changeProfile,
+    changeProсess
+} from '../../services/actions/profile';
 import { useNavigate } from 'react-router-dom';
+import classnames from 'classnames';
 
 
 const Dd104 = () => {
@@ -17,16 +22,23 @@ const Dd104 = () => {
 
     const {
         profileRequest,
+        profileSuccess,
         activeProfile,
         availableProfiles,
-        activeTable,
         changeProfileRequest,
-        activeTableRequest
+        activeTableRequest,
+        activeTable,
+        profileFailed
     } = useSelector(state => state.profile);
 
 
     useEffect(() => {
-        dispatch(getActiveTable())
+        const callee = () => {
+            dispatch(getActiveTable())
+        }
+
+        dispatch(getProfiles(callee))
+
     }, [])
 
     const onStartAllBtnClickHandler = () => {
@@ -38,34 +50,57 @@ const Dd104 = () => {
     }
 
     const onProfileClickHandler = (profile) => {
-        dispatch(changeProfile(profile))
+        const callee = () => {
+            dispatch(getActiveTable())
+        }
+
+        dispatch(changeProfile(profile, callee))
+    }
+
+    const isDataUploading = activeTableRequest ||
+        profileRequest || 
+        changeProfileRequest;
+        
+    const btnStyles = classnames({'btn-inactive ': isDataUploading})
+
+    const headerContent = () => {      
+
+        return (
+            <>
+                <Flex align='center' justify='flex-start'>
+                    <h2 className={`text text_type_main mr-10`}>Рабочий профиль:</h2>
+                    {profileRequest && (
+                        <LoadingOutlined style={{ fontSize: 20 }} />
+                    )}
+                </Flex>
+
+                {profileSuccess && (
+                    <>
+                        <DropDown
+                            selectedOption={activeProfile}
+                            availableOptions={availableProfiles}
+                            loading={changeProfileRequest}
+                            onClick={onProfileClickHandler}
+                        />
+                        <button 
+                            className={`button btn-green ml-auto ${btnStyles}`}
+                            onClick={e => { navigate('/profile-editor', { state: { prevProfile: activeProfile } }) }}
+                        >Редактировать профиль</button>
+                    </>
+                )}
+            </>
+        )
     }
 
     return (
         <div className={styles.profile}>
             <div className={styles.header}>
-                <div className={`text text_type_main mr-10`}>Рабочий профиль:</div>
-                {profileRequest ? (
-                    <LoadingOutlined style={{ fontSize: 20 }} />
-                ) : (
-                    <>
-                        <DropDown
-                            currentProfile={activeProfile}
-                            availableProfiles={availableProfiles}
-                            loading={changeProfileRequest}
-                            onClick={onProfileClickHandler}
-                        />
-                        <button className='button btn-green ml-auto'
-                            onClick={e => { navigate('/profile-editor', {state: {prevProfile: activeProfile}}) }}
-                        >Редактировать профиль</button>
-                    </>
-                )}
-
+                {headerContent()}
             </div>
             <div className={styles.tableWrapper}>
                 <Table
                     rowKey={(record) => record.id}
-                    loading={activeTableRequest}
+                    loading={isDataUploading}
                     dataSource={activeTable}
                     pagination={false}
                     expandable={{
@@ -80,14 +115,18 @@ const Dd104 = () => {
             <footer className={styles.footer}>
                 <Flex justify='space-between' className='wrapper'>
                     <div>
-                        <button className='button btn-blue mr-10'
+                        <button 
+                            className={`button btn-blue mr-10 ${btnStyles} ${profileFailed && 'btn-inactive'}`}
                             onClick={onStartAllBtnClickHandler}
+                            disabled={isDataUploading || profileFailed}
                         >Запустить всё</button>
-                        <button className='button btn-blue'
+                        <button 
+                            className={`button btn-blue ${btnStyles} ${profileFailed && 'btn-inactive'}`}
                             onClick={onStopAllBtnClickHandler}
+                            disabled={isDataUploading || profileFailed}
                         >Остановить всё</button>
                     </div>
-                    <button className='button btn-purple'>Открыть log</button>
+                    {/* <button className='button btn-purple'>Открыть log</button> */}
                 </Flex>
             </footer>
 

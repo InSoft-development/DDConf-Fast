@@ -7,7 +7,7 @@
     border-radius: 5px;
 }
 
-.availablePoints{
+.availableOptions{
     width: 200px;
     position: absolute;
     top: 40px;
@@ -20,7 +20,7 @@
     border-radius: 10px;
 }
 
-.availablePointsInActive{
+.availableOptionsHidden{
     display: none;
 }
 

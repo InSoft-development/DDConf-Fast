@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { App as AntdApp } from 'antd';
 
 import {store} from './services/store';
 import App from './components/app/app';
@@ -16,7 +17,9 @@ root.render(
     <React.StrictMode>
         <Provider store={store}>
             <BrowserRouter>
-                <App />
+                <AntdApp>
+                    <App />
+                </AntdApp>
             </BrowserRouter>
         </Provider>
     </React.StrictMode>

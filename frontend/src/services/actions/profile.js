@@ -31,12 +31,17 @@ export const SAVE_PROFILE_SUCCESS = "SAVE_PROFILE_SUCCESS";
 export const SAVE_PROFILE_FAILED = "SAVE_PROFILE_FAILED";
 
 
-export const getProfiles = () => (dispatch) => {
+export const getProfiles = (cb = null) => (dispatch) => {
     dispatch({ type: PROFILE_REQUEST });
     request('dd104', 'fetch_initial')
         .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: PROFILE_REQUEST_SUCCESS, payload: res.result })
+            
+            if(cb){
+                cb();
+            }
+
         })
         .catch(error => {
             dispatch({ type: PROFILE_REQUEST_FAILED })
@@ -55,7 +60,7 @@ export const getActiveTable = () => (dispatch) => {
         })
 }
 
-export const changeProfile = (profileName) => (dispatch) => {
+export const changeProfile = (profileName, cb = null) => (dispatch) => {
     dispatch({type: CHANGE_PROFILE, payload: profileName});
     request('dd104','profile_apply', {
         name: profileName
@@ -63,7 +68,10 @@ export const changeProfile = (profileName) => (dispatch) => {
         .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: CHANGE_PROFILE_SUCCESS})
-            dispatch(getActiveTable());
+        
+            if(cb){
+                cb();
+            }
 
         })
         .catch(error => {
@@ -71,27 +79,27 @@ export const changeProfile = (profileName) => (dispatch) => {
         })
 }
 
-export const getTableByProfileName = (profileName) => (dispatch) => {
-    dispatch({type: GET_TABLE_BY_PROFILE_NAME});
-    request('dd104', 'fetch_ld', {
-        name: profileName
-    })
-        .then(res => checkResponce(res))
-        .then(res => {
-            dispatch({
-                type: GET_TABLE_BY_PROFILE_NAME_SUCCESS,
-                payload: res.result.data.map((record, index) => {
-                    return {
-                        ...record,
-                        id: index
-                    }
-                })
-            })
-        })
-        .catch(error => {
-            dispatch(dispatch({type: GET_TABLE_BY_PROFILE_NAME_FAILED}))
-        })
-}
+// export const getTableByProfileName = (profileName) => (dispatch) => {
+//     dispatch({type: GET_TABLE_BY_PROFILE_NAME});
+//     request('dd104', 'fetch_ld', {
+//         name: profileName
+//     })
+//         .then(res => checkResponce(res))
+//         .then(res => {
+//             dispatch({
+//                 type: GET_TABLE_BY_PROFILE_NAME_SUCCESS,
+//                 payload: res.result.data.map((record, index) => {
+//                     return {
+//                         ...record,
+//                         id: index
+//                     }
+//                 })
+//             })
+//         })
+//         .catch(error => {
+//             dispatch(dispatch({type: GET_TABLE_BY_PROFILE_NAME_FAILED}))
+//         })
+// }
 
 export const changeProсess = (actionIndex, processId) => (dispatch) => {
     dispatch({ type: CHANGE_PROCESS_STATUS, payload: processId })
@@ -108,20 +116,20 @@ export const changeProсess = (actionIndex, processId) => (dispatch) => {
         })
 }
 
-export const profileSave = (name, data) => (dispatch) => {
-    dispatch({type: SAVE_PROFILE})
-    request('dd104', 'profile_save', {
-        name,
-        data
-    })
-        .then(res => checkResponce(res))
-        .then(res => {
-            dispatch({type: SAVE_PROFILE_SUCCESS})
-        })
-        .catch(error => {
-            dispatch({type: SAVE_PROFILE_FAILED})
-        })
-}
+// export const profileSave = (name, data) => (dispatch) => {
+//     dispatch({type: SAVE_PROFILE})
+//     request('dd104', 'profile_save', {
+//         name,
+//         data
+//     })
+//         .then(res => checkResponce(res))
+//         .then(res => {
+//             dispatch({type: SAVE_PROFILE_SUCCESS})
+//         })
+//         .catch(error => {
+//             dispatch({type: SAVE_PROFILE_FAILED})
+//         })
+// }
 
 
 

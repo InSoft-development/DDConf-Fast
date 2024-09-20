@@ -8,10 +8,12 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 32px;
+    height: 65px;
+    width: 100%;
 }
 
 .tableWrapper{
-    height: calc(100vh - 376px);
+    height: calc(100vh - 400px);
     padding-right: 15px;
     overflow-y: scroll;
 }

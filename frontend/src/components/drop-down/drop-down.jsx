@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { CaretDownOutlined, LoadingOutlined } from '@ant-design/icons'
 import styles from './drop-down.module.css';
 import { Flex } from 'antd';
+import classNames from 'classnames';
 
 const DropDown = ({
-    currentProfile = 'Не выбран',
-    availableProfiles = [],
+    selectedOption = 'Не выбран',
+    availableOptions = [],
     loading = false,
     onClick = () => { }
 }) => {
@@ -16,22 +17,29 @@ const DropDown = ({
         setModalState(!menuIsOpen);
     }
 
+    const optionsListStyle = classNames([
+        [styles.availableOptions],
+        {
+            [styles.availableOptionsHidden] : !menuIsOpen
+        }
+    ])
+
     return (
         <Flex align='center'>
             <div className={`text mr-10 ${styles.dropDown}`}>
-                <div className='currentItem mr-6'>{currentProfile}</div>
+                <div className='mr-6'>{selectedOption}</div>
                 <div>
                     <CaretDownOutlined
                         onClick={onArrowClickHandler}
                         className={`${menuIsOpen ? `${styles.arrowActive}` : ''}`} 
                     />
-                    <ul className={`${styles.availablePoints} ${menuIsOpen ? '' : `${styles.availablePointsInActive}`}`}>
-                        {availableProfiles.map(profile => (
-                            <li key={profile}
-                                className={`${styles.listElement} ${currentProfile === profile ? styles.listElementActive : ''}`}
-                                onClick={e => onClick(profile)}
+                    <ul className={optionsListStyle}>
+                        {availableOptions.map(option => (
+                            <li key={option}
+                                className={`${styles.listElement} ${selectedOption === option ? styles.listElementActive : ''}`}
+                                onClick={e => onClick(option)}
                             >
-                                <div className={styles.listContent}>{profile}</div>
+                                <div className={styles.listContent}>{option}</div>
                             </li>
                         ))}
                     </ul>

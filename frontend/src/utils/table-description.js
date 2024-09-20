@@ -52,6 +52,7 @@ export const columns = [
     {
         title: 'Процесс',
         dataIndex: 'id',
+        width: '10%',
         key: 'id',
         render: (text) => (
             <div className='text'>{text + 1}</div>
@@ -60,6 +61,7 @@ export const columns = [
     {
         title: 'Основной (IP:PORT)',
         dataIndex: 'main',
+        width: '30%',
         key: 'main',
         render: (text) => (
             <div className='text'>{text}</div>
@@ -69,6 +71,7 @@ export const columns = [
         title: 'Резервный (IP:PORT)',
         dataIndex: 'second',
         key: 'second',
+        width: '30%',
         render: (text) => {
             if (text === null) {
                 return <div className='text text_color_inactive'>нет резерва</div>
@@ -81,29 +84,7 @@ export const columns = [
         title: 'Состояние',
         dataIndex: 'status',
         key: 'status',
-        showSorterTooltip: {
-            target: 'full-header',
-        },
-        filters: [
-            {
-                text: 'Остановлен',
-                value: 0,
-            },
-            {
-                text: 'Запущен',
-                value: 1,
-            },
-            {
-                text: 'Запускается',
-                value: 2,
-            },
-            {
-                text: 'Ошибка',
-                value: -1,
-            }
-        ],
-        onFilter: (value, record) => record.status === value,
-
+        width: '20%',
         render: (text) => {
             switch (String(text)) {
                 case '0': {
@@ -132,6 +113,7 @@ export const columns = [
         title: 'Действия',
         dataIndex: 'actions',
         key: 'actions',
+        width: '10%',
         render: (_, record) => (
             <Flex vertical={false} gap={'small'}>
                 {

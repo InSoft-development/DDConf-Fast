@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {getDevicesNet } from '../../services/actions/dashboard';
+import {getDevicesNet, getDeviceFeatures } from '../../services/actions/dashboard';
 import {Flex, Table} from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import styles from './dashboard.module.css';
@@ -10,10 +10,16 @@ import styles from './dashboard.module.css';
 const Dashboard = () => {
 
     const dispatch = useDispatch();
-    const {serial, license, devices, availableProtocols,
-        deviceFeaturesRequest, deviceNetRequest} = useSelector(store => store.device)
+    const {
+        serial, 
+        license,
+        devices,
+        deviceFeaturesRequest,
+        deviceNetRequest
+    } = useSelector(store => store.device)
 
     useEffect(() => {
+        dispatch(getDeviceFeatures())
         dispatch(getDevicesNet());
     }, [])
 
@@ -73,7 +79,7 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className='text mt-30'>
+        <div className='text mt-20'>
             <div>
                 <Flex align='center'>
                     <div className='text_type_main'>ПАК ОПТИ:</div>

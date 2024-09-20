@@ -98,7 +98,7 @@ const ProfileEditor = () => {
                             dataIndex={'id'}
                             key={'id'}
                             render={(text) => (
-                                <div>{text + 1}</div>
+                                <div className='text'>{text + 1}</div>
                             )}
                         />
                         <Column
@@ -109,7 +109,7 @@ const ProfileEditor = () => {
                             render={((_, __, index) => {
                                 return (
                                     <input
-                                        className='input_type_text'
+                                        className='text input_type_text'
                                         id={`${index}.main`}
                                         name={`${index}.main`}
                                         type='text'
@@ -129,7 +129,7 @@ const ProfileEditor = () => {
                             render={(_, __, index) => {
                                 return (
                                     <input
-                                        className='input_type_text'
+                                        className='text input_type_text'
                                         id={`${index}.second`}
                                         name={`${index}.second`}
                                         type='text'

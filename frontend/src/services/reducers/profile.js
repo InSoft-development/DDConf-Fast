@@ -21,7 +21,7 @@ import {
 } from '../actions/profile';
 
 const initialState = {
-    activeProfile: undefined,
+    activeProfile: null,
     activeTable: [],
     availableProfiles: [],
 
@@ -33,8 +33,7 @@ const initialState = {
     activeTableRequestSuccess: false,
     activeTableRequestFailed: false,
 
-    // active profile changing not inner data
-    nextProfile: null,
+    // active profile changing not table data
     changeProfileRequest: false,
     changeProfileSuccess: false,
     changeProfileFailed: false,
