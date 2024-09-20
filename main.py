@@ -1,7 +1,7 @@
 import json, syslog, traceback, datetime, os, jwt
 from typing import Union, Annotated
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket, UploadFile
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, PlainTextResponse, HTMLResponse, FileResponse, RedirectResponse

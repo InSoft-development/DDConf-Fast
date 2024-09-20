@@ -13,10 +13,10 @@ class POST(BaseModel):
 	params: dict | None | str 
 
 
-class Upload(BaseModel):
-	dest: str
-	_file: UploadFile
-	
+# class Upload(BaseModel):
+# 	dest: str
+# 	_file: UploadFile
+# 	
 
 
 class Token(BaseModel):
