@@ -6,7 +6,7 @@ DataDiode Configuration Server developed with FastAPI
 
 |endpoint|Method|Params|Response|Comment|
 |---|---|---|---|---|
-|dd104|"profile_save"|<pre>{<br/>"name": string, <br/>"data": \[\{"main": string , "second": string, "comment": string \}, ...\]<br/>}</pre>|<pre>{<br/>"result": null, <br/>"error": \[ string, ...\] \| null<br/>}</pre>| basic functionality: tested |
+|dd104|"profile_save"|<pre>{<br/>"name": string, <br/>"data": \[\{"main": string , "second": string, "comment": string \}, ...\]<br/>}</pre>|<pre>{<br/>"result": null \| string, <br/>"error": \[ string, ...\] \| null<br/>}</pre>| basic functionality: tested |
 | |"profile_apply"|<pre>{<br/>"name": string, <br/>}</pre>|<pre>{<br/>"result": "success" \| null,<br/>"error": \[ string, ...\] \| null<br/>}</pre>| basic functionality: tested |
 | |"process_handle"|<pre>{<br/>"pid": \[ int \] \|  int, <br/>"op": "stop" \| "start" \| "restart" <br/>}</pre>|<pre>{<br/>  "result": \[{"pid":  int , "status": -1\|0\|1\|2 }, ...\] \| {<br/>    "pid": int, "status": -1\|0\|1\|2<br/>  } \| null, <br/>  "error": \[ string, ...\] \| null<br/>}</pre>| the type of response\["result"\] depends on the type of params\["pid"\] ; basic functionality: tested |
 | |"fetch_initial"| null |<pre>{<br/>  "result": {<br/>    "active": string \| null, <br/>    "loadout_names": \[ string \]<br/>  } \| null,<br/>  "error": string \| null<br/>}</pre>| basic functionality: tested |
