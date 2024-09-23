@@ -29,6 +29,7 @@ from models import Token, TokenData, User, POST
 _mode = 'tx'
 
 #Auth
+SECRET_KEY=Path('/etc/dd/ddconf/.auth/secret').read_text()
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -293,7 +294,7 @@ async def login_for_access_token( form_data: Annotated[OAuth2PasswordRequestForm
 
 
 @app.get("/")
-def greet(token: Annotated[str, Depends(get_current_user)]):
+def greet()#token: Annotated[str, Depends(get_current_user)]):
 	if token:
 		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
 	else:
@@ -301,7 +302,7 @@ def greet(token: Annotated[str, Depends(get_current_user)]):
 
 
 @app.get("/{_path}")
-def get_any(_path: str, token: Annotated[str, Depends(get_current_user)]):
+def get_any(_path: str)#, token: Annotated[str, Depends(get_current_user)]):
 	msg = f"ddconf.main.get_any: GET request detected to /{_path}."
 	if token:
 		print(msg)
@@ -314,8 +315,13 @@ def get_any(_path: str, token: Annotated[str, Depends(get_current_user)]):
 		return RedirectResponse('/login', status_code=200)
 
 
+@app.get("/login")
+def login():
+	#TODO
+
+
 @app.post("/dashboard")
-def dashboard_post(REQ: POST, token: Annotated[str, Depends(get_current_user)]) -> dict:
+def dashboard_post(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
 		data = {}
 		errs = None
@@ -340,7 +346,7 @@ def dashboard_post(REQ: POST, token: Annotated[str, Depends(get_current_user)]) 
 
 
 @app.post("/dd104")
-def dd104_post(REQ: POST, token: Annotated[str, Depends(get_current_user)]) -> dict:
+def dd104_post(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
 		data = {} #just in case
 		errs = None #just in case
@@ -449,7 +455,7 @@ def dd104_post(REQ: POST, token: Annotated[str, Depends(get_current_user)]) -> d
 
 #TODO
 @app.post('/opcua')
-def handle_opcua(REQ: POST, token: Annotated[str, Depends(get_current_user)]):
+def handle_opcua(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]):
 	
 	data = {}
 	errs = []

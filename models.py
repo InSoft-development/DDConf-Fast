@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Union, Annotated
+from typing import Union, Annotated, Optional
 import syslog, json
 from pathlib import Path
  
@@ -32,7 +32,7 @@ class User(BaseModel):
 	username: str
 	hashed_password: str
 	level: str #'admin', 'user', 'disabled' TODO
-	logged_in: bool
+	logged_in: Optional[bool] = False
 
 
 # class UserInDB(User):
