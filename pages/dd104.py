@@ -129,13 +129,13 @@ def get_status(PID: int) -> int:
 	# return randrange(-2, 3)
 
 
-def validate_ld_data(data: dict) -> bool:
+def validate_ld_data(data: list) -> bool:
 	flag = True
 	
 	for i in data:
 		if 'main' not in i or not i['main']:
 			flag = False
-		if i.keys() != ['main', 'second', 'comment']:
+		if list(i.keys()) != ['main', 'second', 'comment']:
 			flag = False
 	
 	return flag
