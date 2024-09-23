@@ -228,7 +228,7 @@ async def login_for_access_token( form_data: Annotated[OAuth2PasswordRequestForm
 
 
 @app.get("/")
-def greet()#token: Annotated[str, Depends(get_current_user)]):
+def greet():#token: Annotated[str, Depends(get_current_user)]):
 	if token:
 		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
 	else:
@@ -255,7 +255,7 @@ def login():
 
 
 @app.post("/dashboard")
-def dashboard_post(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]) -> dict:
+def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
 		data = {}
 		errs = None
@@ -280,7 +280,7 @@ def dashboard_post(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]
 
 
 @app.post("/dd104")
-def dd104_post(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]) -> dict:
+def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
 		data = {} #just in case
 		errs = None #just in case
@@ -389,7 +389,7 @@ def dd104_post(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]) ->
 
 #TODO
 @app.post('/opcua')
-def handle_opcua(REQ: POST)#, token: Annotated[str, Depends(get_current_user)]):
+def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]):
 	
 	data = {}
 	errs = []
