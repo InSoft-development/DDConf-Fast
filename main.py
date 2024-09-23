@@ -236,17 +236,20 @@ def greet():#token: Annotated[str, Depends(get_current_user)]):
 
 
 @app.get("/{_path}")
-def get_any(_path: str)#, token: Annotated[str, Depends(get_current_user)]):
+def get_any(_path: str):#, token: Annotated[str, Depends(get_current_user)]):
 	msg = f"ddconf.main.get_any: GET request detected to /{_path}."
-	if token:
-		print(msg)
-		syslog.syslog(syslog.LOG_INFO, msg)
-		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
-	else:
-		msg = f"ddconf.main.get_any: auth timeout; redirecting to /login ."
-		print(msg)
-		syslog.syslog(syslog.LOG_INFO, msg)
-		return RedirectResponse('/login', status_code=200)
+	# if token:
+	# 	print(msg)
+	# 	syslog.syslog(syslog.LOG_INFO, msg)
+	# 	return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
+	# else:
+	# 	msg = f"ddconf.main.get_any: auth timeout; redirecting to /login ."
+	# 	print(msg)
+	# 	syslog.syslog(syslog.LOG_INFO, msg)
+	# 	return RedirectResponse('/login', status_code=200)
+	print(msg)
+	syslog.syslog(syslog.LOG_INFO, msg)
+	return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
 
 
 @app.get("/login")
