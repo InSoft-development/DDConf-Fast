@@ -79,28 +79,6 @@ export const changeProfile = (profileName, cb = null) => (dispatch) => {
         })
 }
 
-// export const getTableByProfileName = (profileName) => (dispatch) => {
-//     dispatch({type: GET_TABLE_BY_PROFILE_NAME});
-//     request('dd104', 'fetch_ld', {
-//         name: profileName
-//     })
-//         .then(res => checkResponce(res))
-//         .then(res => {
-//             dispatch({
-//                 type: GET_TABLE_BY_PROFILE_NAME_SUCCESS,
-//                 payload: res.result.data.map((record, index) => {
-//                     return {
-//                         ...record,
-//                         id: index
-//                     }
-//                 })
-//             })
-//         })
-//         .catch(error => {
-//             dispatch(dispatch({type: GET_TABLE_BY_PROFILE_NAME_FAILED}))
-//         })
-// }
-
 export const changeProсess = (actionIndex, processId) => (dispatch) => {
     dispatch({ type: CHANGE_PROCESS_STATUS, payload: processId })
     request('dd104','process_handle', {

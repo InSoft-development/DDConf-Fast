@@ -104,6 +104,13 @@ html {
     --margin-index: 2px;
 }
 
+.no-select{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* typography */
 .text {
     font-family: Inter, sans-serif;
@@ -314,6 +321,15 @@ html {
 }
 
 /* inputs profile editor */
+
+.input{
+    width: 85%;
+    border: 1px solid var(--gray-400);
+    outline: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: transparent;
+}
 
 .input_type_text {
     width: 85%;

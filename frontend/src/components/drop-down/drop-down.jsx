@@ -18,6 +18,7 @@ const DropDown = ({
     }
 
     const optionsListStyle = classNames([
+        'no-select',
         [styles.availableOptions],
         {
             [styles.availableOptionsHidden] : !menuIsOpen

@@ -7,10 +7,6 @@ import {
     GET_ACTIVE_TABLE_SUCCESS,
     GET_ACTIVE_TABLE_FAILED,
 
-    GET_TABLE_BY_PROFILE_NAME,
-    GET_TABLE_BY_PROFILE_NAME_SUCCESS,
-    GET_TABLE_BY_PROFILE_NAME_FAILED,
-
     CHANGE_PROFILE,
     CHANGE_PROFILE_SUCCESS,
     CHANGE_PROFILE_FAILED,
@@ -32,11 +28,6 @@ const initialState = {
     activeTableRequest: false,
     activeTableRequestSuccess: false,
     activeTableRequestFailed: false,
-
-    // active profile changing not table data
-    changeProfileRequest: false,
-    changeProfileSuccess: false,
-    changeProfileFailed: false,
 }
 
 export const profileReducer = (state = initialState, action) => {
@@ -218,31 +209,6 @@ export const profileReducer = (state = initialState, action) => {
         case CHANGE_PROCESS_STATUS_FAILED: {
             return {
                 ...state,
-            }
-        }
-        case GET_TABLE_BY_PROFILE_NAME: {
-            return {
-                ...state,
-                editableTableRequest: true,
-                editableTableRequestSuccess: false,
-                editableTableRequestFailed: false,
-            }
-        }
-        case GET_TABLE_BY_PROFILE_NAME_SUCCESS: {
-            return {
-                ...state,
-                editableTableRequest: false,
-                editableTableRequestSuccess: true,
-                editableTableRequestFailed: false,
-                editableTable: action.payload
-            }
-        }
-        case GET_TABLE_BY_PROFILE_NAME_FAILED: {
-            return {
-                ...state,
-                editableTableRequest: false,
-                editableTableRequestSuccess: false,
-                editableTableRequestFailed: true,
             }
         }
         default: {
