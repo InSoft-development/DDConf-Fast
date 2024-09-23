@@ -142,7 +142,7 @@ app.add_middleware(
 )
 
 
-app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), html=True), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "client"), html=True), name="static")
 
 
 def get_user_from_file(name:str) -> User: 
@@ -336,19 +336,16 @@ def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -
 			else:
 				raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
 		
-		elif REQ.method == "profile_save": #TODO validation
+		elif REQ.method == "profile_save": 
 			
-			if REQ.params['name'] in DD104.list_ld() or ".loadout" in REQ.params['name']:
-				try:
-					data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
-				except Exception as e:
-					msg = f"ddconf.dd104.dd104_save_ld_handler: Error: {str(e)}"
-					syslog.syslog(syslog.LOG_ERR, msg)
-					data = None
-					errs.append(msg)
-			else:
-				errs = f"ddconf.dd104.profile_save: incorrect ld name; data: {REQ.params['name']}\n"
+			try:
+				data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
+			except Exception as e:
+				msg = f"ddconf.dd104.profile_save: Error: {str(e)}"
+				syslog.syslog(syslog.LOG_ERR, msg)
 				data = None
+				errs.append(msg)
+			
 		
 		elif REQ.method == "profile_apply": #TODO validation
 			
