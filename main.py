@@ -229,10 +229,11 @@ async def login_for_access_token( form_data: Annotated[OAuth2PasswordRequestForm
 
 @app.get("/")
 def greet():#token: Annotated[str, Depends(get_current_user)]):
-	if token:
-		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
-	else:
-		return RedirectResponse('/login', status_code=200)
+	# if token:
+	# 	return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
+	# else:
+	# 	return RedirectResponse('/login', status_code=200)
+	return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
 
 
 @app.get("/{_path}")
@@ -254,7 +255,7 @@ def get_any(_path: str):#, token: Annotated[str, Depends(get_current_user)]):
 
 @app.get("/login")
 def login():
-	#TODO
+	pass#TODO
 
 
 @app.post("/dashboard")
@@ -286,7 +287,7 @@ def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
 		data = {} #just in case
-		errs = None #just in case
+		errs = [] #just in case
 		
 		if REQ.method == "fetch_initial":
 			
