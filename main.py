@@ -225,7 +225,7 @@ def get_user_from_file(name:str) -> User:
 	except Exception as e:
 		msg = f"ddconf.main.get_user_from_file: unexpected exception: {str(e)}"
 		syslog.syslog(syslog.LOG_CRIT, msg)
-		Path("/home/txhost/.EOUT").write_text(data)
+		Path("/home/txhost/.EOUTS/main").write_text(data)
 		print(msg)
 
 
