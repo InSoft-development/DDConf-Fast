@@ -46,17 +46,39 @@ def rm_inis():
 
 def rm_services():
 	try:
+		
 		dest = Path('/etc/systemd/system/')
 		for svc in listdir(dest):
-			if 'dd104' in svc:
+			if f'dd104{"client" if _mode == "tx" else "server"}' in svc:
+				syslog.syslog(syslog.LOG_INFO, f"ddconf.dd104.rm_services: disabling {svc} process")
+				print(f"ddconf.dd104.rm_services: disabling {svc} process")
+				_ = subprocess.run(f"systemctl disable --now {svc}".split())
 				(dest/svc).unlink()
 				syslog.syslog(syslog.LOG_INFO, f"ddconf.dd104.rm_services: {str(dest/svc)} file was removed")
 				print(f"ddconf.dd104.rm_services: {str(dest/svc)} file was removed")
+		_ = subprocess.run(f"systemctl daemon-reload".split())
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.rm_services: Error while removing file:  {str(e)}")
-		print(f"ddconf.dd104.rm_services: Error while removing file:  {traceback.print_exception(e)}\n")
+		print(f"ddconf.dd104.rm_services: Error while removing file:  {traceback.format_exception(e)}\n")
+		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
 
-
+def delete_ld(name: str):
+	try:
+		if name in list_ld():
+			if name == get_active_ld()
+				rm_services()
+				rm_inis()
+				(Path(DD104.DEFAULTS.DD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
+			
+			_f = Path(DD104.DEFAULTS.DD['LOADOUTDIR'])/f"{name}{'.loadout' if '.loadout' not in name else ''}"
+			_f.unlink()
+	except Exception as e:
+		msg = f"ddconf.main.dd104_post: couldn't remove loadout file {str(_f)}."
+		#DEBUG
+		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
+		raise RuntimeError(e)
+	else:
+		return "success"
 
 #TODO
 def create_inis(data: list):
@@ -90,13 +112,19 @@ def create_services(count:int):
 		for i in range(1, count+1): #why was this +2 ???
 			msg = f"[Unit]\nDescription=dd104client\nAfter=hasplmd.service\n[Service]\nKillMode=mixed\nExecStartPre=/bin/sleep 5\nExecStart=/opt/dd/{'dd104client/dd104client' if _mode=='tx' else 'dd104server/dd104server'} -c {Defaults.DD['INIDIR']}dd104{'client' if _mode=='tx' else 'server'}{i}.ini\nRestart=always\nUser=dd\nGroup=dd\n\n[Install]\nWantedBy=multi-user.target"
 			
-			stat = Path(f'/etc/systemd/system/{"dd104client" if _mode=="tx" else "dd104server"}{i}.service').write_text(msg)
+			_ = Path(f'/etc/systemd/system/{"dd104client" if _mode=="tx" else "dd104server"}{i}.service').write_text(msg)
 			
 			msg = f"ddconf.dd104.create_services: Created a file at /etc/systemd/system/dd104{'client' if _mode=='tx' else 'server'}{i}.service. "
 			syslog.syslog(syslog.LOG_INFO, msg)
 			print(msg)
+			
+			_ = subprocess.run(f'''systemctl enable {"dd104client" if _mode=="tx" else "dd104server"}{i}.service''')
+			
+			msg = f"ddconf.dd104.create_services: enabling {"dd104client" if _mode=="tx" else "dd104server"}{i}.service"
+			syslog.syslog(syslog.LOG_INFO, msg)
+			print(msg)
 		
-		stat = subprocess.run(f"systemctl daemon-reload".split())
+		_ = subprocess.run(f"systemctl daemon-reload".split())
 		
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"dd104.create_services: couldn't create services; Details:  {str(e)}\n")
@@ -217,7 +245,7 @@ def get_processes(LD_ID: str) -> list:
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
 	try:
-		return ((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[:-1:])) if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().is_file() else None
+		return ((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[:-1:])) if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").exists() and  (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().is_file() else None
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.get_active_ld: Error: {str(e)}")
 		return f"Ошибка: {str(e)}"
