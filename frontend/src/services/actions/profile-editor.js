@@ -2,23 +2,23 @@ import { request } from '../api';
 import { checkResponce } from '../../utils/checkResponce';
 import { notification } from 'antd';
 
-export const GET_PROFILES_REQUEST = 'GET_PROFILES_REQUEST';
-export const GET_PROFILES_REQUEST_SUCCESS = 'GET_PROFILES_REQUEST_SUCCESS';
-export const GET_PROFILES_REQUEST_FAILED = 'GET_PROFILES_REQUEST_FAILED';
+export const GET_PROFILES_REQUEST = 'profile-editor/GET_PROFILES_REQUEST';
+export const GET_PROFILES_REQUEST_SUCCESS = 'profile-editor/GET_PROFILES_REQUEST_SUCCESS';
+export const GET_PROFILES_REQUEST_FAILED = 'profile-editor/GET_PROFILES_REQUEST_FAILED';
 
-export const GET_TABLE_BY_PROFILE_NAME = 'GET_TABLE_BY_PROFILE_NAME';
-export const GET_TABLE_BY_PROFILE_NAME_SUCCESS = 'GET_TABLE_BY_PROFILE_NAME_SUCCESS';
-export const GET_TABLE_BY_PROFILE_NAME_FAILED = 'GET_TABLE_BY_PROFILE_NAME_FAILED';
+export const GET_TABLE_BY_PROFILE_NAME = 'profile-editor/GET_TABLE_BY_PROFILE_NAME';
+export const GET_TABLE_BY_PROFILE_NAME_SUCCESS = 'profile-editor/GET_TABLE_BY_PROFILE_NAME_SUCCESS';
+export const GET_TABLE_BY_PROFILE_NAME_FAILED = 'profile-editor/GET_TABLE_BY_PROFILE_NAME_FAILED';
 
-export const CHANGE_PROFILE = 'CHANGE_PROFILE';
+export const CHANGE_PROFILE = 'profile-editor/CHANGE_PROFILE';
 
-export const SAVE_PROFILE = 'SAVE_PROFILE';
-export const SAVE_PROFILE_SUCCESS = 'SAVE_PROFILE_SUCCESS';
-export const SAVE_PROFILE_FAILED = 'SAVE_PROFILE_FAILED';
+export const SAVE_PROFILE = 'profile-editor/SAVE_PROFILE';
+export const SAVE_PROFILE_SUCCESS = 'profile-editor/SAVE_PROFILE_SUCCESS';
+export const SAVE_PROFILE_FAILED = 'profile-editor/SAVE_PROFILE_FAILED';
 
-export const APPLY_PROFILE = 'APPLY_PROFILE';
-export const APPLY_PROFILE_SUCCESS = 'APPLY_PROFILE_SUCCESS';
-export const APPLY_PROFILE_FAILED = 'APPLY_PROFILE_FAILED';
+export const APPLY_PROFILE = 'profile-editor/APPLY_PROFILE';
+export const APPLY_PROFILE_SUCCESS = 'profile-editor/APPLY_PROFILE_SUCCESS';
+export const APPLY_PROFILE_FAILED = 'profile-editor/APPLY_PROFILE_FAILED';
 
 
 export const getProfiles = () => (dispatch) => {
