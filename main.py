@@ -447,18 +447,7 @@ def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -
 		
 		elif REQ.method == 'delete_ld':
 			
-			if REQ.params['name'] and REQ.params['name'] in DD104.list_ld():
-				try:
-					_f = Path(DD104.DEFAULTS.DD['LOADOUTDIR'])/f"{REQ.params['name']}{'.loadout' if '.loadout' not in REQ.params['name'] else ''}"
-					_f.unlink()
-				except Exception as e:
-					msg = f"ddconf.main.dd104_post: couldn't remove loadout file {str(_f)}."
-					errs = msg
-					# print(msg)
-					data = None
-			else:
-				errs = f"ddconf.dd104.fetch_ld: incorrect data: {json.dumps(REQ.params)}"
-				data = None
+			data = DD104.delete_ld(REQ.params['name'])
 			
 		
 	except Exception as e:
