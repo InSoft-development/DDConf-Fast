@@ -183,7 +183,7 @@ items
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
 		print(f"ddconf.opcua.make_file: couldn't write into {fname}; previous config was deleted, please check permissions and try again! ")
 		print(f"traceback:", traceback.format_exc())
-		Path('/home/txhost/.EOUT').write_text(str(data) + '\n\n' + traceback.format_exc())
+		Path('/home/txhost/.EOUTS/opcua').write_text(str(data) + '\n\n' + traceback.format_exc())
 		
 		
 		
