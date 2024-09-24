@@ -65,7 +65,7 @@ def rm_services():
 def delete_ld(name: str):
 	try:
 		if name in list_ld():
-			if name == get_active_ld()
+			if name == get_active_ld():
 				rm_services()
 				rm_inis()
 				(Path(DD104.DEFAULTS.DD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
