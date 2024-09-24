@@ -14,6 +14,7 @@ import {
     profileApply,
 } from '../../services/actions/profile-editor';
 import classNames from 'classnames';
+import { uniqueValues } from '../../utils/uniqueValues';
 
 const ProfileEditor = () => {
 
@@ -113,7 +114,7 @@ const ProfileEditor = () => {
         setFormValues(newFormValues);
     }
 
-    const onCancelBtnClickHandler = (e) => {
+    const onReturnBtnClickHandler = (e) => {
         navigate('/dd104');
     }
 
@@ -138,10 +139,29 @@ const ProfileEditor = () => {
             data: formValues
         }
 
-        if (newProfileName.length === 0) {
+        // Определяем запрещённые символы, недопустимые для элементов файлоых систем OC
+        //eslint-disable-next-line
+        const regExp = /[\&\;\|\*\?\'\"\`\[\]\(\)\$\<\>\{\}\^\#\/\%\!\\]/g;
+
+        const matches = profileData.name.match(regExp);     
+
+        console.log(profileData.name.length);
+        
+        if (profileData.name.length === 0) {
             message.open({
                 type: 'warning',
-                content: 'Название профиля не может быть пустым'
+                content: 'Название профиля не может быть пустым',
+                duration: 2
+            })
+            return;
+        }
+        
+        if(matches !== null){          
+
+            message.open({
+                type: 'warning',
+                content: `В названии профиля не могут содержаться следующие символы: ${uniqueValues(matches).join(' ')}`,
+                duration: 5
             })
             return;
         }
@@ -159,20 +179,23 @@ const ProfileEditor = () => {
     return (
         <>
             <div className={styles.profileEditorWrapper}>
-                <Flex align='center' justify='flex-start'>
-                    <h2 className='text text_type_main mr-10'>Редактор профилей</h2>
-                    {activeProfileRequest && (
-                        <LoadingOutlined style={{ fontSize: 20 }} />
-                    )}
+                <Flex align='center' justify='space-between'>
+                    <Flex align='center' justify='flex-start'>
+                        <h2 className='text text_type_main mr-10'>Редактор профилей</h2>
+                        {activeProfileRequest && (
+                            <LoadingOutlined style={{ fontSize: 20 }} />
+                        )}
 
-                    {activeProfileRequestSuccess && (
-                        <DropDown
-                            selectedOption={selectedProfile}
-                            availableOptions={availableProfiles}
-                            loading={activeProfileRequest}
-                            onClick={onOptionListClickHandler}
-                        />
-                    )}
+                        {activeProfileRequestSuccess && (
+                            <DropDown
+                                selectedOption={selectedProfile}
+                                availableOptions={availableProfiles}
+                                loading={activeProfileRequest}
+                                onClick={onOptionListClickHandler}
+                            />
+                        )}
+                    </Flex>
+                    <button type="button" className='button btn-green no-select' onClick={onReturnBtnClickHandler}>Выйти из режима редактирования</button>
 
                 </Flex>
                 <Divider />
@@ -300,8 +323,7 @@ const ProfileEditor = () => {
                                 >Удалить</button>
                                 <button
                                     type="button"
-                                    className='button btn-grey'
-                                    onClick={onCancelBtnClickHandler}
+                                    className={`button btn-grey ${isAvailable}`}
                                 >Отменить</button>
                             </div>
                         </Flex>

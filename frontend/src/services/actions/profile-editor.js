@@ -65,7 +65,16 @@ export const changeProfile = (profileName) => (dispatch)=> {
 export const saveProfile = (profileData) => (dispatch) => {
     dispatch({type: SAVE_PROFILE});
 
-    request('dd104', 'profile_save', profileData)
+    // Удаление свойста id в каждом объекте массива
+    const newProfileData = {
+        name: profileData.name,
+        data: [...profileData.data].map(obj => {
+            const {id, ...withoutId} = obj;
+            return withoutId
+        })
+    };
+
+    request('dd104', 'profile_save', newProfileData)
         .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: SAVE_PROFILE_SUCCESS})
@@ -78,7 +87,7 @@ export const saveProfile = (profileData) => (dispatch) => {
                 })
             }else{
                 notification.success({
-                    message: `Профиль ${profileData.name} успешно сохранён`,
+                    message: `Профиль ${newProfileData.name} успешно сохранён`,
                     placement: 'topLeft',
                 })
             }
