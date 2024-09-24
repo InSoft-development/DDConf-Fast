@@ -83,7 +83,7 @@ const Dd104 = () => {
                             onClick={onProfileClickHandler}
                         />
                         <button 
-                            className={`button btn-green ml-auto ${btnStyles}`}
+                            className={`button btn-green ml-auto no-select ${btnStyles}`}
                             onClick={e => { navigate('/profile-editor', { state: { prevProfile: activeProfile } }) }}
                         >Редактировать профиль</button>
                     </>

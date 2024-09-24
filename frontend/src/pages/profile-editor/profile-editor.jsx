@@ -133,7 +133,7 @@ const ProfileEditor = () => {
         dispatch(saveProfile(profileData));
     }
 
-    const onSaveAsProfileHandler = () => {
+    const onSaveAsProfileHandler = (cb) => {
         const profileData = {
             name: newProfileName,
             data: formValues
@@ -143,10 +143,8 @@ const ProfileEditor = () => {
         //eslint-disable-next-line
         const regExp = /[\&\;\|\*\?\'\"\`\[\]\(\)\$\<\>\{\}\^\#\/\%\!\\]/g;
 
-        const matches = profileData.name.match(regExp);     
+        const matches = profileData.name.match(regExp);
 
-        console.log(profileData.name.length);
-        
         if (profileData.name.length === 0) {
             message.open({
                 type: 'warning',
@@ -155,9 +153,8 @@ const ProfileEditor = () => {
             })
             return;
         }
-        
-        if(matches !== null){          
 
+        if (matches !== null) {
             message.open({
                 type: 'warning',
                 content: `В названии профиля не могут содержаться следующие символы: ${uniqueValues(matches).join(' ')}`,
@@ -166,7 +163,7 @@ const ProfileEditor = () => {
             return;
         }
 
-        dispatch(saveProfile(profileData));
+        dispatch(saveProfile(profileData, cb));
         setNewProfileName('');
         setModalIsOpen(false);
 
@@ -174,6 +171,10 @@ const ProfileEditor = () => {
 
     const onApplyProfileHandler = () => {
         dispatch(profileApply(selectedProfile));
+    }
+
+    const onCancelProfileHandler = () => {
+        dispatch(getTableByProfileName(selectedProfile))
     }
 
     return (
@@ -291,7 +292,11 @@ const ProfileEditor = () => {
 
                     <footer className={styles.footer}>
                         <Flex align='center' justify='space-between' className='wrapper'>
-                            <button type="button" className='button btn-green' onClick={addRow}>Добавить</button>
+                            <button type="button"
+                                className={`button btn-green ${isAvailable}`}
+                                onClick={addRow}
+                                disabled={formIsUploading}
+                            >Добавить</button>
                             <div>
                                 <button
                                     type="button"
@@ -324,6 +329,8 @@ const ProfileEditor = () => {
                                 <button
                                     type="button"
                                     className={`button btn-grey ${isAvailable}`}
+                                    disabled={formIsUploading}
+                                    onClick={onCancelProfileHandler}
                                 >Отменить</button>
                             </div>
                         </Flex>
@@ -342,7 +349,12 @@ const ProfileEditor = () => {
                 okText='Сохранить и отправить'
                 cancelText='Отменить'
                 onCancel={e => setModalIsOpen(false)}
-                onOk={e => onSaveAsProfileHandler()}
+                onOk={e => {
+                    const callee = () => {
+                        dispatch(getProfiles())
+                    }
+                    onSaveAsProfileHandler(callee)
+                }}
 
             >
                 <Flex align='center' justify='space-between' className='mt-20 mb-20'>

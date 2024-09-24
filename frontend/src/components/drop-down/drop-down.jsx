@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CaretDownOutlined, LoadingOutlined } from '@ant-design/icons'
 import styles from './drop-down.module.css';
 import { Flex } from 'antd';
@@ -13,7 +13,21 @@ const DropDown = ({
 
     const [menuIsOpen, setModalState] = useState(false);
 
-    const onArrowClickHandler = () => {
+    useEffect(() => {
+
+        document.addEventListener('click', onClickOutside);
+
+        return () => { document.removeEventListener('click', onClickOutside)};
+
+    }, [])
+
+    const onClickOutside = (e) => {
+        setModalState(false)
+    }
+    
+
+    const onArrowClickHandler = (e) => {
+        e.stopPropagation();
         setModalState(!menuIsOpen);
     }
 
@@ -21,7 +35,7 @@ const DropDown = ({
         'no-select',
         [styles.availableOptions],
         {
-            [styles.availableOptionsHidden] : !menuIsOpen
+            [styles.availableOptionsHidden]: !menuIsOpen
         }
     ])
 
@@ -32,13 +46,16 @@ const DropDown = ({
                 <div>
                     <CaretDownOutlined
                         onClick={onArrowClickHandler}
-                        className={`${menuIsOpen ? `${styles.arrowActive}` : ''}`} 
+                        className={`${menuIsOpen ? `${styles.arrowActive}` : ''}`}
                     />
                     <ul className={optionsListStyle}>
                         {availableOptions.map(option => (
                             <li key={option}
                                 className={`${styles.listElement} ${selectedOption === option ? styles.listElementActive : ''}`}
-                                onClick={e => onClick(option)}
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    onClick(option)
+                                }}
                             >
                                 <div className={styles.listContent}>{option}</div>
                             </li>
@@ -54,3 +71,5 @@ const DropDown = ({
 }
 
 export default DropDown;
+
+

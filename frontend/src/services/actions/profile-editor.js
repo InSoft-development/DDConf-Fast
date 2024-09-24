@@ -62,7 +62,7 @@ export const changeProfile = (profileName) => (dispatch)=> {
     dispatch(getTableByProfileName(profileName));
 }
 
-export const saveProfile = (profileData) => (dispatch) => {
+export const saveProfile = (profileData, cb = null) => (dispatch) => {
     dispatch({type: SAVE_PROFILE});
 
     // Удаление свойста id в каждом объекте массива
@@ -91,6 +91,11 @@ export const saveProfile = (profileData) => (dispatch) => {
                     placement: 'topLeft',
                 })
             }
+
+            if(cb){
+                cb();
+            }
+
         })
         .catch(error => {
             dispatch({type: SAVE_PROFILE_FAILED})
