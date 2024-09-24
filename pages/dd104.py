@@ -225,7 +225,7 @@ def get_active_ld() -> str:
 
 def list_ld() -> list:
 	# lists loadout IDs !!!
-	return [x for x in listdir(Defaults.DD["LOADOUTDIR"]) if (Path(Defaults.DD["LOADOUTDIR"])/x).is_file() and (Path(Defaults.DD["LOADOUTDIR"])/x).name.split('.')[-1] == 'loadout' and (Path(Defaults.DD["LOADOUTDIR"])/x).name != ".ACTIVE.loadout"]
+	return ['.'.join(x.split('.')[:-1:]) for x in listdir(Defaults.DD["LOADOUTDIR"]) if (Path(Defaults.DD["LOADOUTDIR"])/x).is_file() and (Path(Defaults.DD["LOADOUTDIR"])/x).name.split('.')[-1] == 'loadout' and (Path(Defaults.DD["LOADOUTDIR"])/x).name != ".ACTIVE.loadout"]
 	# return ["a", "b", "ne b"]
 
 
