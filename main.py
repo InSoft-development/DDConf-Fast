@@ -209,7 +209,7 @@ app.add_middleware(
 
 
 
-app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "client"), html=True), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(os.getcwd(), "static"), html=True), name="static")
 
 
 
