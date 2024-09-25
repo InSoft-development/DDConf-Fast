@@ -9,9 +9,6 @@ export const GET_DEVICES_NET = 'dashboard/GET_DEVICES_NET';
 export const GET_DEVICES_NET_SUCCESS = 'dashboard/GET_DEVICES_NET_SUCCESS';
 export const GET_DEVICES_NET_FAILED = 'dashboard/GET_DEVICES_NET_FAILED';
 
-export const GET_AVAILABLE_PROTOCOLS = 'dashboard/GET_AVAILABLE_PROTOCOLS';
-export const GET_AVAILABLE_PROTOCOLS_SUCCESS = 'dashboard/GET_AVAILABLE_PROTOCOLS_SUCCESS';
-export const GET_AVAILABLE_PROTOCOLS_FAILED = 'dashboard/GET_AVAILABLE_PROTOCOLS_FAILED';
 
 export const getDeviceFeatures = () => (dispatch) => {
     dispatch({type: GET_DEVICE_FEATURES});

@@ -13,7 +13,9 @@ import {
 
     CHANGE_PROCESS_STATUS,
     CHANGE_PROCESS_STATUS_SUCCESS,
-    CHANGE_PROCESS_STATUS_FAILED    
+    CHANGE_PROCESS_STATUS_FAILED,
+    
+    SET_DEFAULT_SLICE_STATE
 } from '../actions/profile';
 
 const initialState = {
@@ -28,6 +30,11 @@ const initialState = {
     activeTableRequest: false,
     activeTableRequestSuccess: false,
     activeTableRequestFailed: false,
+    
+    changeProfileRequest: false,
+    changeProfileSuccess: false,
+    changeProfileFailed: false,
+
 }
 
 export const profileReducer = (state = initialState, action) => {
@@ -209,6 +216,12 @@ export const profileReducer = (state = initialState, action) => {
         case CHANGE_PROCESS_STATUS_FAILED: {
             return {
                 ...state,
+            }
+        }
+        case SET_DEFAULT_SLICE_STATE: {
+            
+            return {
+                ...initialState
             }
         }
         default: {

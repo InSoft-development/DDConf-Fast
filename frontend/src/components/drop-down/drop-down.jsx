@@ -5,7 +5,7 @@ import { Flex } from 'antd';
 import classNames from 'classnames';
 
 const DropDown = ({
-    selectedOption = 'Не выбран',
+    selectedOption,
     availableOptions = [],
     loading = false,
     onClick = () => { }
@@ -42,7 +42,7 @@ const DropDown = ({
     return (
         <Flex align='center'>
             <div className={`text mr-10 ${styles.dropDown}`}>
-                <div className='mr-6'>{selectedOption}</div>
+                <div className='mr-6'>{selectedOption ? selectedOption : 'Не задан'}</div>
                 <div>
                     <CaretDownOutlined
                         onClick={onArrowClickHandler}

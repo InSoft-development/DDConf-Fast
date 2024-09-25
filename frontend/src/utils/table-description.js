@@ -102,6 +102,9 @@ export const columns = [
                 case '-1': {
                     return <Badge status='error' text="ошибка" />
                 }
+                case '-2': {
+                    return <Badge status='error' text="крит. ошибка" />
+                }
                 default: {
                     break;
                 }

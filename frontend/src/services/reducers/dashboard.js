@@ -7,9 +7,6 @@ import {
     GET_DEVICES_NET_SUCCESS,
     GET_DEVICES_NET_FAILED,
 
-    GET_AVAILABLE_PROTOCOLS,
-    GET_AVAILABLE_PROTOCOLS_SUCCESS,
-    GET_AVAILABLE_PROTOCOLS_FAILED
  } from '../actions/dashboard';
 
 const initialState = {

@@ -12,6 +12,8 @@ import {
     changeProfile,
     saveProfile,
     profileApply,
+    deleteProfile,
+    SET_DEFAULT_SLICE_STATE
 } from '../../services/actions/profile-editor';
 import classNames from 'classnames';
 import { uniqueValues } from '../../utils/uniqueValues';
@@ -19,7 +21,10 @@ import { uniqueValues } from '../../utils/uniqueValues';
 const ProfileEditor = () => {
 
     const [newProfileName, setNewProfileName] = useState('');
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [newlyProfileName, setNewlyProfileName] = useState('');
+    const [saveProfileModalIsOpen, setSaveProfileModalIsOpen] = useState(false);
+    const [deleteProfileModalIsOpen, setDeleteProfileModalIsOpen] = useState(false);
+    const [createProfileModalIsOpen, setCreateProfileModalIsOpen] = useState(false);
 
     const [formValues, setFormValues] = useState([]);
     const dispatch = useDispatch();
@@ -33,18 +38,30 @@ const ProfileEditor = () => {
         tableRequest,
         tableRequestSuccess,
         profileSaveRequest,
-        applyProficeRequest
+        applyProficeRequest,
+        deleteProfileRequest,
+        activeProfileRequestFailed,
+        tableRequestFailed
     } = useSelector(store => store.profileEditor);
 
-    const formIsUploading = profileSaveRequest || activeProfileRequest || tableRequest || applyProficeRequest;
+    const formIsUploading = profileSaveRequest ||
+        activeProfileRequest ||
+        tableRequest ||
+        applyProficeRequest ||
+        deleteProfileRequest;
+
+    const failedRequest = activeProfileRequestFailed || tableRequestFailed;
 
     const isAvailable = classNames({
-        'btn-inactive': formIsUploading,
+        'btn-inactive': formIsUploading || failedRequest,
     })
-
 
     useEffect(() => {
         dispatch(getProfiles());
+
+        return () => {
+            dispatch({type: SET_DEFAULT_SLICE_STATE})
+        }
     }, [])
 
     useEffect(() => {
@@ -60,10 +77,6 @@ const ProfileEditor = () => {
         }
 
     }, [tableRequestSuccess])
-
-
-
-
 
     // form handlers
     const onSubmit = (e) => {
@@ -133,11 +146,11 @@ const ProfileEditor = () => {
         dispatch(saveProfile(profileData));
     }
 
-    const onSaveAsProfileHandler = (cb) => {
+    const onSaveAsProfileHandler = (newlyProfile = false, cb = null) => {
         const profileData = {
-            name: newProfileName,
-            data: formValues
-        }
+            name: newlyProfile ? newlyProfileName : newProfileName,
+            data: newlyProfile ? [] : formValues
+        }      
 
         // Определяем запрещённые символы, недопустимые для элементов файлоых систем OC
         //eslint-disable-next-line
@@ -165,7 +178,9 @@ const ProfileEditor = () => {
 
         dispatch(saveProfile(profileData, cb));
         setNewProfileName('');
-        setModalIsOpen(false);
+        setNewlyProfileName('');
+        setSaveProfileModalIsOpen(false);
+        setCreateProfileModalIsOpen(false)
 
     }
 
@@ -197,7 +212,6 @@ const ProfileEditor = () => {
                         )}
                     </Flex>
                     <button type="button" className='button btn-green no-select' onClick={onReturnBtnClickHandler}>Выйти из режима редактирования</button>
-
                 </Flex>
                 <Divider />
                 <form onSubmit={onSubmit}>
@@ -207,7 +221,7 @@ const ProfileEditor = () => {
                             bordered={true}
                             dataSource={formValues}
                             pagination={false}
-                            loading={tableRequest || activeProfileRequest}
+                            loading={formIsUploading}
                             expandable={{
                                 expandedRowRender: (record) => (
                                     <textarea
@@ -254,7 +268,7 @@ const ProfileEditor = () => {
                             />
                             <Column
                                 width={'40%'}
-                                title={'Резервный'}
+                                title={'Резервный (IP:PORT)'}
                                 dataIndex={'second'}
                                 key={'second'}
                                 render={(_, __, index) => {
@@ -295,14 +309,14 @@ const ProfileEditor = () => {
                             <button type="button"
                                 className={`button btn-green ${isAvailable}`}
                                 onClick={addRow}
-                                disabled={formIsUploading}
-                            >Добавить</button>
+                                disabled={formIsUploading || failedRequest}
+                            >Добавить процесс</button>
                             <div>
                                 <button
                                     type="button"
                                     className={`button btn-green mr-2 ${isAvailable}`}
                                     title='Сделать выбранный профиль активным'
-                                    disabled={formIsUploading}
+                                    disabled={formIsUploading || failedRequest}
                                     onClick={e => onApplyProfileHandler()}
                                 >Применить</button>
                                 <button
@@ -310,37 +324,48 @@ const ProfileEditor = () => {
                                     className={`button btn-green mr-2 ${isAvailable}`}
                                     title='Сохранить изменения профиля'
                                     onClick={onSaveProfileHandler}
-                                    disabled={formIsUploading}
+                                    disabled={formIsUploading || failedRequest}
                                 >Сохранить</button>
                                 <button
                                     type="button"
                                     className={`button btn-green mr-2 ${isAvailable}`}
                                     title='Сохранить изменения в новый профиль'
-                                    disabled={formIsUploading}
+                                    disabled={formIsUploading || failedRequest}
                                     onClick={e => {
-                                        setModalIsOpen(true)
+                                        setSaveProfileModalIsOpen(true)
                                     }}
                                 >Сохранить как</button>
                                 <button
                                     type="button"
+                                    className={`button btn-green mr-2 ${isAvailable}`}
+                                    disabled={formIsUploading || failedRequest}
+                                    title='Создать новый профиль'
+                                    onClick={e => setCreateProfileModalIsOpen(true)}
+                                >Создать профиль</button>
+                                <button
+                                    type="button"
                                     className={`button btn-red mr-2 ${isAvailable}`}
-                                    disabled={formIsUploading}
+                                    disabled={formIsUploading || failedRequest}
+                                    onClick={e => setDeleteProfileModalIsOpen(true)}
+                                    title='Удалить профиль'
                                 >Удалить</button>
                                 <button
                                     type="button"
                                     className={`button btn-grey ${isAvailable}`}
-                                    disabled={formIsUploading}
+                                    disabled={formIsUploading || failedRequest}
                                     onClick={onCancelProfileHandler}
+                                    title={'Вернуть изначальное состояние формы'}
                                 >Отменить</button>
                             </div>
                         </Flex>
                     </footer>
                 </form>
             </div>
+            {/* Модалка | Сохранение профиля */}
             <Modal
                 title={'Сохранить как'}
                 centered={true}
-                open={modalIsOpen}
+                open={saveProfileModalIsOpen}
                 okButtonProps={{
                     style: {
                         backgroundColor: 'var(--green)'
@@ -348,12 +373,12 @@ const ProfileEditor = () => {
                 }}
                 okText='Сохранить и отправить'
                 cancelText='Отменить'
-                onCancel={e => setModalIsOpen(false)}
+                onCancel={e => setSaveProfileModalIsOpen(false)}
                 onOk={e => {
                     const callee = () => {
                         dispatch(getProfiles())
                     }
-                    onSaveAsProfileHandler(callee)
+                    onSaveAsProfileHandler(false, callee)
                 }}
 
             >
@@ -371,6 +396,69 @@ const ProfileEditor = () => {
                         }}
                     />
                 </Flex>
+            </Modal>
+            {/* Модалка | Удаление профиля */}
+            <Modal
+                title={' '}
+                centered={true}
+                open={deleteProfileModalIsOpen}
+                okButtonProps={{
+                    style: {
+                        backgroundColor: 'var(--red)'
+                    }
+                }}
+                okText='Удалить'
+                cancelText='Отменить'
+                onCancel={e => setDeleteProfileModalIsOpen(false)}
+                onOk={e => {
+                    dispatch(deleteProfile(selectedProfile));
+                    setDeleteProfileModalIsOpen(false)                 
+                }}
+
+            >
+                <div className='text'>
+                    <span className='fw-b'>Внимание: </span>
+                    вы пытаетесь необратимо удалить активный профиль, все текущие процессы сервиса заданные данным профилем будут остановлены. Если вы действительно хотите удалить этот профиль, нажмите 'Удалить', для отмены нажмите 'Отменить'.
+                </div>
+            </Modal>
+            {/* Модалка | Создание профиля */}
+            <Modal
+                title={'Создание нового профиля'}
+                width={600}
+                centered={true}
+                open={createProfileModalIsOpen}
+                okButtonProps={{
+                    style: {
+                        backgroundColor: 'var(--green)'
+                    }
+                }}
+                okText='Создать'
+                cancelText='Отменить'
+                onCancel={e => {setCreateProfileModalIsOpen(false)}}
+                onOk={e => {
+                    const callee = () => {
+                        dispatch(getProfiles())
+                    }
+
+                    onSaveAsProfileHandler(true, callee)
+                }}
+
+            >
+                <Flex align='center' justify='space-between' className='mt-10 mb-10'>
+                    <label htmlFor="createProfileInput" className='mr-10' style={{width: 160}}>Название профиля:</label>
+                    <input type="text"
+                        name="createProfileInput"
+                        id="createProfileInput"
+                        autoComplete='off'
+                        placeholder='Введите название нового профиля'
+                        className='input'
+                        value={newlyProfileName}
+                        onChange={e => {                            
+                            setNewlyProfileName(e.target.value)
+                        }}
+                      />
+                </Flex>
+
             </Modal>
         </>
     );

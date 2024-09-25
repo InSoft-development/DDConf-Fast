@@ -20,6 +20,12 @@ export const APPLY_PROFILE = 'profile-editor/APPLY_PROFILE';
 export const APPLY_PROFILE_SUCCESS = 'profile-editor/APPLY_PROFILE_SUCCESS';
 export const APPLY_PROFILE_FAILED = 'profile-editor/APPLY_PROFILE_FAILED';
 
+export const DELETE_PROFILE = 'profile-editor/DELETE_PROFILE';
+export const DELETE_PROFILE_SUCCESS = 'profile-editor/DELETE_PROFILE_SUCCESS';
+export const DELETE_PROFILE_FAILED = 'profile-editor/DELETE_PROFILE_FAILED';
+
+export const SET_DEFAULT_SLICE_STATE = 'profile-editor/SET_DEFAULT_SLICE_STATE';
+
 
 export const getProfiles = () => (dispatch) => {
     dispatch({ type: GET_PROFILES_REQUEST });
@@ -79,18 +85,10 @@ export const saveProfile = (profileData, cb = null) => (dispatch) => {
         .then(res => {
             dispatch({type: SAVE_PROFILE_SUCCESS})
 
-            if(res.error !== null){
-                notification.error({
-                    message: 'Ошибка запроса',
-                    description: res.error ,
-                    placement: 'topLeft',
-                })
-            }else{
-                notification.success({
-                    message: `Профиль ${newProfileData.name} успешно сохранён`,
-                    placement: 'topLeft',
-                })
-            }
+            notification.success({
+                message: `Профиль "${newProfileData.name}" успешно сохранён `,
+                placement: 'topLeft',
+            })
 
             if(cb){
                 cb();
@@ -110,20 +108,32 @@ export const profileApply = (profileName) => (dispatch) => {
         .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: APPLY_PROFILE_SUCCESS})
-
-            if(res.error !== null){
-                notification.error({
-                    message: 'Ошибка запроса',
-                    description: res.error ,
-                    placement: 'topLeft',
-                })
-            }else{
-                notification.success({
-                    message: `Профиль ${profileName} успешно установлен как активный`,
-                    placement: 'topLeft',
-                })
-            }
+        
+            notification.success({
+                message: `Профиль ${profileName} успешно установлен как активный`,
+                placement: 'topLeft',
+            })
+            
 
         })
         .catch(error => dispatch({type: APPLY_PROFILE_FAILED}))
+}
+
+export const deleteProfile = (profileName) => (dispatch) => {
+    dispatch({type: DELETE_PROFILE});
+    request('dd104', 'delete_ld', {
+        name: profileName
+    })
+        .then(res => checkResponce(res))
+        .then(res => {
+            dispatch({type: DELETE_PROFILE_SUCCESS})
+
+            notification.success({
+                message: `Профиль ${profileName} успешно удалён`,
+                placement: 'topLeft'
+            })
+            
+
+        })
+        .catch(error => dispatch({type: DELETE_PROFILE_FAILED}))
 }

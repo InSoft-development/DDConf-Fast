@@ -25,6 +25,8 @@ export const CHANGE_PROCESS_STATUS = 'profile/CHANGE_PROCCESS_STATUS';
 export const CHANGE_PROCESS_STATUS_SUCCESS = 'profile/CHANGE_PROCCESS_STATUS_SUCCESS';
 export const CHANGE_PROCESS_STATUS_FAILED = 'profile/CHANGE_PROCCESS_STATUS_FAILED';
 
+export const SET_DEFAULT_SLICE_STATE = 'profile/SET_DEFAULT_SLICE_STATE';
+
 
 
 export const getProfiles = (cb = null) => (dispatch) => {
@@ -34,7 +36,7 @@ export const getProfiles = (cb = null) => (dispatch) => {
         .then(res => {
             dispatch({ type: PROFILE_REQUEST_SUCCESS, payload: res.result })
             
-            if(cb){
+            if(cb && res.result.active){
                 cb();
             }
 

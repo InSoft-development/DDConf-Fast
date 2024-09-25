@@ -9,7 +9,8 @@ import {
     getProfiles,
     getActiveTable,
     changeProfile,
-    changeProсess
+    changeProсess,
+    SET_DEFAULT_SLICE_STATE
 } from '../../services/actions/profile';
 import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
@@ -39,6 +40,10 @@ const Dd104 = () => {
 
         dispatch(getProfiles(callee))
 
+        return () => {
+            dispatch({type: SET_DEFAULT_SLICE_STATE})
+        }
+
     }, [])
 
     const onStartAllBtnClickHandler = () => {
@@ -57,11 +62,19 @@ const Dd104 = () => {
         dispatch(changeProfile(profile, callee))
     }
 
-    const isDataUploading = activeTableRequest ||
+    // Константы определяющие условный рендер
+    const hasImportantEssence =
+        activeProfile === null ||
+        activeTable.length === 0
+
+
+    const isDataUploading = 
+        activeTableRequest ||
         profileRequest || 
         changeProfileRequest;
-        
-    const btnStyles = classnames({'btn-inactive ': isDataUploading})
+
+    const editBtnStyles = classnames({'btn-inactive': isDataUploading})
+    const footerBtnStyles = classnames({'btn-inactive ': isDataUploading || hasImportantEssence})
 
     const headerContent = () => {      
 
@@ -83,7 +96,7 @@ const Dd104 = () => {
                             onClick={onProfileClickHandler}
                         />
                         <button 
-                            className={`button btn-green ml-auto no-select ${btnStyles}`}
+                            className={`button btn-green ml-auto no-select ${editBtnStyles}`}
                             onClick={e => { navigate('/profile-editor', { state: { prevProfile: activeProfile } }) }}
                         >Редактировать профиль</button>
                     </>
@@ -116,14 +129,14 @@ const Dd104 = () => {
                 <Flex justify='space-between' className='wrapper'>
                     <div>
                         <button 
-                            className={`button btn-blue mr-10 ${btnStyles} ${profileFailed && 'btn-inactive'}`}
+                            className={`button btn-blue mr-10 ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
                             onClick={onStartAllBtnClickHandler}
-                            disabled={isDataUploading || profileFailed}
+                            disabled={isDataUploading || hasImportantEssence}
                         >Запустить всё</button>
                         <button 
-                            className={`button btn-blue ${btnStyles} ${profileFailed && 'btn-inactive'}`}
+                            className={`button btn-blue ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
                             onClick={onStopAllBtnClickHandler}
-                            disabled={isDataUploading || profileFailed}
+                            disabled={isDataUploading || hasImportantEssence}
                         >Остановить всё</button>
                     </div>
                     {/* <button className='button btn-purple'>Открыть log</button> */}

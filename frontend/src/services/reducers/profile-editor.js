@@ -15,7 +15,13 @@ import {
 
     APPLY_PROFILE,
     APPLY_PROFILE_SUCCESS,
-    APPLY_PROFILE_FAILED
+    APPLY_PROFILE_FAILED,
+
+    DELETE_PROFILE,
+    DELETE_PROFILE_SUCCESS,
+    DELETE_PROFILE_FAILED,
+
+    SET_DEFAULT_SLICE_STATE
 
 } from '../actions/profile-editor';
 
@@ -40,6 +46,10 @@ const initialState = {
     applyProficeRequest: false,
     applyProficeRequestSuccess: false,
     applyProficeRequestFailed: false,
+
+    deleteProfileRequest: false,
+    deleteProfileRequestSuccess: false,
+    deleteProfileRequestFailed: false,
 }
 
 export const profileEditorReducer = (state = initialState, action) => {
@@ -149,6 +159,35 @@ export const profileEditorReducer = (state = initialState, action) => {
                 applyProficeRequest: false,
                 applyProficeRequestSuccess: false,
                 applyProficeRequestFailed: true,
+            }
+        }
+        case DELETE_PROFILE: {
+            return {
+                ...state,
+                deleteProfileRequest: true,
+                deleteProfileRequestSuccess: false,
+                deleteProfileRequestFailed: false,
+            }
+        }
+        case DELETE_PROFILE_SUCCESS: {
+            return {
+                ...state,
+                deleteProfileRequest: false,
+                deleteProfileRequestSuccess: true,
+                deleteProfileRequestFailed: false,
+            }
+        }
+        case DELETE_PROFILE_FAILED: {
+            return {
+                ...state,
+                deleteProfileRequest: false,
+                deleteProfileRequestSuccess: false,
+                deleteProfileRequestFailed: true,
+            }
+        }
+        case SET_DEFAULT_SLICE_STATE:{
+            return {
+                ...initialState
             }
         }
         default: {
