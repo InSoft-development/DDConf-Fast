@@ -22,6 +22,7 @@ from datetime import datetime, timedelta, timezone
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
+# import pages.network as Net
 
 import models as Models
 from models import Token, TokenData, User, POST
@@ -415,6 +416,29 @@ def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)])
 		return {"result":None, "error":str(e)}
 	
 	return {"result": data, "error":None if not errs else errs}
+
+
+# @app.post('/network')
+# def handle_network(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]):
+# 	
+# 	data = {}
+# 	errs = []
+# 	
+# 	try:
+# 		
+# 		if REQ.method == 'list_devices':
+# 			pass
+# 		elif REQ.method == 'fetch_device':
+# 			Net.fetch_device()
+# 		
+# 		
+# 	except Exception as e:
+# 		tb=traceback.format_exc().strip().split('\n')[1::]
+# 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_network: ERROR: {tb}")
+# 		print(f"ddconf.main.handle_network: ERROR: {tb}")
+# 		return {"result":None, "error":str(e)}
+# 	
+# 	return {"result": data, "error":None if not errs else errs}
 
 
 #TODO very jank, but better already
