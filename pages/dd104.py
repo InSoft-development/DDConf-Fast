@@ -124,7 +124,7 @@ def create_services(count:int):
 			syslog.syslog(syslog.LOG_INFO, msg)
 			print(msg)
 			
-			_ = subprocess.run(f'''systemctl enable {"dd104client" if _mode=="tx" else "dd104server"}{i}.service''')
+			_ = subprocess.run(f'systemctl enable {"dd104client" if _mode=="tx" else "dd104server"}{i}.service'.split())
 			
 			msg = f'ddconf.dd104.create_services: enabling {"dd104client" if _mode=="tx" else "dd104server"}{i}.service'
 			syslog.syslog(syslog.LOG_INFO, msg)
