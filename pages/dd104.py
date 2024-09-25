@@ -68,25 +68,25 @@ def delete_ld(name: str):
 			if name == get_active_ld():
 				rm_services()
 				rm_inis()
-				(Path(DefaultsDD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
+				(Path(Defaults.DD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
 			
-			_f = Path(DefaultsDD['LOADOUTDIR'])/f"{name}{'.loadout' if '.loadout' not in name else ''}"
+			_f = Path(Defaults.DD['LOADOUTDIR'])/f"{name}{'.loadout' if '.loadout' not in name else ''}"
 			_f.unlink()
 		elif name+'.loadout' in list_ld():
 			name = name + ".loadout"
 			if name == get_active_ld():
 				rm_services()
 				rm_inis()
-				(Path(DefaultsDD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
+				(Path(Defaults.DD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
 			
-			_f = Path(DefaultsDD['LOADOUTDIR'])/f"{name}{'.loadout' if '.loadout' not in name else ''}"
+			_f = Path(Defaults.DD['LOADOUTDIR'])/f"{name}{'.loadout' if '.loadout' not in name else ''}"
 			_f.unlink()
 		else:
 			raise ValueError(f"ddconf.dd104.delete_ld: loadout name {name} is invalid.")
 	except ValueError as v:
 		raise v
 	except Exception as e:
-		msg = f"ddconf.dd104.delete_ld: couldn't remove loadout file {str(Path(DefaultsDD['LOADOUTDIR'])/f'{name}')}."
+		msg = f"ddconf.dd104.delete_ld: couldn't remove loadout file {str(Path(Defaults.DD['LOADOUTDIR'])/f'{name}')}."
 		#DEBUG
 		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
 		raise RuntimeError(e)
