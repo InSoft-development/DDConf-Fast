@@ -64,16 +64,9 @@ def rm_services():
 
 def delete_ld(name: str):
 	try:
+		if name.split('.')[-1] != 'loadout':
+			name = name+'.loadout'
 		if name in list_ld():
-			if name == get_active_ld():
-				rm_services()
-				rm_inis()
-				(Path(Defaults.DD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
-			
-			_f = Path(Defaults.DD['LOADOUTDIR'])/f"{name}{'.loadout' if '.loadout' not in name else ''}"
-			_f.unlink()
-		elif name+'.loadout' in list_ld():
-			name = name + ".loadout"
 			if name == get_active_ld():
 				rm_services()
 				rm_inis()
@@ -188,8 +181,11 @@ def save_ld(filename: str, data : dict) -> None:
 			filename = filename+".loadout"
 		if validate_ld_data(data):
 			(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
+			if filename == get_active_ld():
+				apply_ld(filename)
 		else:
 			raise ValueError(f"dd104.save_ld: received malformed data, discarding changes.")
+		
 	except Exception as e:
 		msg = f"ddconf.dd104.save_ld: an error occured: {str(e)}"
 		syslog.syslog(syslog.LOG_ERR, msg)
