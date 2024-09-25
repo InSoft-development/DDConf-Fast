@@ -64,8 +64,8 @@ def rm_services():
 
 def delete_ld(name: str):
 	try:
-		if name.split('.')[-1] != 'loadout':
-			name = name+'.loadout'
+		if name.split('.')[-1] == 'loadout':
+			name = '.'.join(name.split('.')[:-1:])
 		if name in list_ld():
 			if name == get_active_ld():
 				rm_services()
@@ -79,7 +79,7 @@ def delete_ld(name: str):
 	except ValueError as v:
 		raise v
 	except Exception as e:
-		msg = f"ddconf.dd104.delete_ld: couldn't remove loadout file {str(Path(Defaults.DD['LOADOUTDIR'])/f'{name}')}."
+		msg = f"ddconf.dd104.delete_ld: couldn't remove loadout file {str(Path(Defaults.DD['LOADOUTDIR'])/f'{name}.loadout')}."
 		#DEBUG
 		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
 		raise RuntimeError(e)
