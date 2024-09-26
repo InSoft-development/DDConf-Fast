@@ -21,7 +21,8 @@ import {
     DELETE_PROFILE_SUCCESS,
     DELETE_PROFILE_FAILED,
 
-    SET_DEFAULT_SLICE_STATE
+    SET_DEFAULT_SLICE_STATE,
+    SET_NEW_SELECTED_PROFILE_VALUE
 
 } from '../actions/profile-editor';
 
@@ -188,6 +189,22 @@ export const profileEditorReducer = (state = initialState, action) => {
         case SET_DEFAULT_SLICE_STATE:{
             return {
                 ...initialState
+            }
+        }
+        case SET_NEW_SELECTED_PROFILE_VALUE:{
+
+            let newSelectedProfileValue = null;
+
+            if(state.availableProfiles.length !== 0){
+                newSelectedProfileValue = state.availableProfiles[0];
+            }
+
+            console.log(newSelectedProfileValue);
+            
+
+            return {
+                ...initialState,
+                selectedProfile: newSelectedProfileValue
             }
         }
         default: {
