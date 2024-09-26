@@ -14,11 +14,9 @@ def fetch_device(_id: str) -> dict:
 	
 	try:
 		io = net_io_counters(pernic=True)
-		ifaces = ['.'.join(x.split('.')[:x.split('.').index('network'):]) for x in listdir('/etc/systemd/network/') if Path(f'/etc/systemd/network/{x}').is_file() and 'network' in x]
+		netfile = [x for x in listdir('/etc/systemd/network/') if Path(f'/etc/systemd/network/{x}').is_file() and 'network' in x and _id in x]
 		
-		if _id in ifaces and _id in io:
-			
-			netfile = Path(f'/etc/systemd/network/{_id}.network').read_text().strip().split('\n')
+		if netfile and _id in io:
 			
 			data = {
 				'device': _id,
@@ -34,7 +32,7 @@ def fetch_device(_id: str) -> dict:
 				# 	"broadcast": ,
 				# }
 				]
-				# "protocol": ,
+				"protocol": subprocess.run(f"grep DHCP /etc/systemd/network/{netfile[0]}".split(), capture_output=True, text=True).stdout(),
 				#"uponboot": #dispatcher
 			}
 			
@@ -49,16 +47,15 @@ def fetch_device(_id: str) -> dict:
 				})
 			
 			
+			#TODO dispatcher up on boot
 			
-			
-			
-			
-			#TODO
 		else:
 			raise ValueError(f"ddconf.network.fetch_device: device {_id} not found!")
 	except Exception as e:
 		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
 		raise e
+	else:
+		return data
 
 
 def nicfind(tgt, tgtv, arr) -> list: 
