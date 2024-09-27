@@ -22,6 +22,7 @@ from datetime import datetime, timedelta, timezone
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
+# import pages.network as Net
 
 import models as Models
 from models import Token, TokenData, User, POST
@@ -449,6 +450,14 @@ def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -
 			
 			data = DD104.delete_ld(REQ.params['name'])
 			
+		elif REQ.method == 'fetch_logs':
+			
+			data = DD104.get_logs(REQ.params['pid'], REQ.params['length'])
+			if 'error' in data.keys():
+				errs = data['error']
+				data = None
+			
+		
 		
 	except Exception as e:
 		tb=traceback.format_exc().strip().split('\n')[1::]
@@ -483,50 +492,26 @@ def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)])
 	return {"result": data, "error":None if not errs else errs}
 
 
-#TODO very jank, but better already
-@app.websocket("/ws_logs_104")
-async def websocket_logs_104(WS: WebSocket, token: Annotated[str, Depends(get_current_user)]):
-	await WS.accept()
-	syslog.syslog(syslog.LOG_INFO, f"Client connected")
-	observer = prime_observer(WS)
-	# observer.start()
-	data = ""
-	_data = ""
-	_RQ = None
-	while True:
-		try:
-			RQ = await WS.receive_text()
-			syslog.syslog(syslog.LOG_INFO, f"ddconf.main.ws_logs_104: Client sent request: {RQ}")
-			RQ = json.loads(RQ)
-			
-			if _RQ != RQ:
-				_RQ = RQ
-				if 'pid' in RQ and RQ['pid']:
-					try:
-						observer.start()
-					except RuntimeError:
-						syslog.syslog(syslog.LOG_INFO, f"ddconf.main.websocket_logs_104: reinitializing observer upon user request")
-						observer.stop()
-						observer = prime_observer(WS, RQ['pid'])
-						observer.start()
-				# else:
-				# 	_data = data
-				# 	data = DD104.get_logs(RQ['pid'], RQ['length'])
-				# 	if not data == _data:
-				# 		payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
-				# 		await CManager.send(json.dumps(payload), WS)
-				# 	sleep(0.5)
-			
-			
-		except WebSocketDisconnect:
-			CManager.disconnect(WS)
-			observer.stop()
-			syslog.syslog(syslog.LOG_INFO, f"Client disconnected")
-			break
-		except Exception as e:
-			tb=traceback.format_exc().strip().split('\n')[1::]
-			syslog.syslog(syslog.LOG_ERR, f"ddconf.main.ws_logs_104: Error while handling WS request; {tb}")
-			await CManager.send(json.dumps({"response":None, "errors":str(e)}))
-	
-	observer.join()
-	syslog.syslog(syslog.LOG_INFO, "ddconf.main.ws_logs_104: WS function shutdown")
+# @app.post('/network')
+# def handle_network(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]):
+# 	
+# 	data = {}
+# 	errs = []
+# 	
+# 	try:
+# 		
+# 		if REQ.method == 'list_devices':
+# 			pass
+# 		elif REQ.method == 'fetch_device':
+# 			Net.fetch_device()
+# 		
+# 		
+# 	except Exception as e:
+# 		tb=traceback.format_exc().strip().split('\n')[1::]
+# 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_network: ERROR: {tb}")
+# 		print(f"ddconf.main.handle_network: ERROR: {tb}")
+# 		return {"result":None, "error":str(e)}
+# 	
+# 	return {"result": data, "error":None if not errs else errs}
+
+

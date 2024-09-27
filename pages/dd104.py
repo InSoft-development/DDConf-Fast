@@ -115,7 +115,8 @@ def create_inis(data: list):
 def create_services(count:int):
 	try:
 		
-		for i in range(1, count+2):
+		for i in range(1, count+1): #why was this +2 ??? and didn't change in develop!!!
+			
 			msg = f"[Unit]\nDescription=dd104client\nAfter=hasplmd.service\n[Service]\nKillMode=mixed\nExecStartPre=/bin/sleep 5\nExecStart=/opt/dd/{'dd104client/dd104client' if _mode=='tx' else 'dd104server/dd104server'} -c {Defaults.DD['INIDIR']}dd104{'client' if _mode=='tx' else 'server'}{i}.ini\nRestart=always\nUser=dd\nGroup=dd\n\n[Install]\nWantedBy=multi-user.target"
 			
 			_ = Path(f'/etc/systemd/system/{"dd104client" if _mode=="tx" else "dd104server"}{i}.service').write_text(msg)
@@ -283,7 +284,7 @@ def process_handle(PID: int, OP:str) -> int:
 		return -2
 
 #TODO
-def get_logs(PID: str, LEN: int):
+def get_logs(PID: str, LEN: int) -> dict: 
 	try:
 		if PID.lower() == "syslog":
 			if LEN:
@@ -291,11 +292,11 @@ def get_logs(PID: str, LEN: int):
 			else:
 				LOGS = subprocess.run(f"cat /var/log/syslog".split(), capture_output=True, text=True).stdout.strip()
 			
-		elif "dd104" in PID[0:5:]:
-			lines=[x.strip() for x in subprocess.run(f"systemctl status {PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if PID in x]
+		elif ("dd104client" if _mode == 'tx' else "dd104server") in PID:
+			lines=[x.strip() for x in subprocess.run(f"grep {PID} /var/log/syslog".split(), capture_output=True, text=True).stdout.strip().split('\n') if 'uvicorn' not in x and 'DDCS_Launch' not in x]
 				
 			if not lines: 
-				raise RuntimeError("dd104.get_logs: lines is empty!")
+				raise RuntimeError("dd104.get_logs: no lines to show!")
 			
 			if LEN:
 				
@@ -307,11 +308,11 @@ def get_logs(PID: str, LEN: int):
 			else:
 				LOGS="\n".join(lines)
 			
-		elif int(PID):
-			lines=[x.strip() for x in subprocess.run(f"systemctl status dd104{'server' if _mode=='tx' else 'client'}{PID}".split(), capture_output=True, text=True).stdout.strip().split('\n') if f"dd104{'server' if _mode=='tx' else 'client'}{PID}" in x]
+		elif isinstance(PID, (int, float)) or PID.isnumeric():
+			lines=[x.strip() for x in subprocess.run(f"grep dd104{'server' if _mode=='tx' else 'client'}{PID} /var/log/syslog".split(), capture_output=True, text=True).stdout.strip().split('\n') if "uvicorn" not in x and "DDCS_Launch" not in x]
 				
 			if not lines: 
-				raise RuntimeError("dd104.get_logs: lines is empty!")
+				raise RuntimeError("dd104.get_logs: no lones to show!")
 			
 			if LEN:
 				
