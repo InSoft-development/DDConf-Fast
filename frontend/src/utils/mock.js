@@ -1,42 +1,38 @@
-
-
-
 // 0- остановлени status="warning"
 // 1 - запущен    status="success"
 // 2 - в процессе status="processing"
 // -1 ошибка      status="error"
 
 
-// export const dataSource = [
-//     {
-//         key: '1',
-//         proccess: '1',
-//         mainIp: '10.30.44.15:23678',
-//         secondaryIp: null,
-//         status: 1,
-//     },
-//     {
-//         key: '2',
-//         proccess: '2',
-//         mainIp: '10.30.44.15:23678',
-//         secondaryIp: null,
-//         status: 2,
-//     },
-//     {
-//         key: '3',
-//         proccess: '3',
-//         mainIp: '10.30.44.15:23678',
-//         secondaryIp: '10.30.44.15:23678',
-//         status: 0,
-//     },
-//     {
-//         key: '4',
-//         proccess: '4',
-//         mainIp: '10.30.44.15:23678',
-//         secondaryIp: '10.30.44.15:23678',
-//         status: -1,
-//     },
-// ];
+export const dataSource = [
+    {
+        id: 0,
+        main: '10.30.44.15:23678',
+        second: null,
+        status: 1,
+        comment: 'Комментарий'
+    },
+    {
+        id: 1,
+        main: '10.30.44.15:23678',
+        second: null,
+        status: 2,
+        comment: 'Комментарий'
+    },
+    {
+        id: 2,
+        main: '10.30.44.15:23678',
+        second: '10.30.44.15:23678',
+        status: 0,
+    },
+    {
+        id: 3,
+        main: '10.30.44.15:23678',
+        second: '10.30.44.15:23678',
+        status: -1,
+        comment: 'Комментарий'
+    },
+];
 
 
 

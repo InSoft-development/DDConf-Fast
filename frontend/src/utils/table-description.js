@@ -4,17 +4,9 @@ import {
     PauseCircleOutlined,
     ReloadOutlined,
     LoadingOutlined,
-    DeleteOutlined,
-    FormOutlined
 } from '@ant-design/icons';
 import { store } from '../services/store';
 import { changeProсess } from '../services/actions/profile';
-import {  
-    DELTE_PROCESS_BY_ID, 
-    RESET_EDITABLE_ROW_ID,
-    SET_EDITABLE_COMMENT
-} from '../services/actions/profile';
-import { OPEN_COMMENT_EDITOR } from '../services/actions/modals';
 
 
 const actions = [
@@ -48,6 +40,9 @@ const onActionBtnClickHandler = (actionIndex, processIndex) => {
             action = 'restart'
             break;
         }
+        default: {
+            break;
+        }
     }
     store.dispatch(changeProсess(action, processIndex))
 }
@@ -57,6 +52,7 @@ export const columns = [
     {
         title: 'Процесс',
         dataIndex: 'id',
+        width: '10%',
         key: 'id',
         render: (text) => (
             <div className='text'>{text + 1}</div>
@@ -65,6 +61,7 @@ export const columns = [
     {
         title: 'Основной (IP:PORT)',
         dataIndex: 'main',
+        width: '30%',
         key: 'main',
         render: (text) => (
             <div className='text'>{text}</div>
@@ -74,6 +71,7 @@ export const columns = [
         title: 'Резервный (IP:PORT)',
         dataIndex: 'second',
         key: 'second',
+        width: '30%',
         render: (text) => {
             if (text === null) {
                 return <div className='text text_color_inactive'>нет резерва</div>
@@ -86,29 +84,7 @@ export const columns = [
         title: 'Состояние',
         dataIndex: 'status',
         key: 'status',
-        showSorterTooltip: {
-            target: 'full-header',
-        },
-        filters: [
-            {
-                text: 'Остановлен',
-                value: 0,
-            },
-            {
-                text: 'Запущен',
-                value: 1,
-            },
-            {
-                text: 'Запускается',
-                value: 2,
-            },
-            {
-                text: 'Ошибка',
-                value: -1,
-            }
-        ],
-        onFilter: (value, record) => record.status === value,
-
+        width: '20%',
         render: (text) => {
             switch (String(text)) {
                 case '0': {
@@ -126,6 +102,12 @@ export const columns = [
                 case '-1': {
                     return <Badge status='error' text="ошибка" />
                 }
+                case '-2': {
+                    return <Badge status='error' text="крит. ошибка" />
+                }
+                default: {
+                    break;
+                }
             }
 
         }
@@ -134,6 +116,7 @@ export const columns = [
         title: 'Действия',
         dataIndex: 'actions',
         key: 'actions',
+        width: '10%',
         render: (_, record) => (
             <Flex vertical={false} gap={'small'}>
                 {
@@ -144,102 +127,6 @@ export const columns = [
                     })
                 }
             </Flex>
-        )
-    },
-];
-
-const onDeleteBtnClickHandler = (record) => {
-    store.dispatch({
-        type: DELTE_PROCESS_BY_ID,
-        payload: record.id
-    })
-    store.dispatch({type: RESET_EDITABLE_ROW_ID})
-}
-
-const onCommentEditBtnClickHandler = (record) => {
-    store.dispatch({
-        type: OPEN_COMMENT_EDITOR
-    })
-    store.dispatch({
-        type: SET_EDITABLE_COMMENT,
-        payload: record.comment
-    })
-}
-
-export const editColumns = [
-    {
-        title: 'Процесс',
-        dataIndex: 'id',
-        key: 'id',
-        render: (text) => (
-            <div className='text'>{text + 1}</div>
-        )
-    },
-    {
-        title: 'Основной (IP:PORT)',
-        dataIndex: 'main',
-        key: 'main',
-        render: (text, record) => {
-            if (record.id === store.getState().profile.editableRow) {
-                return (
-                    <Form.Item name='main'>
-                        <Input value={text}
-                            placeholder='Введите основной IP' />
-                    </Form.Item>
-                )
-            } else {
-                if (text === null) {
-                    return <div className='text text_color_inactive'>укажите IP</div>
-                } else {
-                    return <div className='text'>{text}</div>
-                }
-            }
-
-        }
-    },
-    {
-        title: 'Резервный (IP:PORT)',
-        dataIndex: 'second',
-        key: 'second',
-        render: (text, record) => {
-            if (record.id === store.getState().profile.editableRow) {
-                return (
-                    <Form.Item name='second'>
-                        <Input value={text}
-                            placeholder='Введите резервный IP' />
-                    </Form.Item>
-                )
-            } else {
-                if (text === null) {
-                    return <div className='text text_color_inactive'>укажите резерв</div>
-                } else {
-                    return <div className='text'>{text}</div>
-                }
-            }
-
-        }
-    },
-    {
-        title: 'Действия',
-        dataIndex: 'actions',
-        key: 'actions',
-        render: (_, record) => (
-            <Flex style={{width: 60}} justify='space-between'>
-                <DeleteOutlined
-                    style={{ fontSize: 20, cursor: 'pointer' }}
-                    onClick={e => {
-                        e.stopPropagation();
-                        onDeleteBtnClickHandler(record)
-                    }}
-                />
-                <FormOutlined
-                    style={{fontSize: 20, cursor: 'pointer'}}
-                    onClick={e => {
-                        onCommentEditBtnClickHandler(record)
-                    }}
-                />
-            </Flex>
-
         )
     },
 ];

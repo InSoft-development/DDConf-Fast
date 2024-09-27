@@ -92,7 +92,7 @@ const OpcUa = () => {
                                         <Flex align='center' justify='space-between'>
                                             <label
                                                 htmlFor={`servers.${index}.utoken_type`}
-                                                className='fw-b label-required-symbol'
+                                                className='fw-b '
                                             >Тип авторизации:</label>
                                             <select
                                                 defaultValue={'anonymous'}
@@ -101,7 +101,7 @@ const OpcUa = () => {
                                                 className='opc-input'
                                             >
                                                 <option value="anonymous">Без авторизации</option>
-                                                {/* <option value="certificate">По сертификату</option> */}
+                                                <option value="certificate">По сертификату</option>
                                                 <option value="username">По логину и паролю</option>
                                             </select>
                                         </Flex>
@@ -117,15 +117,15 @@ const OpcUa = () => {
                                         <Flex align='center' justify='space-between'>
                                             <label
                                                 htmlFor={`servers.${index}.secpolicy`}
-                                                className='fw-b label-required-symbol'
+                                                className='fw-b '
                                             >Политика безопасности:</label>
                                             <select
-                                                defaultValue={'None'}
+                                                defaultValue={'none'}
                                                 id={`servers.${index}.secpolicy`}
                                                 {...register(`servers.${index}.secpolicy`)}
                                                 className='opc-input'
                                             >
-                                                <option value="None">None</option>
+                                                <option value="none">None</option>
                                                 <option value="Basic256Sha256 - Sign">Basic256Sha256 - Sign</option>
                                                 <option value="Basic256Sha256 - Sign & Encrypt">Basic256Sha256 - Sign & Encrypt</option>
                                                 <option value="Aes128_Sha256_RsaOaep - Sign">Aes128_Sha256_RsaOaep - Sign</option>
@@ -140,12 +140,12 @@ const OpcUa = () => {
                                                 className='fw-b'
                                             >Режим шифрования <br /> сообщений:</label>
                                             <select
-                                                defaultValue={'None'}
+                                                defaultValue={'none'}
                                                 id={`servers.${index}.mesmode`}
                                                 {...register(`servers.${index}.mesmode`)}
                                                 className='opc-input'
                                             >
-                                                <option value="None">None</option>
+                                                <option value="none">None</option>
                                                 <option value="Sign">Sign</option>
                                                 <option value="Sign & Encrypt">Sign & Encrypt</option>
                                             </select>

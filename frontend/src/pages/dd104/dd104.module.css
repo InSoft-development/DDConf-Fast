@@ -1,49 +1,46 @@
 .profile{
-    margin-top: 60px;
+    margin-top: 20px;
     padding: 10px 15px;
 }
 
-.workProfile{
+.header{
     display: flex;
-    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 42px;
-}
-
-.profileMenu{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    margin-bottom: 32px;
+    height: 65px;
     width: 100%;
-    height: 50px;
 }
 
-.btnPanel{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 33px;
+.tableWrapper{
+    height: calc(100vh - 400px);
+    padding-right: 15px;
+    overflow-y: scroll;
 }
 
-.panelLeftSide{
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
-}
-
-.currentProfile{
-    min-width: 210px;
+.footer{
+    padding: 20px 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid var(--gray-300);
+    background-color: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+    overflow-x: hidden;
 }
 
 .logWrapper{
-    list-style: none;
-    margin-top: 40px;
-    border: 1px solid var(--gray-400);
-    border-radius: 10px;
-    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--gray-300);
+    border-radius: 15px;
+    padding: 15px;
+    overflow: auto;
+    resize: both;
 }
 
-.logWrapper > li{
-    margin-bottom: 3px;
+.logLine{
+    font-family: Consolas;
+    margin-bottom: 10px;
 }

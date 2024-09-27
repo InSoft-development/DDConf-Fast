@@ -14,7 +14,7 @@ const SubscriptionsSection = ({ register, index: parentIndex, control}) => {
             {fields.map((field, index) => (
                 <div key={field.id}>
                     <Flex align='center' justify='space-between'>
-                        <h2 className={`text_type_main ${index === 0 && 'label-required-symbol'}`}>Подписка {index + 1}</h2>
+                        <h2 className={`text_type_main ${index === 0 && ''}`}>Подписка {index + 1}</h2>
                         <button className='button btn-red btn-circle'
                             onClick={e => remove(index)}
                         >

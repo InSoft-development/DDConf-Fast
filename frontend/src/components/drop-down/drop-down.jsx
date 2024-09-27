@@ -1,37 +1,84 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CaretDownOutlined, LoadingOutlined } from '@ant-design/icons'
 import styles from './drop-down.module.css';
 import { Flex } from 'antd';
+import classNames from 'classnames';
 
 const DropDown = ({
-    currentProfile = 'Не выбран',
-    availableProfiles = [],
+    selectedOption,
+    availableOptions = [],
     loading = false,
-    onClick = () => { }
+    onClick = () => { },
+    activeOption = null
 }) => {
 
     const [menuIsOpen, setModalState] = useState(false);
 
-    const onArrowClickHandler = () => {
+    useEffect(() => {
+
+        document.addEventListener('click', onClickOutside);
+
+        return () => { document.removeEventListener('click', onClickOutside)};
+
+    }, [])
+
+    const onClickOutside = (e) => {
+        setModalState(false)
+    }
+    
+
+    const onArrowClickHandler = (e) => {
+        e.stopPropagation();
         setModalState(!menuIsOpen);
+    }
+
+    const optionsListStyle = classNames([
+        'no-select',
+        [styles.availableOptions],
+        {
+            [styles.availableOptionsHidden]: !menuIsOpen
+        }
+    ])
+
+    const trimOption = (optionName, value) => {
+
+        if(optionName.length >= value){
+            return optionName.substring(0 , value - 1) + ' ...';
+        }
+
+        return optionName;        
     }
 
     return (
         <Flex align='center'>
-            <div className={`text mr-10 ${styles.dropDown}`}>
-                <div className='currentItem mr-6'>{currentProfile}</div>
+            <div className={`text mr-10 ${styles.dropDown}`}
+                onClick={onArrowClickHandler}
+            >
+                <div className='mr-6'
+                    title={selectedOption ? selectedOption : 'Не задан'}
+                >{selectedOption ? trimOption(selectedOption, 12) : 'Не задан'}</div>
                 <div>
                     <CaretDownOutlined
                         onClick={onArrowClickHandler}
-                        className={`${menuIsOpen ? `${styles.arrowActive}` : ''}`} 
+                        className={`${menuIsOpen ? `${styles.arrowActive}` : ''}`}
                     />
-                    <ul className={`${styles.availablePoints} ${menuIsOpen ? '' : `${styles.availablePointsInActive}`}`}>
-                        {availableProfiles.map(profile => (
-                            <li key={profile}
-                                className={`${styles.listElement} ${currentProfile === profile ? styles.listElementActive : ''}`}
-                                onClick={e => onClick(profile)}
+                    <ul className={optionsListStyle}>
+                        {availableOptions.map(option => (
+                            <li key={option}
+                                title={option}
+                                className={`${styles.listElement} ${selectedOption === option ? styles.listElementActive : ''}`}
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    onArrowClickHandler(e);
+                                    onClick(option)
+                                }}
                             >
-                                <div className={styles.listContent}>{profile}</div>
+                                <div className={styles.listContent}>
+                                    {trimOption(option, 20)}
+                                    {activeOption === option && (
+                                        <sup className={`ml-a ${styles.activeOption}`}>активный</sup>
+                                    )}
+                                </div>
                             </li>
                         ))}
                     </ul>
@@ -45,3 +92,5 @@ const DropDown = ({
 }
 
 export default DropDown;
+
+

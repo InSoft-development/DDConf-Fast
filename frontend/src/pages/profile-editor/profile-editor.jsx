@@ -1,187 +1,481 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Flex, Table, Divider, Modal } from 'antd';
+import Column from 'antd/es/table/Column';
+import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import styles from './profile-editor.module.css';
-import { Flex, Table, Form, Modal, Input} from 'antd';
 import DropDown from '../../components/drop-down/drop-down';
-import { editColumns } from '../../utils/table-description';
-import { getTableByProfileName, profileSave } from '../../services/actions/profile';
-import { 
-    ADD_NEW_PROCESS, 
-    SET_EDITABLE_ROW_ID, 
-    CHANGE_TABLE_CELL, 
-    SET_EDITABLE_PROFILE,
-    RESET_EDITABLE_ROW_ID,
-    CHANGE_TABLE_COMMENT
-} from '../../services/actions/profile';
-import { CLOSE_COMMENT_EDITOR } from '../../services/actions/modals';
+import {
+    initialize,
+    profileApply,
+    saveProfile,
+    changeProfile,
+    deleteProfile,
+    SET_DEFAULT_SLICE_STATE
+} from '../../services/actions/profile-editor';
+import classNames from 'classnames';
+import { isProfileNameValid } from '../../utils/isProfileNameValid';
 
 
 const ProfileEditor = () => {
 
+    const [saveAsProfileName, setSaveAsProfileName] = useState('');
+    const [createProfileName, setCreateProfileName] = useState('');
+
+    const [saveAsModalIsOpen, setSaveAsProfileModalIsOpen] = useState(false);
+    const [createProfileModalIsOpen, setCreateProfileModalIsOpen] = useState(false);
+    const [deleteProfileModalIsOpen, setDeleteProfileModalIsOpen] = useState(false);
+
+
+    const [formValues, setFormValues] = useState([]);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const {
-        activeProfile,
+        table,
+        selectedProfile,
         availableProfiles,
-        editableProfile,
-        editableTable,
-        editableTableRequest,
-    } = useSelector(state => state.profile);
-    const {commentEditorIsOpen} = useSelector(state => state.modals)
+        activeProfile,
+        activeProfileRequest,
+        tableRequest,
+        profileSaveRequest,
+        applyProficeRequest,
+        deleteProfileRequest
 
-    const [form] = Form.useForm();
-    const [editableComment, setEditableComment] = useState('');
+    } = useSelector(store => store.profileEditor);
+
+    const hasImportantEssence = 
+        selectedProfile === null
+
+    const isDatauploading =
+        activeProfileRequest ||
+        tableRequest ||
+        profileSaveRequest ||
+        applyProficeRequest ||
+        deleteProfileRequest
+
+    const isAvailable = classNames({
+        'btn-inactive': isDatauploading || hasImportantEssence
+    });
 
     useEffect(() => {
-        if(activeProfile !== null){
-            dispatch({
-                type: SET_EDITABLE_PROFILE,
-                payload: activeProfile
-            })
-            dispatch(getTableByProfileName(activeProfile))
-        }
-    }, [])
-
-    useEffect(() => {
-        const onEnterPressHandler = (e) => {
-            if(e.key === 'Enter'){
-                dispatch({type: RESET_EDITABLE_ROW_ID})
-            }
-        }
-
-        document.addEventListener('keydown', onEnterPressHandler);
+        dispatch(initialize({
+            isActive: true
+        }));
 
         return () => {
-            document.removeEventListener('keydown', onEnterPressHandler);
+            dispatch({ type: SET_DEFAULT_SLICE_STATE })
         }
     }, [])
 
+    useEffect(() => {
+        setFormValues(table)
+    }, [table])
 
-    const onProfileClickHandler = (profile) => {
-        dispatch({
-            type: SET_EDITABLE_PROFILE,
-            payload: profile
-        })
-        dispatch(getTableByProfileName(profile))
+    // form handlers
+    const onSubmit = (e) => {
+        e.preventDefault();
+        console.log(formValues);
     }
 
-    const onAddProcessBtnClickHandler = (e) => {
-        dispatch({type: ADD_NEW_PROCESS})
+    const addRow = (e) => {
+        const newFormValues = [...formValues, {
+            id: formValues.length,
+            main: null,
+            second: null,
+            comment: null
+        }]
+
+        setFormValues(newFormValues);
     }
 
-    const setEditableRow = (record) => {
-        dispatch({
-            type: SET_EDITABLE_ROW_ID,
-            payload: record,
-        })
+    const removeRow = (index) => {
+        const newFormData = [...formValues]
+            .filter((_, rowId) => rowId !== index)
+            .map((row, index) => {
+                return {
+                    ...row,
+                    id: index
+                }
+            })
+
+        setFormValues(newFormData)
+
     }
 
-    const onFieldsChange = (changedFields) => {
-        const {value, name} = changedFields[0];
+    const changeCellValue = (e) => {
+        const newValue = e.target.value;
+        const [index, fieldName] = e.target.id.split('.');
 
-        dispatch({
-            type: CHANGE_TABLE_CELL,
-            payload: {
-                field: name.shift(),
-                value,
+        const newFormValues = [...formValues].map(row => {
+
+            if (row.id === Number(index)) {
+                return {
+                    ...row,
+                    [fieldName]: newValue
+                }
             }
+
+            return row;
         })
+        setFormValues(newFormValues);
     }
 
-    const onClsBtnClickHandler = () => {
-        dispatch({
-            type: CLOSE_COMMENT_EDITOR
-        })
+    const onReturnBtnClickHandler = (e) => {
+        navigate('/dd104');
     }
 
-    const onModalSaveBtnClickHandler = (e) => {
-        dispatch({
-            type: CHANGE_TABLE_COMMENT,
-            payload: editableComment
-        })
-        onClsBtnClickHandler();
-        setEditableComment('');
+    // profile handlers
+
+    const onOptionListClickHandler = (option) => {
+        dispatch(changeProfile(option))
+    }
+
+    const onApplyClickHandler = (e) => {
+
+        const callee = () => {
+            dispatch(profileApply(selectedProfile, () => {
+                dispatch(initialize({
+                    previous: true
+                }))
+            }))
+        }
+
+        dispatch(saveProfile({
+            name: selectedProfile,
+            data: formValues
+        }, callee))
+    }
+
+    const onSaveBtnClickHandler = (e) => {
+
+        const callee = () => {
+            dispatch(initialize({
+                previous: true
+            }))
+        }
+
+        dispatch(saveProfile({
+            name: selectedProfile,
+            data: formValues,
+        }, callee))
+    }
+
+    const onSaveAsBtnClickHandler = (e) => {
+
+        const isValid = isProfileNameValid(saveAsProfileName);
+
+        const callee = () => {
+            dispatch(initialize({
+                current: saveAsProfileName
+            }))
+        }
+
+        if (isValid) {
+            dispatch(saveProfile({
+                name: saveAsProfileName,
+                data: formValues
+            }, callee))
+
+            setSaveAsProfileModalIsOpen(false);
+            setSaveAsProfileName('');
+        }
+    }
+
+    const onCreateProfileBtnClickHandler = (e) => {
+
+        const isValid = isProfileNameValid(createProfileName);
+
+        const callee = () => {
+            dispatch(initialize({
+                current: createProfileName
+            }))
+        }
+
+        if (isValid) {
+            dispatch(saveProfile({
+                name: createProfileName,
+                data: []
+            }, callee))
+
+            setCreateProfileModalIsOpen(false);
+            setCreateProfileName('');
+        }
+
+    }
+
+    const onDeleteProfileBtnClickHandler = (e) => {
+
+        const callee = () => {
+            dispatch(initialize({
+                isNew: true
+            }))
+        }
+
+        dispatch(deleteProfile(selectedProfile, callee));
+
+        setDeleteProfileModalIsOpen(false);
+    }
+
+    const onCancelProfileClickhandler = (e) => {
+        dispatch(initialize({
+            previous: true
+        }))
     }
 
     return (
         <>
-        <div className={styles.profileEditor}>
-            <header className='text text_type_main'>Редактор профилей</header>
-            <main>
-                <Flex justify='space-between' className='mb-10'>
-                    <DropDown 
-                        currentProfile={editableProfile} 
-                        availableProfiles={availableProfiles} 
-                        onClick={onProfileClickHandler}/>
-                    <button className='button btn-green ml-10'>Новый</button>
+            <div className={styles.profileEditorWrapper}>
+                <Flex align='center' justify='space-between'>
+                    <Flex align='center' justify='flex-start'>
+                        <h2 className='text text_type_main mr-10'>Редактор профилей</h2>
+                        {/* {activeProfileRequest && (
+                            <LoadingOutlined style={{ fontSize: 20 }} />
+                        )} */}
+
+                        {true && (
+                            <DropDown
+                                selectedOption={selectedProfile}
+                                availableOptions={availableProfiles}
+                                onClick={onOptionListClickHandler}
+                                activeOption={activeProfile}
+                                loading={isDatauploading}
+                            />
+                        )}
+                    </Flex>
+                    <button type="button" className='button btn-green no-select' onClick={onReturnBtnClickHandler}>Выйти из режима редактирования</button>
                 </Flex>
-                <Form form={form} onFieldsChange={onFieldsChange}>
-                    <Table
-                        rowKey={(record) => record.id}
-                        columns={editColumns}
-                        dataSource={editableTable}
-                        loading={editableTableRequest}
-                        expandable={{
-                            expandedRowRender: (record) => (
-                                <div>{record.comment}</div>
-                            )
-                        }}
-                        onRow={(record) => {
-                            return {
-                                onClick: (e) => {
-                                    setEditableRow(record);
-                                    form.setFieldsValue({
-                                        main: record.main,
-                                        second: record.second
-                                    })
-                                }
-                            }
+                <Divider />
+                <form onSubmit={onSubmit}>
+                    <div className={styles.tableWrapper}>
+                        <Table
+                            rowKey={(record) => record.id}
+                            bordered={true}
+                            dataSource={formValues}
+                            pagination={false}
+                            loading={isDatauploading}
+                            expandable={{
+                                expandedRowRender: (record) => (
+                                    <textarea
+                                        resize={'vertical'}
+                                        autoComplete='off'
+                                        placeholder='Введите комментарий'
+                                        className={styles.textArea}
+                                        id={`${record.id}.comment`}
+                                        name={`${record.id}.comment`}
+                                        onChange={e => changeCellValue(e)}
+                                        value={formValues[record.id].comment || ''}
+                                    />
+                                )
+                            }}
+                        >
+                            <Column
+                                width={'10%'}
+                                title={'Процесс'}
+                                dataIndex={'id'}
+                                key={'id'}
+                                render={(text) => (
+                                    <div className='text'>{text + 1}</div>
+                                )}
+                            />
+                            <Column
+                                width={'40%'}
+                                title={'Основной (IP:PORT)'}
+                                dataIndex={'main'}
+                                key={'main'}
+                                render={((_, __, index) => {
+                                    return (
+                                        <input
+                                            className='text input_type_text'
+                                            id={`${index}.main`}
+                                            name={`${index}.main`}
+                                            type='text'
+                                            autoComplete='off'
+                                            value={formValues[index].main || ''}
+                                            onChange={e => changeCellValue(e)}
+                                            placeholder='Введите основной IP'
+                                        />
+                                    )
+                                })}
+                            />
+                            <Column
+                                width={'40%'}
+                                title={'Резервный (IP:PORT)'}
+                                dataIndex={'second'}
+                                key={'second'}
+                                render={(_, __, index) => {
+                                    return (
+                                        <input
+                                            className='text input_type_text'
+                                            id={`${index}.second`}
+                                            name={`${index}.second`}
+                                            type='text'
+                                            autoComplete='off'
+                                            value={formValues[index].second || ''}
+                                            onChange={e => changeCellValue(e)}
+                                            placeholder='Введите резервный IP'
+                                        />
+                                    )
+                                }}
+                            />
+                            <Column
+                                width={'10%'}
+                                title={'Действия'}
+                                key={'actions'}
+                                render={(_, __, index) => (
+                                    <Flex align='center' justify='flex-start' key={`${index}.action`}>
+                                        <div
+                                            className={styles.iconWrapper}
+                                            onClick={e => removeRow(index)}
+                                        >
+                                            <DeleteOutlined style={{ fontSize: 18 }} />
+                                        </div>
+                                    </Flex>
+                                )}
+                            />
+                        </Table>
+                    </div>
+
+                    <footer className={styles.footer}>
+                        <Flex align='center' justify='space-between' className='wrapper'>
+                            <button type="button"
+                                className={`button btn-green ${isAvailable}`}
+                                onClick={addRow}
+                            >Добавить процесс</button>
+                            <div>
+                                <button
+                                    type="button"
+                                    className={`button btn-green mr-2 ${isAvailable}`}
+                                    title='Сделать выбранный профиль активным'
+                                    onClick={onApplyClickHandler}
+                                    disabled={isDatauploading}
+                                >Применить</button>
+                                <button
+                                    type="button"
+                                    className={`button btn-green mr-2 ${isAvailable}`}
+                                    title='Сохранить изменения профиля'
+                                    onClick={onSaveBtnClickHandler}
+                                    disabled={isDatauploading}
+                                >Сохранить</button>
+                                <button
+                                    type="button"
+                                    className={`button btn-green mr-2 ${isAvailable}`}
+                                    title='Сохранить изменения в новый профиль'
+                                    onClick={e => setSaveAsProfileModalIsOpen(true)}
+                                    disabled={isDatauploading}
+                                >Сохранить как</button>
+                                <button
+                                    type="button"
+                                    className={`button btn-green mr-2 ${isAvailable}`}
+                                    title='Создать новый профиль'
+                                    onClick={e => setCreateProfileModalIsOpen(true)}
+                                    disabled={isDatauploading}
+                                >Создать профиль</button>
+                                <button
+                                    type="button"
+                                    className={`button btn-red mr-2 ${isAvailable}`}
+                                    onClick={e => setDeleteProfileModalIsOpen(true)}
+                                    title='Удалить профиль'
+                                    disabled={isDatauploading}
+                                >Удалить</button>
+                                <button
+                                    type="button"
+                                    className={`button btn-grey ${isAvailable}`}
+                                    onClick={onCancelProfileClickhandler}
+                                    title={'Вернуть изначальное состояние формы'}
+                                    disabled={isDatauploading}
+                                >Отменить</button>
+                            </div>
+                        </Flex>
+                    </footer>
+                </form>
+            </div>
+            {/* Модалка | Сохранение профиля */}
+            <Modal
+                title={`Сохранить профиль "${selectedProfile}" как`}
+                centered={true}
+                open={saveAsModalIsOpen}
+                okButtonProps={{
+                    style: {
+                        backgroundColor: 'var(--green)'
+                    }
+                }}
+                okText='Сохранить и отправить'
+                cancelText='Отменить'
+                onCancel={e => setSaveAsProfileModalIsOpen(false)}
+                onOk={onSaveAsBtnClickHandler}
+
+            >
+                <Flex align='center' justify='space-between' className='mt-20 mb-20'>
+                    <label htmlFor="newProfile">Профиль: </label>
+                    <input
+                        id='newProfile'
+                        autoComplete='off'
+                        placeholder='Введите название профиля'
+                        className='input'
+                        type="text"
+                        value={saveAsProfileName}
+                        onChange={e => {
+                            setSaveAsProfileName(e.target.value)
                         }}
                     />
-                </Form>
-                <button className='button btn-green'
-                        onClick={onAddProcessBtnClickHandler}
-                >Добавить процесс</button>
-
-            </main>
-            <footer>
-                <Flex justify='flex-end'>
-                    <button className='button btn-green mr-4'
-                            onClick={e => dispatch(profileSave(editableProfile, editableTable))}
-                    >Применить</button>
-                    {/* <button className='button btn-purple mr-4'>Удалить</button>
-                    <button className='button btn-purple mr-4'>Сохранить</button>
-                    <button className='button btn-purple mr-4'>Сохранить как</button> */}
-                    {/* <button className='button btn-grey'>Отменить</button> */}
                 </Flex>
-            </footer>
-        </div>
-        <Modal 
-            title="Введите комментарий" open={commentEditorIsOpen}
-            onCancel={onClsBtnClickHandler}
-            centered
-            footer={[
-                <button
-                    key='close'
-                    className='button btn-outlined'
-                    onClick={onClsBtnClickHandler}
-                    >Закрыть окно</button>,
-                <button 
-                    key='save'
-                    className='button btn-green ml-4'
-                    onClick={onModalSaveBtnClickHandler}
-                    >Сохранить</button>
-            ]}
+            </Modal>
+            {/* Модалка | Создание профиля */}
+            <Modal
+                title={'Создание нового профиля'}
+                width={600}
+                centered={true}
+                open={createProfileModalIsOpen}
+                okButtonProps={{
+                    style: {
+                        backgroundColor: 'var(--green)'
+                    }
+                }}
+                okText='Создать'
+                cancelText='Отменить'
+                onCancel={e => { setCreateProfileModalIsOpen(false) }}
+                onOk={onCreateProfileBtnClickHandler}
+
             >
-            <div className='mt-20 mb-20'>
-                <Input.TextArea
-                    style={{minHeight: 100}}
-                    placeholder='Введите комментарий'
-                    value={editableComment}
-                    onChange={e => setEditableComment(e.target.value)}
-                >
-                </Input.TextArea>
-            </div>
-        </Modal>
+                <Flex align='center' justify='space-between' className='mt-10 mb-10'>
+                    <label htmlFor="createProfileInput" className='mr-10' style={{ width: 160 }}>Название профиля:</label>
+                    <input type="text"
+                        name="createProfileInput"
+                        id="createProfileInput"
+                        autoComplete='off'
+                        placeholder='Введите название нового профиля'
+                        className='input'
+                        value={createProfileName}
+                        onChange={e => {
+                            setCreateProfileName(e.target.value)
+                        }}
+                    />
+                </Flex>
+
+            </Modal>
+            {/* Модалка | Удаление профиля */}
+            <Modal
+                title={' '}
+                centered={true}
+                open={deleteProfileModalIsOpen}
+                okButtonProps={{
+                    style: {
+                        backgroundColor: 'var(--red)'
+                    }
+                }}
+                okText='Удалить'
+                cancelText='Отменить'
+                onCancel={e => setDeleteProfileModalIsOpen(false)}
+                onOk={onDeleteProfileBtnClickHandler}
+
+            >
+                <div className='text'>
+                    <span className='fw-b'>Внимание: </span>
+                    <span>вы пытаетесь удалить профиль, это действие будет необратимо. Если вы действительно хотите удалить этот профиль, нажмите 'Удалить', для отмены нажмите 'Отменить'.</span>
+                </div>
+            </Modal>
+
         </>
     );
 }
