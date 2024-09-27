@@ -35,11 +35,28 @@ const ProfileEditor = () => {
         table,
         selectedProfile,
         availableProfiles,
-        activeProfile
-        
+        activeProfile,
+        activeProfileRequest,
+        tableRequest,
+        profileSaveRequest,
+        applyProficeRequest,
+        deleteProfileRequest
+
     } = useSelector(store => store.profileEditor);
 
-    const isAvailable = true;
+    const hasImportantEssence = 
+        selectedProfile === null
+
+    const isDatauploading =
+        activeProfileRequest ||
+        tableRequest ||
+        profileSaveRequest ||
+        applyProficeRequest ||
+        deleteProfileRequest
+
+    const isAvailable = classNames({
+        'btn-inactive': isDatauploading || hasImportantEssence
+    });
 
     useEffect(() => {
         dispatch(initialize({
@@ -110,12 +127,10 @@ const ProfileEditor = () => {
 
     // profile handlers
 
-    // +
     const onOptionListClickHandler = (option) => {
         dispatch(changeProfile(option))
     }
 
-    // +
     const onApplyClickHandler = (e) => {
 
         const callee = () => {
@@ -132,7 +147,6 @@ const ProfileEditor = () => {
         }, callee))
     }
 
-    // +
     const onSaveBtnClickHandler = (e) => {
 
         const callee = () => {
@@ -147,12 +161,11 @@ const ProfileEditor = () => {
         }, callee))
     }
 
-    // +
     const onSaveAsBtnClickHandler = (e) => {
 
         const isValid = isProfileNameValid(saveAsProfileName);
 
-        const callee =  () => {
+        const callee = () => {
             dispatch(initialize({
                 current: saveAsProfileName
             }))
@@ -169,7 +182,6 @@ const ProfileEditor = () => {
         }
     }
 
-    // +
     const onCreateProfileBtnClickHandler = (e) => {
 
         const isValid = isProfileNameValid(createProfileName);
@@ -205,6 +217,12 @@ const ProfileEditor = () => {
         setDeleteProfileModalIsOpen(false);
     }
 
+    const onCancelProfileClickhandler = (e) => {
+        dispatch(initialize({
+            previous: true
+        }))
+    }
+
     return (
         <>
             <div className={styles.profileEditorWrapper}>
@@ -221,6 +239,7 @@ const ProfileEditor = () => {
                                 availableOptions={availableProfiles}
                                 onClick={onOptionListClickHandler}
                                 activeOption={activeProfile}
+                                loading={isDatauploading}
                             />
                         )}
                     </Flex>
@@ -234,6 +253,7 @@ const ProfileEditor = () => {
                             bordered={true}
                             dataSource={formValues}
                             pagination={false}
+                            loading={isDatauploading}
                             expandable={{
                                 expandedRowRender: (record) => (
                                     <textarea
@@ -328,36 +348,42 @@ const ProfileEditor = () => {
                                     className={`button btn-green mr-2 ${isAvailable}`}
                                     title='Сделать выбранный профиль активным'
                                     onClick={onApplyClickHandler}
+                                    disabled={isDatauploading}
                                 >Применить</button>
                                 <button
                                     type="button"
                                     className={`button btn-green mr-2 ${isAvailable}`}
                                     title='Сохранить изменения профиля'
                                     onClick={onSaveBtnClickHandler}
+                                    disabled={isDatauploading}
                                 >Сохранить</button>
                                 <button
                                     type="button"
                                     className={`button btn-green mr-2 ${isAvailable}`}
                                     title='Сохранить изменения в новый профиль'
                                     onClick={e => setSaveAsProfileModalIsOpen(true)}
+                                    disabled={isDatauploading}
                                 >Сохранить как</button>
                                 <button
                                     type="button"
                                     className={`button btn-green mr-2 ${isAvailable}`}
                                     title='Создать новый профиль'
                                     onClick={e => setCreateProfileModalIsOpen(true)}
+                                    disabled={isDatauploading}
                                 >Создать профиль</button>
                                 <button
                                     type="button"
                                     className={`button btn-red mr-2 ${isAvailable}`}
                                     onClick={e => setDeleteProfileModalIsOpen(true)}
                                     title='Удалить профиль'
+                                    disabled={isDatauploading}
                                 >Удалить</button>
                                 <button
                                     type="button"
                                     className={`button btn-grey ${isAvailable}`}
-
+                                    onClick={onCancelProfileClickhandler}
                                     title={'Вернуть изначальное состояние формы'}
+                                    disabled={isDatauploading}
                                 >Отменить</button>
                             </div>
                         </Flex>
