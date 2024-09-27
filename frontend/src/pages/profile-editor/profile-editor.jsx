@@ -12,10 +12,6 @@ import {
     saveProfile,
     changeProfile,
     deleteProfile,
-    getProfiles,
-    getTableByProfileName,
-    setNewProfileValue,
-
     SET_DEFAULT_SLICE_STATE
 } from '../../services/actions/profile-editor';
 import classNames from 'classnames';
@@ -39,6 +35,7 @@ const ProfileEditor = () => {
         table,
         selectedProfile,
         availableProfiles,
+        activeProfile
         
     } = useSelector(store => store.profileEditor);
 
@@ -223,6 +220,7 @@ const ProfileEditor = () => {
                                 selectedOption={selectedProfile}
                                 availableOptions={availableProfiles}
                                 onClick={onOptionListClickHandler}
+                                activeOption={activeProfile}
                             />
                         )}
                     </Flex>

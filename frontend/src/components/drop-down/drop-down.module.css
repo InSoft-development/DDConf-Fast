@@ -1,6 +1,8 @@
 .dropDown{
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    width: 200px;
     position: relative;
     padding: 6px 15px;
     border: 1px solid var(--gray-400);
@@ -8,7 +10,7 @@
 }
 
 .availableOptions{
-    width: 200px;
+    width: 300px;
     position: absolute;
     top: 40px;
     left: 0;
@@ -57,9 +59,18 @@
 }
 
 .listContent{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
     padding: 10px 15px 10px 8px;
 }
 
 .arrowActive{
     transform: rotate(180deg);
+}
+
+.activeOption{
+   color: var(--green);
+   
 }

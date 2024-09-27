@@ -8,7 +8,8 @@ const DropDown = ({
     selectedOption,
     availableOptions = [],
     loading = false,
-    onClick = () => { }
+    onClick = () => { },
+    activeOption = null
 }) => {
 
     const [menuIsOpen, setModalState] = useState(false);
@@ -39,10 +40,19 @@ const DropDown = ({
         }
     ])
 
+    const trimOption = (optionName, value) => {
+
+        if(optionName.length >= value){
+            return optionName.substring(0 , value - 1) + ' ...';
+        }
+
+        return optionName;        
+    }
+
     return (
         <Flex align='center'>
             <div className={`text mr-10 ${styles.dropDown}`}>
-                <div className='mr-6'>{selectedOption ? selectedOption : 'Не задан'}</div>
+                <div className='mr-6'>{selectedOption ? trimOption(selectedOption, 12) : 'Не задан'}</div>
                 <div>
                     <CaretDownOutlined
                         onClick={onArrowClickHandler}
@@ -51,13 +61,20 @@ const DropDown = ({
                     <ul className={optionsListStyle}>
                         {availableOptions.map(option => (
                             <li key={option}
+                                title={option}
                                 className={`${styles.listElement} ${selectedOption === option ? styles.listElementActive : ''}`}
                                 onClick={e => {
                                     e.stopPropagation();
+                                    onArrowClickHandler(e);
                                     onClick(option)
                                 }}
                             >
-                                <div className={styles.listContent}>{option}</div>
+                                <div className={styles.listContent}>
+                                    {trimOption(option, 20)}
+                                    {activeOption === option && (
+                                        <sup className={`ml-a ${styles.activeOption}`}>активный</sup>
+                                    )}
+                                </div>
                             </li>
                         ))}
                     </ul>
