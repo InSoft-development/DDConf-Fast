@@ -10,6 +10,8 @@ import Dashboard from '../../pages/dashboard/dashboard';
 import OpcUa from '../../pages/opc-ua/opc-ua';
 import ProfileEditor from '../../pages/profile-editor/profile-editor';
 
+import Network from '../../pages/network/network';
+
 // services
 import {getDeviceFeatures} from '../../services/actions/dashboard'
 import { getProfiles } from '../../services/actions/profile';
@@ -33,6 +35,7 @@ const App = () => {
                     <Route path='dd104' element={<Dd104/>}></Route>
                     <Route path='opcua' element={<OpcUa/>}></Route>
                     <Route path='profile-editor' element={<ProfileEditor/>}></Route>
+                    <Route path='network' element={<Network/>}></Route>
                 </Route>
                 <Route path='/login' element={<SignIn/>}></Route>
             </Routes>

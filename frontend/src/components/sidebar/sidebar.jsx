@@ -53,7 +53,13 @@ const Sidebar = () => {
                             <NavLink to='/opcua' className={navLink} onClick={e => closeSidebar()}>
                                 <ProfileOutlined style={{marginRight: 10}}/>
                                 OPC UA
-                            </NavLink>                          
+                            </NavLink>                              
+
+                            <NavLink to='/network' className={navLink} onClick={e => closeSidebar()}>
+                                <ProfileOutlined style={{marginRight: 10}}/>
+                                Network
+                            </NavLink>                        
+                    
                         </ul>
                     </nav>
                 </div>

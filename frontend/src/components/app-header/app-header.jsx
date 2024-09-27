@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { MenuOutlined } from '@ant-design/icons';
+import { MenuOutlined} from '@ant-design/icons';
 import styles from './app-header.module.css';
 import { OPEN_SIDEBAR } from '../../services/actions/modals';
 
@@ -23,8 +23,8 @@ const AppHeader = () => {
             '/': 'Дашборд',
             '/dd104': 'Протокол МЭК 104',
             '/profile-editor': 'Протокол МЭК 104',
-            '/opcua': 'OPC UA'
-
+            '/opcua': 'OPC UA',
+            '/network': 'Сетевые интерфейсы'
         }
 
         setHeaderTitle(headerText[location.pathname])
