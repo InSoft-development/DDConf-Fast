@@ -46,7 +46,7 @@ def fetch_device(_id: str) -> dict:
 					'broadcast': nic.broadcast
 				})
 			
-			
+			data = {**data, **fetch_status(_id)}
 			#TODO dispatcher up on boot
 			
 		else:

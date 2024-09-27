@@ -4,6 +4,7 @@ from pathlib import Path
 from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
+from time import sleep 
 
 from models import Defaults
 # Globals
@@ -92,7 +93,7 @@ def create_inis(data: list):
 	try:
 		COUNT = 0
 		for proc in data:
-			COUNT += 1
+			
 			if proc['main'] or proc['second']:
 				if not proc['main']:
 					proc['main'] = proc['second']
@@ -104,9 +105,12 @@ def create_inis(data: list):
 				(Path(Defaults.DD["INIDIR"])/f"dd104client{COUNT}.ini").write_text(msg)
 				syslog.syslog(syslog.LOG_INFO, f'ddconf.dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
 				print(f'ddconf.dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
+				
 			else:
 				raise ValueError(f"process {COUNT} data is invalid ({proc})")
-	
+		
+			COUNT += 1
+		
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {str(e)}\n")
 		print(f"ddconf.dd104.create_inis: both main and second fields of proc are empty and/or invalid! Details:  {traceback.print_exception(e)}\n")
@@ -115,8 +119,8 @@ def create_inis(data: list):
 def create_services(count:int):
 	try:
 		
-		for i in range(1, count+1): #why was this +2 ??? and didn't change in develop!!!
-			
+
+		for i in range(0, count): #now it's indexed from 0
 			msg = f"[Unit]\nDescription=dd104client\nAfter=hasplmd.service\n[Service]\nKillMode=mixed\nExecStartPre=/bin/sleep 5\nExecStart=/opt/dd/{'dd104client/dd104client' if _mode=='tx' else 'dd104server/dd104server'} -c {Defaults.DD['INIDIR']}dd104{'client' if _mode=='tx' else 'server'}{i}.ini\nRestart=always\nUser=dd\nGroup=dd\n\n[Install]\nWantedBy=multi-user.target"
 			
 			_ = Path(f'/etc/systemd/system/{"dd104client" if _mode=="tx" else "dd104server"}{i}.service').write_text(msg)
@@ -274,16 +278,18 @@ def process_handle(PID: int, OP:str) -> int:
 			std = subprocess.run(f'systemctl {OP} {"dd104client" if _mode == "tx" else "dd104server"}{PID}.service'.split(), text=True, capture_output=True)
 			if std.stderr:
 				raise RuntimeError(std.stderr)
-			return get_status(PID)
 		else:
 			raise TypeError(f"ddconf.dd104.process_handle: PID must be a single instance of int, str, got {type(PID)}.")
 	except RuntimeError:
 		return -1
 	except Exception as e:
-		syslog.syslog(syslog.LOG_WARNING, f"dd104.{OP}: {str(e)}")
+		syslog.syslog(syslog.LOG_WARNING, f"ddconf.dd104.process_handle: {OP}: {str(e)}")
 		return -2
+	else:
+		sleep(0.05)
+		return get_status(PID)
 
-#TODO
+
 def get_logs(PID: str, LEN: int) -> dict: 
 	try:
 		if PID.lower() == "syslog":
