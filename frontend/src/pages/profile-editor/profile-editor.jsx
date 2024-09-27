@@ -12,6 +12,9 @@ import {
     saveProfile,
     changeProfile,
     deleteProfile,
+    getProfiles,
+    getTableByProfileName,
+    setNewProfileValue,
 
     SET_DEFAULT_SLICE_STATE
 } from '../../services/actions/profile-editor';
@@ -36,15 +39,15 @@ const ProfileEditor = () => {
         table,
         selectedProfile,
         availableProfiles,
+        
     } = useSelector(store => store.profileEditor);
 
     const isAvailable = true;
-    // const isAvailable = classNames({
-    //     'btn-inactive': formIsUploading || failedRequest,
-    // })
 
     useEffect(() => {
-        dispatch(initialize());
+        dispatch(initialize({
+            isActive: true
+        }));
 
         return () => {
             dispatch({ type: SET_DEFAULT_SLICE_STATE })
@@ -110,14 +113,20 @@ const ProfileEditor = () => {
 
     // profile handlers
 
+    // +
     const onOptionListClickHandler = (option) => {
         dispatch(changeProfile(option))
     }
 
+    // +
     const onApplyClickHandler = (e) => {
 
         const callee = () => {
-            dispatch(profileApply(selectedProfile))
+            dispatch(profileApply(selectedProfile, () => {
+                dispatch(initialize({
+                    previous: true
+                }))
+            }))
         }
 
         dispatch(saveProfile({
@@ -126,19 +135,30 @@ const ProfileEditor = () => {
         }, callee))
     }
 
+    // +
     const onSaveBtnClickHandler = (e) => {
+
+        const callee = () => {
+            dispatch(initialize({
+                previous: true
+            }))
+        }
+
         dispatch(saveProfile({
             name: selectedProfile,
             data: formValues,
-        }))
+        }, callee))
     }
 
+    // +
     const onSaveAsBtnClickHandler = (e) => {
 
         const isValid = isProfileNameValid(saveAsProfileName);
 
-        const callee = () => {
-            dispatch(changeProfile(saveAsProfileName))
+        const callee =  () => {
+            dispatch(initialize({
+                current: saveAsProfileName
+            }))
         }
 
         if (isValid) {
@@ -152,12 +172,15 @@ const ProfileEditor = () => {
         }
     }
 
+    // +
     const onCreateProfileBtnClickHandler = (e) => {
 
         const isValid = isProfileNameValid(createProfileName);
 
         const callee = () => {
-            dispatch(changeProfile(createProfileName))
+            dispatch(initialize({
+                current: createProfileName
+            }))
         }
 
         if (isValid) {
@@ -173,7 +196,14 @@ const ProfileEditor = () => {
     }
 
     const onDeleteProfileBtnClickHandler = (e) => {
-        dispatch(deleteProfile(selectedProfile));
+
+        const callee = () => {
+            dispatch(initialize({
+                isNew: true
+            }))
+        }
+
+        dispatch(deleteProfile(selectedProfile, callee));
 
         setDeleteProfileModalIsOpen(false);
     }

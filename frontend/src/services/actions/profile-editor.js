@@ -29,39 +29,52 @@ export const DELETE_PROFILE_FAILED = 'profile-editor/DELETE_PROFILE_FAILED';
 export const SET_DEFAULT_SLICE_STATE = 'profile-editor/SET_DEFAULT_SLICE_STATE';
 export const SET_NEW_SELECTED_PROFILE_VALUE = 'profile-editor/SET_NEW_SELECTED_PROFILE_VALUE';
 
-export const initialize = () => (dispatch) => {
+/* payload 
+        isActicve
+        isNew
+        current
+        previous
+*/
+export const initialize = (option, cb = null) => (dispatch) => {
     dispatch({ type: GET_PROFILES_REQUEST });
     request('dd104', 'fetch_initial')
         .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: GET_PROFILES_REQUEST_SUCCESS, payload: res.result })
-            
-            if(res.result.active !== null){
-                dispatch(getTableByProfileName(res.result.active))
+            dispatch({type: SET_NEW_SELECTED_PROFILE_VALUE, payload: {
+                ...option
+            }})
+
+            if(store.getState().profileEditor.selectedProfile !== null){
+                dispatch(getTableByProfileName())
             }
-            
+
         })
         .catch(error => {
             dispatch({ type: GET_PROFILES_REQUEST_FAILED })
         })
 }
 
-export const getProfiles = () => (dispatch) => {
+export const getProfiles = (cb = null) => (dispatch) => {
     dispatch({ type: GET_PROFILES_REQUEST });
     request('dd104', 'fetch_initial')
         .then(res => checkResponce(res))
         .then(res => {
-            dispatch({ type: GET_PROFILES_REQUEST_SUCCESS, payload: res.result })           
+            dispatch({ type: GET_PROFILES_REQUEST_SUCCESS, payload: res.result })
+
+            if(cb){
+                cb()
+            }
         })
         .catch(error => {
             dispatch({ type: GET_PROFILES_REQUEST_FAILED })
         })
 }
 
-export const getTableByProfileName = (profileName) => (dispatch) => {
+export const getTableByProfileName = (cb = null) => (dispatch) => {
     dispatch({ type: GET_TABLE_BY_PROFILE_NAME });
     request('dd104', 'fetch_ld', {
-        name: profileName
+        name: store.getState().profileEditor.selectedProfile
     })
         .then(res => checkResponce(res))
         .then(res => {
@@ -74,6 +87,10 @@ export const getTableByProfileName = (profileName) => (dispatch) => {
                     }
                 })
             })
+
+            if(cb){
+                cb();
+            }
         })
         .catch(error => {
             dispatch({ type: GET_TABLE_BY_PROFILE_NAME_FAILED })
@@ -82,7 +99,7 @@ export const getTableByProfileName = (profileName) => (dispatch) => {
 
 export const changeProfile = (profileName) => (dispatch)=> {
     dispatch({type:CHANGE_PROFILE, payload: profileName})
-    dispatch(getTableByProfileName(profileName));
+    dispatch(getTableByProfileName());
 }
 
 export const saveProfile = (profileData, cb = null) => (dispatch) => {
@@ -117,7 +134,7 @@ export const saveProfile = (profileData, cb = null) => (dispatch) => {
         })
 }
 
-export const profileApply = (profileName) => (dispatch) => {
+export const profileApply = (profileName, cb = null) => (dispatch) => {
     dispatch({type: APPLY_PROFILE});
     request('dd104', 'profile_apply', {
         name: profileName
@@ -130,13 +147,17 @@ export const profileApply = (profileName) => (dispatch) => {
                 message: `Профиль ${profileName} успешно установлен как активный`,
                 placement: 'topLeft',
             })
+
+            if(cb){
+                cb();
+            }
             
 
         })
         .catch(error => dispatch({type: APPLY_PROFILE_FAILED}))
 }
 
-export const deleteProfile = (profileName) => (dispatch) => {
+export const deleteProfile = (profileName, cb= null) => (dispatch) => {
     dispatch({type: DELETE_PROFILE})
     request('dd104', 'delete_ld', {
         name: profileName
@@ -144,15 +165,15 @@ export const deleteProfile = (profileName) => (dispatch) => {
         .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: DELETE_PROFILE_SUCCESS})
-                .then(res => console.log(res))
 
             notification.success({
                 message: `Профиль ${profileName} успешно удалён`,
                 placement: 'topLeft'
             })
 
-            dispatch(setNewProfileValue())
-                .then(res => console.log(res))
+            if(cb){
+                cb();
+            }
 
         })
         .catch(error => dispatch({type: DELETE_PROFILE_FAILED}))

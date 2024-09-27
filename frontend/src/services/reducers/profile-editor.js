@@ -27,6 +27,7 @@ import {
 } from '../actions/profile-editor';
 
 const initialState = {
+    activeProfile: '',
     selectedProfile: '',
     availableProfiles: [],
 
@@ -70,7 +71,7 @@ export const profileEditorReducer = (state = initialState, action) => {
                 activeProfileRequestSuccess: true,
                 activeProfileRequestFailed: false,
                 
-                selectedProfile: action.payload.active,
+                activeProfile: action.payload.active,
                 availableProfiles: action.payload.loadout_names,
             }
         }
@@ -195,15 +196,29 @@ export const profileEditorReducer = (state = initialState, action) => {
 
             let newSelectedProfileValue = null;
 
-            if(state.availableProfiles.length !== 0){
-                newSelectedProfileValue = state.availableProfiles[0];
+            if(action.payload.isActive){
+                newSelectedProfileValue = state.activeProfile
             }
 
-            console.log(newSelectedProfileValue);
-            
+            if(action.payload.isNew){
+                if(state.availableProfiles.length !== 0){
+                    newSelectedProfileValue = state.availableProfiles[0];
+                }else{
+                    newSelectedProfileValue = null;
+                }
+                
+            }         
+
+            if(action.payload.current){
+                newSelectedProfileValue = action.payload.current
+            }
+
+            if(action.payload.previous){
+                newSelectedProfileValue = state.selectedProfile;
+            }
 
             return {
-                ...initialState,
+                ...state,
                 selectedProfile: newSelectedProfileValue
             }
         }
