@@ -1,0 +1,33 @@
+.form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+    position: relative;
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+}
+.labelDevice{
+    margin-left: 70px;
+}
+
+.textarea{
+    margin-left: 180px;
+    width: 400px;
+}
+.ipv4{
+    margin-left: 55px;
+}
+.ipv4netmask{
+    margin-left: 65px;
+}
+.ipv4gateway{
+    margin-left: 70px;
+}
+.ipv4broadcast{
+    margin-left: 15px;
+}
+
+.device{
+    margin-left: 139px;
+}

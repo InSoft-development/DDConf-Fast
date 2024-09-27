@@ -1,0 +1,1 @@
+export const SET_FORM_NETWORK = 'SET_FORM_NETWORK';
