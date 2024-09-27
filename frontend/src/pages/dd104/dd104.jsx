@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table, Flex } from 'antd';
+import { Table, Flex, Modal } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import styles from './dd104.module.css';
 import { columns } from '../../utils/table-description';
@@ -15,11 +15,15 @@ import {
 import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
 
+import { logs } from '../../utils/mock';
+
 
 const Dd104 = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [logModalIsOpen, setLogModalIsOpen] = useState(false);
 
     const {
         profileRequest,
@@ -41,7 +45,7 @@ const Dd104 = () => {
         dispatch(getProfiles(callee))
 
         return () => {
-            dispatch({type: SET_DEFAULT_SLICE_STATE})
+            dispatch({ type: SET_DEFAULT_SLICE_STATE })
         }
 
     }, [])
@@ -68,15 +72,15 @@ const Dd104 = () => {
         activeTable.length === 0
 
 
-    const isDataUploading = 
+    const isDataUploading =
         activeTableRequest ||
-        profileRequest || 
+        profileRequest ||
         changeProfileRequest;
 
-    const editBtnStyles = classnames({'btn-inactive': isDataUploading})
-    const footerBtnStyles = classnames({'btn-inactive ': isDataUploading || hasImportantEssence})
+    const editBtnStyles = classnames({ 'btn-inactive': isDataUploading })
+    const footerBtnStyles = classnames({ 'btn-inactive ': isDataUploading || hasImportantEssence })
 
-    const headerContent = () => {      
+    const headerContent = () => {
 
         return (
             <>
@@ -95,7 +99,7 @@ const Dd104 = () => {
                             loading={changeProfileRequest}
                             onClick={onProfileClickHandler}
                         />
-                        <button 
+                        <button
                             className={`button btn-green ml-auto no-select ${editBtnStyles}`}
                             onClick={e => { navigate('/profile-editor', { state: { prevProfile: activeProfile } }) }}
                         >Редактировать профиль</button>
@@ -106,44 +110,48 @@ const Dd104 = () => {
     }
 
     return (
-        <div className={styles.profile}>
-            <div className={styles.header}>
-                {headerContent()}
-            </div>
-            <div className={styles.tableWrapper}>
-                <Table
-                    rowKey={(record) => record.id}
-                    loading={isDataUploading}
-                    dataSource={activeTable}
-                    pagination={false}
-                    expandable={{
-                        expandedRowRender: (record) => (
-                            <div>{record.comment}</div>
-                        )
-                    }}
-                    columns={columns}
-                    bordered={true}
-                />
-            </div>
-            <footer className={styles.footer}>
-                <Flex justify='space-between' className='wrapper'>
-                    <div>
-                        <button 
-                            className={`button btn-blue mr-10 ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
-                            onClick={onStartAllBtnClickHandler}
-                            disabled={isDataUploading || hasImportantEssence}
-                        >Запустить всё</button>
-                        <button 
-                            className={`button btn-blue ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
-                            onClick={onStopAllBtnClickHandler}
-                            disabled={isDataUploading || hasImportantEssence}
-                        >Остановить всё</button>
-                    </div>
-                    {/* <button className='button btn-purple'>Открыть log</button> */}
-                </Flex>
-            </footer>
+        <>
+            <div className={styles.profile}>
+                <div className={styles.header}>
+                    {headerContent()}
+                </div>
+                <div className={styles.tableWrapper}>
+                    <Table
+                        rowKey={(record) => record.id}
+                        loading={isDataUploading}
+                        dataSource={activeTable}
+                        pagination={false}
+                        expandable={{
+                            expandedRowRender: (record) => (
+                                <div>{record.comment}</div>
+                            )
+                        }}
+                        columns={columns}
+                        bordered={true}
+                    />
+                </div>
+                <footer className={styles.footer}>
+                    <Flex justify='space-between' className='wrapper'>
+                        <div>
+                            <button
+                                className={`button btn-blue mr-10 ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
+                                onClick={onStartAllBtnClickHandler}
+                                disabled={isDataUploading || hasImportantEssence}
+                            >Запустить всё</button>
+                            <button
+                                className={`button btn-blue ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
+                                onClick={onStopAllBtnClickHandler}
+                                disabled={isDataUploading || hasImportantEssence}
+                            >Остановить всё</button>
+                        </div>
+                        <button className='button btn-purple'
+                            onClick={e => setLogModalIsOpen(true)}
+                        >Открыть log</button>
+                    </Flex>
+                </footer>
 
-        </div>
+            </div>
+        </>
     );
 }
 

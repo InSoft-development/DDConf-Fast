@@ -21,7 +21,7 @@ const UrlSection = ({ register, index: parentIndex, control }) => {
         <>
             <Flex align='center' justify='space-between'>
                 <label htmlFor={`servers.${parentIndex}.url1`}
-                    className='fw-b label-required-symbol'
+                    className='fw-b '
                 >URL 1:</label>
                 <Flex>
                     <input

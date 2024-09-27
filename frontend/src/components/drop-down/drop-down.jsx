@@ -51,8 +51,12 @@ const DropDown = ({
 
     return (
         <Flex align='center'>
-            <div className={`text mr-10 ${styles.dropDown}`}>
-                <div className='mr-6'>{selectedOption ? trimOption(selectedOption, 12) : 'Не задан'}</div>
+            <div className={`text mr-10 ${styles.dropDown}`}
+                onClick={onArrowClickHandler}
+            >
+                <div className='mr-6'
+                    title={selectedOption ? selectedOption : 'Не задан'}
+                >{selectedOption ? trimOption(selectedOption, 12) : 'Не задан'}</div>
                 <div>
                     <CaretDownOutlined
                         onClick={onArrowClickHandler}
