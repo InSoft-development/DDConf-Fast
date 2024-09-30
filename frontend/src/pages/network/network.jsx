@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
-import { useWatch } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Controller, useWatch } from 'react-hook-form';
 import style from './network.module.css';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Flex } from 'antd';
 import { SET_FORM_NETWORK } from '../../services/actions/network';
+import data from '../../json/network.json';
+import datadevice from '../../json/device.json';
+import { ReloadOutlined } from '@ant-design/icons';
+ 
 
 
 
 
 
 export const Network = () => {
-
-
-
-
-
 
   const dispatch = useDispatch();
   const {register, handleSubmit} = useForm();
@@ -28,6 +27,11 @@ export const Network = () => {
     console.log(data);
   }
 
+const [contacts] = useState(data);
+const [devices] = useState(datadevice);
+
+
+const [device, setDevice] = useState()
 
 
  
@@ -45,29 +49,68 @@ export const Network = () => {
     <form onSubmit={handleSubmit(onSubmit)} className={`text text-18 ${style.form}`}>
     
 
-      <div>
+      {/* <div>
         <label className='fw-b label-required-symbol' htmlFor={`result.device`}>Устройства</label>
         <select className={`opc-input ${style.device}`} name="device" id={`result.device`} {...register(`result.device`)}>
           <option value="br-lan">br-lan</option>
           <option value="br-lan_1">br-lan_1</option>
           <option value="br-lan_2">br-lan_2</option>
           <option value="br-lan_3">br-lan_3</option>
-        </select>
+        </select>        
+      </div> */}
+      <div>
+        <label className='fw-b label-required-symbol' htmlFor={`result.device`}>Устройства</label>
         
+        <select className={`opc-input ${style.device}`} name="device" id={`result.device`} {...register(`result.device`)} value={device} onChange={e=>setDevice(e.target.value)}>
+        {devices.map((device)=>
+        <option value={device.name}>{device.name}</option>        
+        )}
+        </select>        
       </div>
 
 
-      <Flex className='mt-30'>
-        <label className='fw-b label-required-symbol' htmlFor="status">Статус</label>
-        <textarea  className={`opc-textarea ${style.textarea}`}>  
+      {/* <Flex className='mt-30'> */}
+      <div className='mt-30'>
+          <label className='fw-b label-required-symbol' htmlFor="status">Статус</label>  
+          
+          <button type='button' className={`button btn-circle  btn-green ${style.restart}`}><ReloadOutlined/></button>       
+            <div className={style.card} >  
+              <table className={style.tabel}>
+
+
+              {/* <tbody>
+              {devices.map((device)=>       
+                  <tr>                           
+                    <td value={device.name} className={style.numberStr}></td>
+                    <td className={style.numberIP}>{device}</td>                 
+                  </tr>  )}         
+              </tbody>    */}
+
+
+                <tbody>
+                  {contacts.map((contact)=><tr>                           
+                    <td className={style.numberStr}>{contact.title}</td>
+                    <td className={style.numberIP}>{contact.completed}</td>                  
+                  </tr>)}                    
+                </tbody>         
+              </table>            
+            </div>          
+      </div>
+   
+     
+       
+
+      
+
+
      
 
-        </textarea>     
-      </Flex>
+      
+      {/* </Flex> */}
      
       <div className='mt-30'>      
         <label className='fw-b label-required-symbol mr-40' htmlFor={`result.protocol`}>Протоколы</label>
-        <select className='opc-input ml-30' name="protocol" id={`result.protocol`} {...register(`result.protocol`)}>
+        <select className={`opc-input ml-30 ${style.address}`} name="protocol" id={`result.protocol`} {...register(`result.protocol`)}>
           <option value="static address">static address</option>
           <option value="dynamic address">dynamic address</option>      
         </select>
@@ -116,6 +159,7 @@ export const Network = () => {
          {...register(`result.ipv4.broadcast`)}
          />
       </div>
+
 
     <div className={style.btn}>
       <button  type='submit' className='button btn-green mt-10'>Отправить</button>
