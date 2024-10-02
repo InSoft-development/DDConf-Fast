@@ -4,7 +4,8 @@ import { Outlet, NavLink } from 'react-router-dom';
 import { Drawer, Flex } from 'antd';
 import {
     HomeOutlined,
-    ProfileOutlined
+    ProfileOutlined,
+    ApiOutlined
 } from '@ant-design/icons';
 import { CLOSE_SIDEBAR } from '../../services/actions/modals';
 
@@ -53,6 +54,15 @@ const Layout = () => {
                     >
                         <ProfileOutlined style={{ marginRight: 10 }} />
                         OPC UA
+                    </NavLink>
+                    <NavLink
+                        to='/network'
+                        className='text mt-10'
+                        onClick={onCloseHandler}
+                        end
+                    >
+                        <ApiOutlined style={{ marginRight: 10 }} />
+                        Сетевые интерфейсы
                     </NavLink>
                 </Flex>
             </Drawer>
