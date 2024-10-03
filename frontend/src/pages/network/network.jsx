@@ -3,6 +3,7 @@ import { Flex } from 'antd';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './network.module.css';
+import DeviceStatus from '../../components/network/device-status';
 import { getDevices, getDeviceFeatures } from '../../services/actions/network';
 
 const Network = () => {
@@ -48,48 +49,36 @@ const Network = () => {
                             ))}
                         </select>
                     </Flex>
+                    {deviceFeaturesRequestSuccess && (
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <Flex align='center' justify='space-between'>
+                                <label htmlFor="">Status:</label>
+                                <DeviceStatus device={device} />
+                            </Flex>
+                            <Flex align='center' justify='space-between'>
+                                <label htmlFor="">Protocol</label>
+                                <select name="" id="">
+                                    <option value="">Static address</option>
+                                    <option value="">Dynamic address</option>
+                                </select>
+                            </Flex>
+                            <Flex align='center' justify='space-between'>
+                                <label htmlFor="">IPv4 address</label>
+                                <input type="text" {...register('ipv4.address')} />
+                            </Flex>
+                            <Flex align='center' justify='space-between'>
+                                <label htmlFor="">IPv4 network</label>
+                                <input type="text" {...register('ipv4.network')} />
+                            </Flex>
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Flex align='center' justify='space-between'>
-                            <label htmlFor="">Status:</label>
-                            <div>
-                                <Flex align='center' justify='space-between'>
-                                    <div>Device:</div>
-                                    <div>{device.device}</div>
-                                </Flex>
-                                <Flex align='center' justify='space-between'>
-                                    <div>Uptime:</div>
-                                    <div>{device.uptime}</div>
-                                </Flex>
-                                <Flex align='center' justify='space-between'>
-                                    <div>MAC:</div>
-                                    <div>{device.mac}</div>
-                                </Flex>
-                                <Flex align='center' justify='space-between'>
-                                    <div>RX:</div>
-                                    <div>{device.rx}</div>
-                                </Flex>
-                                <Flex align='center' justify='space-between'>
-                                    <div>TX:</div>
-                                    <div>{device.tx}</div>
-                                </Flex>
-                            </div>
-                        </Flex>
-                        <Flex align='center' justify='space-between'>
-                            <label htmlFor="">IPv4 address</label>
-                            <input type="text" {...register('ipv4.address')} />
-                        </Flex>
-                        <Flex align='center' justify='space-between'>
-                            <label htmlFor="">IPv4 network</label>
-                            <input type="text" {...register('ipv4.network')} />
-                        </Flex>
+                            <footer className={styles.footer}>
+                                <div className='wrapper'>
+                                    <button type='submit' className='button btn-green'>Отправить</button>
+                                </div>
+                            </footer>
+                        </form>
+                    )}
 
-                        <footer className={styles.footer}>
-                            <div className='wrapper'>
-                                <button type='submit' className='button btn-green'>Отправить</button>
-                            </div>
-                        </footer>
-                    </form>
                 </>
             )}
 
