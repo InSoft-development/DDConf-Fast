@@ -7,7 +7,7 @@ from psutil import net_io_counters, net_if_addrs
 from netifaces import gateways
 
 def get_nics() -> list:
-	return net_if_addrs().keys()
+	return list(net_if_addrs().keys())
 
 
 def fetch_device(_id: str) -> dict:
@@ -56,6 +56,18 @@ def fetch_device(_id: str) -> dict:
 		raise e
 	else:
 		return data
+
+
+def save_device(_id: str, data: dict):
+	
+	try:
+		pass
+	except Exception as e:
+		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
+		raise e
+	else:
+		return 'success'
+	
 
 
 def nicfind(tgt, tgtv, arr) -> list: 
