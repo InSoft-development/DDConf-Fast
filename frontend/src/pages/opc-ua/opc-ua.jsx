@@ -75,7 +75,7 @@ const OpcUa = () => {
                                     {/* title & delete button */}
                                     <h3 className={styles.serverTitle}>Сервер {index + 1}</h3>
                                     <button type="button"
-                                        className={`button btn-red btn-circle ${styles.serverDeleteBtn}`}
+                                        className={`btn-red btn-round ${styles.serverDeleteBtn}`}
                                         onClick={e => remove(index)}
                                     >
                                         <DeleteOutlined />
@@ -168,7 +168,7 @@ const OpcUa = () => {
                     <footer className={`mt-10 ${styles.formFooter}`}>
                         <div className=' mt-10 mb-10 wrapper'>
                             <button type="button"
-                                className="button btn-green mr-4"
+                                className="btn-green mr-4"
                                 onClick={e => append({
                                     url1: '',
                                     url2_exists: false,
@@ -181,7 +181,7 @@ const OpcUa = () => {
                                     }]
                                 })}
                             >Добавить сервер</button>
-                            <button type="submit" className='button btn-green'>Отправить</button>
+                            <button type="submit" className='btn-green'>Отправить</button>
                         </div>
                     </footer>
                 </form>

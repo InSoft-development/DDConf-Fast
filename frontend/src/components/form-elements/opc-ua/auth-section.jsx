@@ -27,7 +27,7 @@ const AuthSection = ({ register, index, control }) => {
                                 type="text"
                                 {...register(`servers.${index}.utoken_data.username`)}
                                 placeholder='Введите логин'
-                                className='opc-input'
+                                className='input-text'
                                 autoComplete="off"
                             />
                         </Flex>

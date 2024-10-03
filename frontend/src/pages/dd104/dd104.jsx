@@ -100,7 +100,7 @@ const Dd104 = () => {
                             onClick={onProfileClickHandler}
                         />
                         <button
-                            className={`button btn-green ml-auto no-select ${editBtnStyles}`}
+                            className={`btn-green ml-auto no-select ${editBtnStyles}`}
                             onClick={e => { navigate('/profile-editor', { state: { prevProfile: activeProfile } }) }}
                         >Редактировать профиль</button>
                     </>
@@ -134,17 +134,17 @@ const Dd104 = () => {
                     <Flex justify='space-between' className='wrapper'>
                         <div>
                             <button
-                                className={`button btn-blue mr-10 ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
+                                className={`btn-blue mr-10 ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
                                 onClick={onStartAllBtnClickHandler}
                                 disabled={isDataUploading || hasImportantEssence}
                             >Запустить всё</button>
                             <button
-                                className={`button btn-blue ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
+                                className={`btn-blue ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
                                 onClick={onStopAllBtnClickHandler}
                                 disabled={isDataUploading || hasImportantEssence}
                             >Остановить всё</button>
                         </div>
-                        <button className='button btn-purple'
+                        <button className='btn-purple'
                             onClick={e => setLogModalIsOpen(true)}
                         >Открыть log</button>
                     </Flex>

@@ -1,0 +1,54 @@
+@import '../colors';
+
+$button-font-family: Inter, sans-serif;
+$button-font-size: 16px;
+$button-font-weight: 400;
+
+$button-round-radius: 17px;
+
+// button - skeleton
+%button-shared{
+    display: inline;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: $button-text-color;
+    border: none;
+    border-radius: 6px;
+    font-family: $button-font-family;
+    font-size: $button-font-size;
+    font-weight: $button-font-weight;
+}
+
+.btn-green{
+   @extend %button-shared;
+   background-color: $green; 
+}
+
+.btn-red{
+    @extend %button-shared;
+    background-color: $red;
+}
+
+.btn-blue{
+    @extend %button-shared;
+    background-color: $blue;
+}
+
+.btn-purple{
+    @extend %button-shared;
+    background-color: $purple;
+}
+
+.btn-round{
+    border-radius: 50%;
+    width: calc($button-round-radius * 2);
+    height: calc($button-round-radius * 2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button:disabled{
+    @extend %button-shared;
+    background-color: $gray-300;
+}

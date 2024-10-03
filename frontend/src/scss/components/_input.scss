@@ -1,0 +1,22 @@
+@import '../colors';
+
+$input-text-color: $gray-600;
+$input-font-family: Inter, sans-serif;
+$input-font-size: 16px;
+$input-font-weight: 500;
+
+
+// input - skeleton
+%input-shared{
+    border: 1px solid $gray-500;
+    border-radius: 10px;
+    padding: 0 10px;
+    color: $input-text-color;
+    font-family: $input-font-family;
+    font-weight: $input-font-weight;
+    font-size: $input-font-size;
+}
+
+.input-text{
+    @extend %input-shared;
+}

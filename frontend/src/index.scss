@@ -1,3 +1,6 @@
+@import "./scss/components/button";
+@import "./scss/components/input";
+
 /* Add-ons */
 html {
     margin-right: calc(-1 * (100vw - 100%));
@@ -179,43 +182,43 @@ html {
 
 /* button */
 
-.button {
-    font-family: Inter, sans-serif;
-    padding: 10px 15px;
-    cursor: pointer;
-    border: none;
-    border-radius: 6px;
-    color: #fff;
-}
+// .button {
+//     font-family: Inter, sans-serif;
+//     padding: 10px 15px;
+//     cursor: pointer;
+//     border: none;
+//     border-radius: 6px;
+//     color: #fff;
+// }
 
-.btn-outlined {
-    color: black;
-}
+// .btn-outlined {
+//     color: black;
+// }
 
-.btn-green {
-    background-color: var(--green);
-}
+// .btn-green {
+//     background-color: var(--green);
+// }
 
-.btn-blue {
-    background-color: var(--blue);
-}
+// .btn-blue {
+//     background-color: var(--blue);
+// }
 
-.btn-purple {
-    background-color: var(--purple);
-}
+// .btn-purple {
+//     background-color: var(--purple);
+// }
 
-.btn-red {
-    background-color: var(--red)
-}
+// .btn-red {
+//     background-color: var(--red)
+// }
 
-.btn-grey {
-    background-color: var(--gray-500);
-}
+// .btn-grey {
+//     background-color: var(--gray-500);
+// }
 
-.btn-inactive {
-    background-color: var(--gray-400);
-    cursor: not-allowed;
-}
+// .btn-inactive {
+//     background-color: var(--gray-400);
+//     cursor: not-allowed;
+// }
 
 .btn-circle {
     border-radius: 50%;
