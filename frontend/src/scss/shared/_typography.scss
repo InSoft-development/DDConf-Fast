@@ -1,0 +1,44 @@
+$main-font-family: 'Inter';
+$secondary-font-family: 'HelveticaNeue';
+
+$fonts: ('main': 'Inter', 'secondary': 'HelveticaNeue');
+$sizes: ('small': 12, 'default': 16, 'medium': 18, 'large': 20, 'extra-large': 40);
+
+/*
+    bundle examples: 
+
+    .text_type_main_small
+    .text_type_main_default
+    .text_type_secondary_extra-large
+    .text_type_secondary_medium
+*/
+
+@each $fontType, $font in $fonts{
+    @each $sizeType, $size in $sizes{
+        .text_type_#{$fontType}_#{$sizeType}{
+            font-family: #{$font}, sans-serif;
+            font-size: #{$size}px;
+        };
+    }
+};
+
+// -----------------------------
+
+/*
+    bundle example: 
+
+    .text_bold: {fonst-size: 700}
+    .text_normal: {fonst-size: 400}
+*/
+
+$weightPairs: ('thin': 100, 'extra-light': 200, 'light': 300, 'normal': 400, 'medium': 500, 'semi-bold': 600, 'bold': 700, 'extra-bold': 800, 'heavy': 900);
+
+@each $fontWeight, $fontValue in $weightPairs{
+    .text_#{$fontWeight}{
+        font-weight: #{$fontValue};
+    }
+};
+
+.text_color_inactive{
+    color: $gray-400;
+}

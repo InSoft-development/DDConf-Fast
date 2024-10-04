@@ -1,0 +1,10 @@
+$margin-directions: ('t': 'top', 'r': 'right', 'b': 'bottom', 'l':'left');
+
+@each $prop, $value in $margin-directions{
+    @for $i from 1 through 20 {
+        .m#{$prop}-#{$i}{margin-#{$value}: #{$i * 2}px;}
+    }
+}
+
+.ml-auto{margin-left: auto;}
+.mr-auto{margin-right: auto;}

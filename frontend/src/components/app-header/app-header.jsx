@@ -32,14 +32,14 @@ const AppHeader = () => {
     return (
         <header className={styles.header}>
             <div className={styles.upLine}>
-                <div className={`wrapper ${styles.upLineContent}`}>
+                <div className={`wrapper text_type_main-small ${styles.upLineContent}`}>
                     ДД Конфигуратор
                 </div>
             </div>
             <div className={styles.wrapper}>
                 <div className={`wrapper ${styles.inner}`}>
                     <MenuOutlined className={styles.menu} onClick={onMenuClickHandler}/>
-                    <h2 className={`text text_type_large ${styles.headerText}`}>{headerTitle}</h2>
+                    <h2 className={`text_type_main_extra-large text_bold ${styles.headerText}`}>{headerTitle}</h2>
                 </div>
             </div>
         </header>

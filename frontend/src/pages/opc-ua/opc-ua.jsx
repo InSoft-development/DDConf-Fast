@@ -57,10 +57,10 @@ const OpcUa = () => {
                 </Flex>
             ) : (
                 <form onSubmit={handleSubmit(onSubmit)}
-                    className={`text text-18 ${styles.form}`}>
+                    className={styles.form}>
                     {/* restore */}
                     <div className={styles.restore}>
-                        <label htmlFor="restore" className='fw-b mr-10 ml-10'>Восстановить соединение после падения</label>
+                        <label htmlFor="restore" className='text_bold mr-10 ml-10'>Восстановить соединение после падения</label>
                         <input
                             id='restore'
                             {...register('restore')}

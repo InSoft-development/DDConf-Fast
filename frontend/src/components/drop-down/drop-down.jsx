@@ -51,7 +51,7 @@ const DropDown = ({
 
     return (
         <Flex align='center'>
-            <div className={`text mr-10 ${styles.dropDown}`}
+            <div className={`text_type_main_default mr-10 ${styles.dropDown}`}
                 onClick={onArrowClickHandler}
             >
                 <div className='mr-6'

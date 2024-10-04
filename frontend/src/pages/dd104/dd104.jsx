@@ -15,15 +15,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
 
-import { logs } from '../../utils/mock';
-
-
 const Dd104 = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const [logModalIsOpen, setLogModalIsOpen] = useState(false);
 
     const {
         profileRequest,
@@ -85,7 +80,7 @@ const Dd104 = () => {
         return (
             <>
                 <Flex align='center' justify='flex-start'>
-                    <h2 className={`text text_type_main mr-10`}>Рабочий профиль:</h2>
+                    <h2 className={`text_type_main_medium text_bold mr-10`}>Рабочий профиль:</h2>
                     {profileRequest && (
                         <LoadingOutlined style={{ fontSize: 20 }} />
                     )}
@@ -101,7 +96,7 @@ const Dd104 = () => {
                         />
                         <button
                             className={`btn-green ml-auto no-select ${editBtnStyles}`}
-                            onClick={e => { navigate('/profile-editor', { state: { prevProfile: activeProfile } }) }}
+                            onClick={e => { navigate('/profile-editor')}}
                         >Редактировать профиль</button>
                     </>
                 )}
@@ -144,9 +139,6 @@ const Dd104 = () => {
                                 disabled={isDataUploading || hasImportantEssence}
                             >Остановить всё</button>
                         </div>
-                        <button className='btn-purple'
-                            onClick={e => setLogModalIsOpen(true)}
-                        >Открыть log</button>
                     </Flex>
                 </footer>
 

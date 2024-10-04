@@ -55,7 +55,7 @@ export const columns = [
         width: '10%',
         key: 'id',
         render: (text) => (
-            <div className='text'>{text + 1}</div>
+            <div className='text_type_main_default'>{text + 1}</div>
         )
     },
     {
@@ -64,7 +64,7 @@ export const columns = [
         width: '30%',
         key: 'main',
         render: (text) => (
-            <div className='text'>{text}</div>
+            <div className='text_type_main_default'>{text}</div>
         )
     },
     {
@@ -74,9 +74,9 @@ export const columns = [
         width: '30%',
         render: (text) => {
             if (text === null) {
-                return <div className='text text_color_inactive'>нет резерва</div>
+                return <div className='text_type_main_default text_color_inactive'>нет резерва</div>
             } else {
-                return <div className='text'>{text}</div>
+                return <div className='text_type_main_default'>{text}</div>
             }
         }
     },
@@ -88,22 +88,22 @@ export const columns = [
         render: (text) => {
             switch (String(text)) {
                 case '0': {
-                    return <Badge status='warning' text="остановлен" />
+                    return <Badge status='warning' text="остановлен" className='text_type_main_default'/>
                 }
                 case '1': {
-                    return <Badge status='success' text="запущен" />
+                    return <Badge status='success' text="запущен" className='text_type_main_default'/>
                 }
                 case '2': {
-                    return <Badge status='processing' text="запускается" />
+                    return <Badge status='processing' text="запускается" className='text_type_main_default'/>
                 }
                 case 'loading': {
                     return <LoadingOutlined />
                 }
                 case '-1': {
-                    return <Badge status='error' text="ошибка" />
+                    return <Badge status='error' text="ошибка" className='text_type_main_default'/>
                 }
                 case '-2': {
-                    return <Badge status='error' text="крит. ошибка" />
+                    return <Badge status='error' text="крит. ошибка" className='text_type_main_default'/>
                 }
                 default: {
                     break;

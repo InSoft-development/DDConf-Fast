@@ -1,12 +1,8 @@
-@import '../colors';
-
-$button-font-family: Inter, sans-serif;
+$button-font-family: $main-font-family, sans-serif;
 $button-font-size: 16px;
 $button-font-weight: 400;
-
 $button-round-radius: 17px;
 
-// button - skeleton
 %button-shared{
     display: inline;
     padding: 10px 15px;
@@ -37,6 +33,11 @@ $button-round-radius: 17px;
 .btn-purple{
     @extend %button-shared;
     background-color: $purple;
+}
+
+.btn-grey{
+    @extend %button-shared;
+    background-color: $gray-500;
 }
 
 .btn-round{
