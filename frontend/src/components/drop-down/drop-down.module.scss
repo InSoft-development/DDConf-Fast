@@ -1,3 +1,5 @@
+@import '../../scss/colors';
+
 .dropDown{
     display: flex;
     justify-content: space-between;
@@ -5,7 +7,7 @@
     width: 200px;
     position: relative;
     padding: 6px 15px;
-    border: 1px solid var(--gray-400);
+    border: 1px solid $gray-400;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -37,7 +39,7 @@
 
 .listElement:hover{
     cursor: pointer;
-    background-color: var(--gray-200);
+    background-color: $gray-200;
 }
 
 .listElement:not(:last-child){
@@ -51,12 +53,12 @@
     height: 44px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background-color: var(--blue);
+    background-color: $blue;
 
 }
 
 .listElement.listElementActive{
-    background-color: var(--gray-300);
+    background-color: $gray-300;
 }
 
 .listContent{
@@ -72,6 +74,6 @@
 }
 
 .activeOption{
-   color: var(--green);
+   color: $green;
    
 }

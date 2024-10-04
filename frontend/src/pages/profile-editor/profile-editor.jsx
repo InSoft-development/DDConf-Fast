@@ -228,7 +228,7 @@ const ProfileEditor = () => {
             <div className={styles.profileEditorWrapper}>
                 <Flex align='center' justify='space-between'>
                     <Flex align='center' justify='flex-start'>
-                        <h2 className='text text_type_main mr-10'>Редактор профилей</h2>
+                        <h2 className='text_type_main_large text_bold mr-10'>Редактор профилей</h2>
                         {/* {activeProfileRequest && (
                             <LoadingOutlined style={{ fontSize: 20 }} />
                         )} */}
@@ -260,7 +260,7 @@ const ProfileEditor = () => {
                                         resize={'vertical'}
                                         autoComplete='off'
                                         placeholder='Введите комментарий'
-                                        className={styles.textArea}
+                                        className={`text_type_main_default ${styles.textArea}`}
                                         id={`${record.id}.comment`}
                                         name={`${record.id}.comment`}
                                         onChange={e => changeCellValue(e)}
@@ -275,7 +275,7 @@ const ProfileEditor = () => {
                                 dataIndex={'id'}
                                 key={'id'}
                                 render={(text) => (
-                                    <div className='text'>{text + 1}</div>
+                                    <div className='text_type_main_default'>{text + 1}</div>
                                 )}
                             />
                             <Column
@@ -286,7 +286,7 @@ const ProfileEditor = () => {
                                 render={((_, __, index) => {
                                     return (
                                         <input
-                                            className='text input_type_text'
+                                            className='text_type_main_default'
                                             id={`${index}.main`}
                                             name={`${index}.main`}
                                             type='text'
@@ -306,7 +306,7 @@ const ProfileEditor = () => {
                                 render={(_, __, index) => {
                                     return (
                                         <input
-                                            className='text input_type_text'
+                                            className='text_type_main_default'
                                             id={`${index}.second`}
                                             name={`${index}.second`}
                                             type='text'

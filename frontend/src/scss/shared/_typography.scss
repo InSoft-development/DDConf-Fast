@@ -1,7 +1,7 @@
 $main-font-family: 'Inter';
 $secondary-font-family: 'HelveticaNeue';
 
-$fonts: ('main': 'Inter', 'secondary': 'HelveticaNeue');
+$fonts: ('main': $main-font-family, 'secondary': $secondary-font-family);
 $sizes: ('small': 12, 'default': 16, 'medium': 18, 'large': 20, 'extra-large': 40);
 
 /*

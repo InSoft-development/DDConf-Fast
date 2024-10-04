@@ -1,9 +1,0 @@
-.navigationList{
-    display: flex;
-    flex-direction: column;
-    margin-top: 60px;
-}
-
-.navigationList > li{
-    margin-top: 20px;
-}

@@ -24,13 +24,13 @@ html {
 }
 
 *::-webkit-scrollbar-track{
-    background-color: var(--gray-200);
+    background-color: $gray-200;
     border-radius: 15px;
 }
 
 
 *::-webkit-scrollbar-thumb{
-    background-color: var(--gray-400);
+    background-color: $gray-400;
     border-radius: 15px;
 }
 
@@ -86,4 +86,8 @@ html {
 
 .ant-drawer-header-title>button {
     margin-right: 0;
+}
+
+.ant-drawer .ant-drawer-body{
+    padding: 0;
 }

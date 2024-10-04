@@ -32,7 +32,7 @@ const AppHeader = () => {
     return (
         <header className={styles.header}>
             <div className={styles.upLine}>
-                <div className={`wrapper text_type_main-small ${styles.upLineContent}`}>
+                <div className={`wrapper text_type_main_small ${styles.upLineContent}`}>
                     ДД Конфигуратор
                 </div>
             </div>

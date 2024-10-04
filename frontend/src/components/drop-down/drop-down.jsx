@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CaretDownOutlined, LoadingOutlined } from '@ant-design/icons'
-import styles from './drop-down.module.css';
+import styles from './drop-down.module.scss';
 import { Flex } from 'antd';
 import classNames from 'classnames';
 
