@@ -1,0 +1,22 @@
+@import "../../scss/colors";
+
+.wrapper{
+    padding: 30px 20px;
+    position: relative;
+    border: 1px solid $gray-400; 
+    border-radius: 20px;
+}
+
+.wrapper > h3{
+    position: absolute;
+    top: -16px;
+    left: 30px;
+    padding: 0 10px;
+    background-color: #fff;
+}
+
+h3 + button[class~="btn-round"]{
+    position: absolute;
+    top: -16px;
+    right: -16px;
+}

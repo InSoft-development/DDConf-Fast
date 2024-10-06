@@ -1,9 +1,11 @@
-@import "./scss/shared/reset";
 @import "./scss/colors";
 @import "./scss/shared/typography";
 @import "./scss/shared/button";
 @import "./scss/shared/input";
 @import "./scss/shared/indentations";
+@import "./scss/shared/vendors/normalize.css";
+@import "./scss/shared/settings";
+
 
 /* Add-ons */
 html {
@@ -76,6 +78,10 @@ html {
     src: local('HelveticaNeue'),
         url('./fonts/HelveticaNeue/HelveticaNeueCyr-Roman.ttf');
 }
+
+
+
+
 
 
 /* Переопределение Antd-Design стилей */
