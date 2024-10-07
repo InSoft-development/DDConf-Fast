@@ -5,6 +5,7 @@ import Checkbox from './checkbox/checkbox';
 import Select from './select/select';
 import Password from './password/password';
 import Number from './number/number';
+import Textarea from './textarea/textarea';
 
 const Input = () => {
     return (<></>);
@@ -17,3 +18,4 @@ Input.Checkbox = Checkbox;
 Input.Select = Select;
 Input.Password = Password;
 Input.Number = Number;
+Input.Textarea = Textarea;

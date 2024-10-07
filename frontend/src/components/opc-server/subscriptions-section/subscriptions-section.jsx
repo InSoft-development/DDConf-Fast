@@ -25,7 +25,7 @@ const SubscriptionsSection = ({serverId: id, control, register}) => {
     return (
         <>
             {fields.map((field, index) => (
-                <Subscription key={field.id} subscriptionId={index} register={register} removeSubscription={removeSubscription}/>
+                <Subscription key={field.id} serverId={id} subscriptionId={index} register={register} removeSubscription={removeSubscription}/>
             ))}
             <div>
                 <button type='button' className='btn-green' onClick={addSubscription}>Добавить подписку</button>

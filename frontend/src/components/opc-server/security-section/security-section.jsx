@@ -3,6 +3,7 @@ import { Flex } from 'antd';
 import Input from '../../input/input';
 
 const SecuritySection = ({register, serverId: id}) => {
+
     return (
         <>
             <Flex align='center' justify='space-between'>
