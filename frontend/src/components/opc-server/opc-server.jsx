@@ -1,9 +1,15 @@
 import React from 'react';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Flex } from 'antd';
+import { Divider } from 'antd';
 import styles from './opc-server.module.scss';
 
-const OpcServer = ({ id, register, removeServer}) => {
+import UrlSection from '../opc-server/url-section/url-section';
+import AuthSection from '../opc-server/auth-section/auth-section';
+import SecuritySection from '../opc-server/security-section/security-section';
+import SubscriptionsSection from '../opc-server/subscriptions-section/subscriptions-section';
+
+const OpcServer = ({ id, register, removeServer, control }) => {
+
     return (
         <div className={styles.wrapper}>
             <h3 className='text_type_main_large'>Сервер {id + 1}</h3>
@@ -11,16 +17,26 @@ const OpcServer = ({ id, register, removeServer}) => {
                 onClick={e => {
                     e.preventDefault();
                     removeServer(id)
-                }
-                }
+                }}
             >
                 <DeleteOutlined />
             </button>
-            <Flex align='center' justify='space-between'>
-                <label htmlFor={`servers.${id}.url1`} className='text_type_main_medium text_bold'>URL 1:</label>
-                <input type="text" id={`servers.${id}.url1`}  {...register(`servers.${id}.url1`)}
-                />
-            </Flex>
+
+            <UrlSection register={register} serverId={id} control={control}/>
+
+            <Divider />
+
+            <AuthSection register={register} serverId={id} control={control}/>
+
+            <Divider />
+            
+            <SecuritySection register={register} serverId={id}/>
+
+            <Divider />
+
+            <SubscriptionsSection register={register} serverId={id} control={control}/>
+            
+
         </div>
 
     );

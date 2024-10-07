@@ -1,0 +1,22 @@
+.container{
+    padding-top: 40px;
+    height: calc(100vh - 315px);
+    overflow-y: scroll;
+}
+
+.serversWrapper{
+    margin-bottom: 40px;
+
+}
+
+.footer{
+    padding: 20px 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid var(--gray-300);
+    background-color: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+    overflow-x: hidden;
+}

@@ -19,6 +19,10 @@ html {
     box-sizing: border-box;
 }
 
+.hidden{
+    display: none;
+}
+
 /* Кастомизация скроллбара в Chrome */
 *::-webkit-scrollbar{
     width: 8px;

@@ -1,20 +1,38 @@
 $input-text-color: $gray-600;
-$input-font-family: Inter, sans-serif;
+$input-font-family: $main-font-family, sans-serif;
 $input-font-size: 16px;
-$input-font-weight: 500;
+$input-font-weight: 400;
 
 
 // input - skeleton
 %input-shared{
     border: 1px solid $gray-500;
     border-radius: 10px;
-    padding: 0 10px;
+    padding: 10px 10px;
     color: $input-text-color;
     font-family: $input-font-family;
     font-weight: $input-font-weight;
     font-size: $input-font-size;
 }
 
-.input-text{
+%input-shared:focus{
+    outline: none;
+    border: 1px solid $blueberry;
+    box-shadow: 0 0 7px 3px lighten($blueberry, 20%);
+    -webkit-box-shadow:0 0 7px 3px lighten($blueberry, 20%);
+    -moz-box-shadow: 0 0 7px 3px lighten($blueberry, 20%);
+}
+
+.input{
     @extend %input-shared;
+}
+
+.input_border_sliced-right{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input_border_sliced-left{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
