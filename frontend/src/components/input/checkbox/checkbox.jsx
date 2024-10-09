@@ -2,7 +2,8 @@ import React from 'react';
 
 const Checkbox = ({
     name,
-    register,
+    value,
+    onChange,
     render
 }) => {
 
@@ -15,7 +16,8 @@ const Checkbox = ({
                 type="checkbox"
                 id={name}
                 name={name}
-                {...register(name)}
+                value={value}
+                onChange={onChange}
                 className='hidden'
                 autoComplete='off'
             />

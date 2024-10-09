@@ -1,13 +1,16 @@
 import React, { useMemo } from 'react';
 import { Flex } from 'antd';
 import Input from '../../input/input';
-import { useWatch } from 'react-hook-form';
+import { useWatch, useFormContext, Controller } from 'react-hook-form';
 
-const AuthSection = ({ register, serverId: id, control }) => {
+const AuthSection = ({ serverId: id }) => {
+
+    const spaceName = `servers.${id}`;
+    const { control, register } = useFormContext();
 
     const watchAuthType = useWatch({
         control,
-        name: `servers.${id}.utoken_type`
+        name: `${spaceName}.utoken_type`
     })
 
     const content = useMemo(() => {
@@ -16,20 +19,36 @@ const AuthSection = ({ register, serverId: id, control }) => {
                 return (
                     <>
                         <Flex align='center' justify='space-between'>
-                            <label htmlFor={`servers.${id}.utoken_data.username`} className='text_type_main_default text_bold ml-10'>Логин</label>
-                            <Input.Text
-                                name={`servers.${id}.utoken_data.username`}
-                                register={register}
-                                placeholder='Введите логин'
+                            <label htmlFor={`${spaceName}.utoken_data.username`} className='text_type_main_default text_bold ml-10'>Логин</label>
+                            <Controller
+                                name={`${spaceName}.utoken_data.username`}
+                                control={control}
+                                render={({ field: { value, onChange } }) => (
+                                    <Input.Text
+                                        name={`${spaceName}.utoken_data.username`}
+                                        placeholder='Введите логин'
+                                        value={value}
+                                        onChange={onChange}
+                                    />
+                                )}
                             />
+
                         </Flex>
                         <Flex align='center' justify='space-between'>
-                            <label htmlFor={`servers.${id}.utoken_data.password`} className='text_type_main_default text_bold ml-10'>Пароль</label>
-                            <Input.Password
-                                name={`servers.${id}.utoken_data.password`}
-                                register={register}
-                                placeholder='Введите пароль'
+                            <label htmlFor={`${spaceName}.utoken_data.password`} className='text_type_main_default text_bold ml-10'>Пароль</label>
+                            <Controller
+                                control={control}
+                                name={`${spaceName}.utoken_data.password`}
+                                render={({field: {value, onChange}}) => (
+                                    <Input.Password
+                                        name={`${spaceName}.utoken_data.password`}
+                                        value={value}
+                                        onChange={onChange}
+                                        placeholder='Введите пароль'
+                                    />
+                                )}
                             />
+
                         </Flex>
                     </>
                 )
@@ -45,22 +64,29 @@ const AuthSection = ({ register, serverId: id, control }) => {
     return (
         <>
             <Flex align='center' justify='space-between'>
-                <label htmlFor={`servers.${id}.utoken_type`} className='text_type_main_medium text_bold'>Тип авторизации:</label>
-                <Input.Select
-                    name={`servers.${id}.utoken_type`}
-                    register={register}
-                    defaultValue={'anonymous'}
-                    options={[{
-                        value: 'anonymous',
-                        text: 'Без авторизациия'
-                    }, {
-                        value: 'certificate',
-                        text: 'По сертификату'
-                    }, {
-                        value: 'username',
-                        text: 'По логину и паролю'
-                    }]}
+                <label htmlFor={`${spaceName}.utoken_type`} className='text_type_main_medium text_bold'>Тип авторизации:</label>
+                <Controller
+                    control={control}
+                    name={`${spaceName}.utoken_type`}
+                    render={({ field: { value, onChange } }) => (
+                        <Input.Select
+                            name={`${spaceName}.utoken_type`}
+                            value={value}
+                            onChange={onChange}
+                            options={[{
+                                value: 'anonymous',
+                                text: 'Без авторизациия'
+                            }, {
+                                value: 'certificate',
+                                text: 'По сертификату'
+                            }, {
+                                value: 'username',
+                                text: 'По логину и паролю'
+                            }]}
+                        />
+                    )}
                 />
+
             </Flex>
             {content}
         </>

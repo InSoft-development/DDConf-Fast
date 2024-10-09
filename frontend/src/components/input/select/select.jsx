@@ -1,19 +1,19 @@
 import React from 'react';
 
 const Select = ({
-    defaultValue,
     options,
     name,
-    register,
+    value,
+    onChange,
     width = 400
 }) => {
     return (
         <select
             name={name} 
             id={name} 
-            defaultValue={defaultValue}
             className='input'
-            {...register(name)}
+            value={value || 'anonymous'}
+            onChange={onChange}
             style={{
                 width: width
             }}

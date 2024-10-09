@@ -4,14 +4,16 @@ const Number = ({
     width = 400,
     placeholder = '',
     name,
-    register,
+    value,
+    onChange,
     className = ''
 }) => {
     return (
         <input type="number" 
             id={name}
             name={name}
-            {...register(name)}
+            value={value}
+            onChange={onChange}
             className={`input ${className}`}
             placeholder={placeholder}
             style={{

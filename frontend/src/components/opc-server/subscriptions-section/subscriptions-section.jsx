@@ -1,8 +1,11 @@
 import React from 'react';
 import { useFieldArray } from 'react-hook-form';
 import Subscription from '../subscription/subscription';
+import { useFormContext } from 'react-hook-form';
 
-const SubscriptionsSection = ({serverId: id, control, register}) => {
+const SubscriptionsSection = ({serverId: id}) => {
+
+    const {control} = useFormContext();
 
     const {fields, append, remove} = useFieldArray({
         control,
@@ -25,7 +28,7 @@ const SubscriptionsSection = ({serverId: id, control, register}) => {
     return (
         <>
             {fields.map((field, index) => (
-                <Subscription key={field.id} serverId={id} subscriptionId={index} register={register} removeSubscription={removeSubscription}/>
+                <Subscription key={field.id} serverId={id} subscriptionId={index} removeSubscription={removeSubscription}/>
             ))}
             <div>
                 <button type='button' className='btn-green' onClick={addSubscription}>Добавить подписку</button>

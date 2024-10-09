@@ -4,14 +4,16 @@ const Password = ({
     width = 400,
     placeholder = '',
     name,
-    register,
+    value,
+    onChange,
     className = ''
 }) => {
     return (
         <input type="password" 
             id={name}        
             name={name}
-            {...register(name)}
+            value={value || ''}
+            onChange={onChange}
             className={`input ${className}`}
             placeholder={placeholder}
             style={{

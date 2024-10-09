@@ -1,8 +1,9 @@
 import React from 'react';
 
 const Textarea = ({
-    register,
     name,
+    value,
+    onChange,
     resize = 'vertical',
     maxHeight = 200,
     placeholder = ''
@@ -11,7 +12,8 @@ const Textarea = ({
         <textarea
             name={name}
             id={name}
-            {...register(name)}
+            value={value}
+            onChange={onChange}
             className='input'
             style={{
                 resize: resize,

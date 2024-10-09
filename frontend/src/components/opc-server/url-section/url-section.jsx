@@ -2,13 +2,16 @@ import React from 'react';
 import { Flex } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Input from '../../input/input';
-import { useWatch } from 'react-hook-form';
+import { useWatch, useFormContext, Controller } from 'react-hook-form';
 
-const UrlSection = ({ register, serverId: id, control }) => {
+const UrlSection = ({ serverId: id }) => {
+
+    const spaceName = `servers.${id}`;
+    const { control } = useFormContext();
 
     const watchUrl2Exists = useWatch({
         control,
-        name: `servers.${id}.url2_exists`
+        name: `${spaceName}.url2_exists`
     })
 
     return (
@@ -16,34 +19,57 @@ const UrlSection = ({ register, serverId: id, control }) => {
             <Flex align='center' justify='space-between'>
                 <label htmlFor={`servers.${id}.url1`} className='text_type_main_medium text_bold'>URL 1:</label>
                 <Flex align='stretch' justify='space-between'>
-                    <Input.Text
-                        name={`servers.${id}.url1`}
-                        register={register}
-                        placeholder='Введите URL 1'
-                        className='input_border_sliced-right'
-                        width={360}
+                    <Controller
+                        name={`${spaceName}.url1`}
+                        control={control}
+                        render={({ field: { value, onChange } }) => (
+                            <Input.Text
+                                name={`${spaceName}.url1`}
+                                placeholder='Введите URL 1'
+                                className='input_border_sliced-right'
+                                width={360}
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
                     />
-                    <Input.Checkbox
-                        name={`servers.${id}.url2_exists`}
-                        register={register}
-                        render={
-                            () => (
-                                <div className={''}>
-                                    <PlusOutlined />
-                                </div>
-                            )
-                        }
+                    <Controller
+                        name={`${spaceName}.url2_exists`}
+                        control={control}
+                        render={({ field: { value, onChange } }) => (
+                            <Input.Checkbox
+                                name={`${spaceName}.url2_exists`}
+                                value={value}
+                                onChange={onChange}
+                                render={
+                                    () => (
+                                        <div>
+                                            <PlusOutlined />
+                                        </div>
+                                    )
+                                }
+                            />
+                        )}
                     />
+
                 </Flex>
             </Flex>
             {watchUrl2Exists && (
                 <Flex align='center' justify='space-between'>
-                    <label htmlFor={`servers.${id}.url2`} className='text_type_main_medium text_bold'>URL 2:</label>
-                    <Input.Text
-                        name={`servers.${id}.url2`}
-                        placeholder='Введите URL 2'
-                        register={register}
+                    <label htmlFor={`${spaceName}.url2`} className='text_type_main_medium text_bold'>URL 2:</label>
+                    <Controller
+                        name={`${spaceName}.url2`}
+                        control={control}
+                        render={({field: {value, onChange}}) => (
+                            <Input.Text
+                                name={`${spaceName}.url2`}
+                                placeholder='Введите URL 2'
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
                     />
+
                 </Flex>
             )}
         </>
