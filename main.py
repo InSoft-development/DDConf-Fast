@@ -505,7 +505,7 @@ def handle_network(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 		elif REQ.method == 'fetch_device':
 			data = Net.fetch_device(REQ.params['id'])
 		elif REQ.method == 'save_device':
-			data = Net.save_device(REQ.params['id'], REQ.params['data'])
+			return Net.save_device(REQ.params)
 		
 		
 	except Exception as e:
