@@ -5,7 +5,6 @@ from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 from psutil import net_io_counters, net_if_addrs
 from netifaces import gateways
-import time
 
 
 def get_nics() -> list:
@@ -53,7 +52,6 @@ def fetch_device(_id: str) -> dict:
 					'broadcast': ip.broadcast
 				})
 			
-			data = {**data, **fetch_status(_id)}
 			#TODO dispatcher up on boot
 			data['uponboot'] = True
 		else:
@@ -64,7 +62,7 @@ def fetch_device(_id: str) -> dict:
 	else:
 		return data
 
-
+#TODO
 def save_device(_id: str, data: dict):
 	
 	try:
@@ -75,11 +73,21 @@ def save_device(_id: str, data: dict):
 			protocol: see ipv4
 			uponboot: wtf/dispatcher
 		'''
+		errors = []
+		
 		if _id in get_nics():
-			stat = subprocess.run(f"ip link set {_id} down".split())
+			stat = subprocess.run(f"ip link set {_id} down".split(), capture_output=True)
 			if stat.stderr:
+				#ifup?
 				raise RuntimeError(stat.stderr)
 			
+			#mac
+			if re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", data['mac'].lower()):
+				stat = subprocess.run(f"ip link set {_id} address {data['mac']}".split(), capture_output=True)
+			else:
+				#ifup? 
+				# raise ValueError(f"ddconf.network.save_device: Error: invalid MAC address given: {data['mac']}.")
+				errors.append(f"Error: invalid MAC address given: {data['mac']}. No changes were made.")
 			
 			
 			
