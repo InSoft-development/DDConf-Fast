@@ -5,23 +5,30 @@ from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 from psutil import net_io_counters, net_if_addrs
 from netifaces import gateways
+import time
+
 
 def get_nics() -> list:
 	return list(net_if_addrs().keys())
 
 
 def fetch_device(_id: str) -> dict:
-	
+	#_id = 'eth0', not 'eth0.network'
 	try:
 		io = net_io_counters(pernic=True)
 		netfile = [x for x in listdir('/etc/systemd/network/') if Path(f'/etc/systemd/network/{x}').is_file() and 'network' in x and _id in x]
 		
 		if netfile and _id in io:
+			nicstat = Path(f'/sys/class/net/{_id}/operstate').read_text().strip() != 'down'
+			if nicstat:
+				devupt = float(Path('/proc/uptime').read_text().strip('\n').split()[0])
+				dmesgupt = float(subprocess.getoutput(f'dmesg | grep "{_id}: Link is Up"').split(']')[0][1::].strip())
 			
 			data = {
 				'device': _id,
-				# "uptime": ,
-				"mac": nicfind('family', 17, net_if_addrs()[_id])[0],
+				"status": nicstat,
+				"uptime": devupt - dmesgupt if nicstat else None,
+				"mac": nicfind('family', 17, net_if_addrs()[_id])[0].address,
 				"rx": bytes2human(io[_id].bytes_recv),
 				"tx": bytes2human(io[_id].bytes_sent),
 				"ipv4": [
@@ -36,19 +43,19 @@ def fetch_device(_id: str) -> dict:
 				#"uponboot": #dispatcher
 			}
 			
-			nics = nicfind('family', 2, net_if_addrs()[_id])
+			ips = nicfind('family', 2, net_if_addrs()[_id])
 			
-			for nic in nics:
+			for ip in ips:
 				data['ipv4'].append({
-					'address': nic.address,
-					'netmask': nmtransform(nic.netmask),
+					'address': ip.address,
+					'netmask': nmtransform(ip.netmask),
 					'gateway': gwfind(_id),
-					'broadcast': nic.broadcast
+					'broadcast': ip.broadcast
 				})
 			
 			data = {**data, **fetch_status(_id)}
 			#TODO dispatcher up on boot
-			
+			data['uponboot'] = True
 		else:
 			raise ValueError(f"ddconf.network.fetch_device: device {_id} not found!")
 	except Exception as e:
@@ -61,7 +68,28 @@ def fetch_device(_id: str) -> dict:
 def save_device(_id: str, data: dict):
 	
 	try:
-		pass
+		''' 
+		change:
+			mac: ip link set eno1 address XX:XX:XX:XX:XX:XX
+			ipv4: /etc/systemd/network/80-*.network
+			protocol: see ipv4
+			uponboot: wtf/dispatcher
+		'''
+		if _id in get_nics():
+			stat = subprocess.run(f"ip link set {_id} down".split())
+			if stat.stderr:
+				raise RuntimeError(stat.stderr)
+			
+			
+			
+			
+			
+		else:
+			# could be a renamed device???
+			pass 
+		
+		
+		
 	except Exception as e:
 		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
 		raise e
