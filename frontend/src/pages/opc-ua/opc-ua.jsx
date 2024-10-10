@@ -3,10 +3,11 @@ import OpcServer from '../../components/opc-server/opc-server';
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { getOpcUaForm, sendOpcUaForm } from '../../services/actions/opc-ua';
+import AppHeader from '../../components/app-header/app-header';
 
 import styles from './opc-ua.module.scss';
 
-const OpcUa = () => {
+const OpcUa = ({headerTitle}) => {
 
     const dispatch = useDispatch();
     const { form } = useSelector(store => store.opcua);
@@ -64,26 +65,29 @@ const OpcUa = () => {
     }, [form])
 
     return (
-        <div className={`mt-10 ${styles.container}`}>
-            <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit(onSubmit)}>
-                    {fields.map((field, index) => (
-                        <div key={field.id} className={styles.serversWrapper}>
-                            <OpcServer
-                                id={index}
-                                removeServer={removeServer}
-                            />
-                        </div>
-                    ))}
-                    <footer className={styles.footer}>
-                        <div className='wrapper'>
-                            <button type='button' onClick={addServer} className='btn-green mr-10'>Добавить сервер</button>
-                            <button type='submit' className='btn-green'>Отправить</button>
-                        </div>
-                    </footer>
-                </form>
-            </FormProvider>
-        </div>
+        <>
+            <AppHeader title={headerTitle}/>
+            <div className={`mt-10 ${styles.container}`}>
+                <FormProvider {...methods}>
+                    <form onSubmit={methods.handleSubmit(onSubmit)}>
+                        {fields.map((field, index) => (
+                            <div key={field.id} className={styles.serversWrapper}>
+                                <OpcServer
+                                    id={index}
+                                    removeServer={removeServer}
+                                />
+                            </div>
+                        ))}
+                        <footer className={styles.footer}>
+                            <div className='wrapper'>
+                                <button type='button' onClick={addServer} className='btn-green mr-10'>Добавить сервер</button>
+                                <button type='submit' className='btn-green'>Отправить</button>
+                            </div>
+                        </footer>
+                    </form>
+                </FormProvider>
+            </div>
+        </>
     )
 
 }

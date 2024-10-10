@@ -16,9 +16,10 @@ import {
 } from '../../services/actions/profile-editor';
 import classNames from 'classnames';
 import { isProfileNameValid } from '../../utils/isProfileNameValid';
+import AppHeader from '../../components/app-header/app-header';
 
 
-const ProfileEditor = () => {
+const ProfileEditor = ({headerTitle}) => {
 
     const [saveAsProfileName, setSaveAsProfileName] = useState('');
     const [createProfileName, setCreateProfileName] = useState('');
@@ -225,6 +226,7 @@ const ProfileEditor = () => {
 
     return (
         <>
+            <AppHeader title={headerTitle}/>
             <div className={styles.profileEditorWrapper}>
                 <Flex align='center' justify='space-between'>
                     <Flex align='center' justify='flex-start'>

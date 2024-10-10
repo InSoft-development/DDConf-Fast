@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './network.module.css';
 import DeviceStatus from '../../components/network/device-status';
 import { getDevices, getDeviceFeatures } from '../../services/actions/network';
+import AppHeader from '../../components/app-header/app-header';
 
-const Network = () => {
+const Network = ({headerTitle}) => {
 
     const dispatch = useDispatch();
     const {
@@ -33,56 +34,59 @@ const Network = () => {
     }
 
     return (
-        <div className={`text ${styles.networkWrapper}`}>
-            {devicesListRequestSuccess && (
-                <>
-                    <Flex align='center' justify='space-between'>
-                        <label htmlFor="devicesList">Устрйства: </label>
-                        <select name="devicesList"
-                            id="devicesList"
-                            defaultValue='none'
-                            onChange={e => dispatch(getDeviceFeatures(e.target.value))}
-                        >
-                            <option value="none">Не выбран</option>
-                            {listDevices?.map((device, index) => (
-                                <option key={index}>{device}</option>
-                            ))}
-                        </select>
-                    </Flex>
-                    {deviceFeaturesRequestSuccess && (
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Flex align='center' justify='space-between'>
-                                <label htmlFor="">Status:</label>
-                                <DeviceStatus device={device} />
-                            </Flex>
-                            <Flex align='center' justify='space-between'>
-                                <label htmlFor="">Protocol</label>
-                                <select name="" id="">
-                                    <option value="">Static address</option>
-                                    <option value="">Dynamic address</option>
-                                </select>
-                            </Flex>
-                            <Flex align='center' justify='space-between'>
-                                <label htmlFor="">IPv4 address</label>
-                                <input type="text" {...register('ipv4.address')} />
-                            </Flex>
-                            <Flex align='center' justify='space-between'>
-                                <label htmlFor="">IPv4 network</label>
-                                <input type="text" {...register('ipv4.network')} />
-                            </Flex>
+        <>
+            <AppHeader title={headerTitle}/>
+            <div className={`text ${styles.networkWrapper}`}>
+                {devicesListRequestSuccess && (
+                    <>
+                        <Flex align='center' justify='space-between'>
+                            <label htmlFor="devicesList">Устрйства: </label>
+                            <select name="devicesList"
+                                id="devicesList"
+                                defaultValue='none'
+                                onChange={e => dispatch(getDeviceFeatures(e.target.value))}
+                            >
+                                <option value="none">Не выбран</option>
+                                {listDevices?.map((device, index) => (
+                                    <option key={index}>{device}</option>
+                                ))}
+                            </select>
+                        </Flex>
+                        {deviceFeaturesRequestSuccess && (
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <Flex align='center' justify='space-between'>
+                                    <label htmlFor="">Status:</label>
+                                    <DeviceStatus device={device} />
+                                </Flex>
+                                <Flex align='center' justify='space-between'>
+                                    <label htmlFor="">Protocol</label>
+                                    <select name="" id="">
+                                        <option value="">Static address</option>
+                                        <option value="">Dynamic address</option>
+                                    </select>
+                                </Flex>
+                                <Flex align='center' justify='space-between'>
+                                    <label htmlFor="">IPv4 address</label>
+                                    <input type="text" {...register('ipv4.address')} />
+                                </Flex>
+                                <Flex align='center' justify='space-between'>
+                                    <label htmlFor="">IPv4 network</label>
+                                    <input type="text" {...register('ipv4.network')} />
+                                </Flex>
 
-                            <footer className={styles.footer}>
-                                <div className='wrapper'>
-                                    <button type='submit' className='button btn-green'>Отправить</button>
-                                </div>
-                            </footer>
-                        </form>
-                    )}
+                                <footer className={styles.footer}>
+                                    <div className='wrapper'>
+                                        <button type='submit' className='button btn-green'>Отправить</button>
+                                    </div>
+                                </footer>
+                            </form>
+                        )}
 
-                </>
-            )}
+                    </>
+                )}
 
-        </div>
+            </div>
+        </>
     );
 }
 

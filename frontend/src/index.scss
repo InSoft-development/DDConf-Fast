@@ -1,4 +1,5 @@
 @import "./scss/colors";
+@import "./scss/shared/common-defenition";
 @import "./scss/shared/typography";
 @import "./scss/shared/button";
 @import "./scss/shared/input";
@@ -13,9 +14,9 @@ html {
 }
 
 .wrapper {
-    max-width: 1280px;
+    max-width: $layout-width;
     margin: 0 auto;
-    width: 95%;
+    padding: 0 $layout-external-indentation;
     box-sizing: border-box;
 }
 

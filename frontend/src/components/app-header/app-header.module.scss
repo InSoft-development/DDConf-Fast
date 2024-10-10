@@ -1,51 +1,50 @@
 @import '../../scss/colors';
+@import '../../scss/shared/common-defenition';
 
 .header{
-    width: 100%;
-    height: 185px;
-    display: flex;
-    flex-direction: column;
-    cursor: default;
-    font-family: Inter, sans-serif;
-    position: sticky;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    overflow: hidden;
+    height: $header-summary-height;    
+    position: relative;
 }
 
-.upLine{
-    padding: 10px 15px;
+.header:before{
+    content: '';
+    display: block;
+    width: 100%;
+    height: $header-upline-height;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
     background-color: $green;
 }
 
-.upLineContent{
+.header > h6{
     display: flex;
     justify-content: flex-end;
-    font-size: 12px;
-    font-weight: 700;
-    color: #fff;
+    align-items: center;
+    height: $header-upline-height;
+    width: 100%;
+    color: #ffffff;
+    text-wrap: nowrap;
 }
 
-.wrapper{
-    padding: 10px 15px;
-    background-color: $gray-300;
+.header::after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: $header-body-height;
+    position: absolute;
+    top: $header-upline-height;
+    left: 0;
+    z-index: -1;
+    background-color: $gray-200;
 }
 
-.inner{
+.header > h4{
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 32px 0;
-}
-
-.headerText{
+    width: 100%;
+    height: $header-body-height;
     text-wrap: nowrap;
-    margin-left: 33px;
-}
-
-.menu{
-    font-size: 32px;
-    cursor: pointer;
-    outline: unset;
 }

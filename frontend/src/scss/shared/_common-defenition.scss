@@ -1,0 +1,7 @@
+
+$layout-width: 1280px;
+$layout-external-indentation: 40px;
+
+$header-summary-height: 185px;
+$header-upline-height: 40px;
+$header-body-height: calc(#{$header-summary-height} - $header-upline-height);

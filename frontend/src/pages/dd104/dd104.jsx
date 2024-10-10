@@ -14,8 +14,9 @@ import {
 } from '../../services/actions/profile';
 import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
+import AppHeader from '../../components/app-header/app-header';
 
-const Dd104 = () => {
+const Dd104 = ({headerTitle}) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -106,6 +107,7 @@ const Dd104 = () => {
 
     return (
         <>
+            <AppHeader title={headerTitle}/>
             <div className={styles.profile}>
                 <div className={styles.header}>
                     {headerContent()}
