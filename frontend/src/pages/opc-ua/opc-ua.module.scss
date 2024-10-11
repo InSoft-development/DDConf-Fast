@@ -1,17 +1,15 @@
-.container{
-    padding-top: 40px;
-    height: calc(100vh - 315px);
+@import "../../scss/shared/common-defenition";
+
+.opcUa{
+    height: calc(100vh - (#{$header-summary-height} + #{$footer-height}));
     overflow-y: scroll;
-}
-
-.serversWrapper{
-    margin-bottom: 40px;
-
+    padding-top: 30px;
 }
 
 .footer{
     padding: 20px 0;
     width: 100%;
+    height: $footer-height;
     position: fixed;
     bottom: 0;
     left: 0;

@@ -41,13 +41,7 @@ const UrlSection = ({ serverId: id }) => {
                                 name={`${spaceName}.url2_exists`}
                                 value={value}
                                 onChange={onChange}
-                                render={
-                                    () => (
-                                        <div>
-                                            <PlusOutlined />
-                                        </div>
-                                    )
-                                }
+                                icon={<PlusOutlined />}
                             />
                         )}
                     />

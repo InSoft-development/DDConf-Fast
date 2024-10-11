@@ -2,6 +2,7 @@ $input-text-color: $gray-600;
 $input-font-family: $main-font-family, sans-serif;
 $input-font-size: 16px;
 $input-font-weight: 400;
+$input-border-color: $blueberry;
 
 
 // input - skeleton
@@ -17,7 +18,7 @@ $input-font-weight: 400;
 
 %input-shared:focus{
     outline: none;
-    border: 1px solid $blueberry;
+    border: 1px solid $input-border-color;
     box-shadow: 0 0 7px 3px lighten($blueberry, 20%);
     -webkit-box-shadow:0 0 7px 3px lighten($blueberry, 20%);
     -moz-box-shadow: 0 0 7px 3px lighten($blueberry, 20%);

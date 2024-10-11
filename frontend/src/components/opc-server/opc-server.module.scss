@@ -1,14 +1,16 @@
 @import "../../scss/colors";
+@import "../../scss/shared/common-defenition";
 
-.wrapper{
-    max-width: 760px;
+.opcServer{
+    max-width: $opcua-server-width;
     padding: 40px 20px 20px;
     position: relative;
     border: 1px solid $gray-400; 
     border-radius: 20px;
+    margin-bottom: 30px;
 }
 
-.wrapper > h3{
+.opcServer > h3{
     position: absolute;
     top: -16px;
     left: 30px;
@@ -16,7 +18,7 @@
     background-color: #fff;
 }
 
-.wrapper > *:not(:last-child) {
+.opcServer > *:not(:last-child) {
     margin-bottom: 30px;
 }
 

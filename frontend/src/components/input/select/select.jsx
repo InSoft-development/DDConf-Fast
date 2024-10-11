@@ -5,7 +5,8 @@ const Select = ({
     name,
     value,
     onChange,
-    width = 400
+    width = 400,
+    height = 40
 }) => {
     return (
         <select
@@ -15,7 +16,8 @@ const Select = ({
             value={value || 'anonymous'}
             onChange={onChange}
             style={{
-                width: width
+                width: width,
+                height: height
             }}
         >
             {options.map(({value, text}, index) => (

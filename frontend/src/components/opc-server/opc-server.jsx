@@ -8,7 +8,7 @@ import styles from './opc-server.module.scss';
 const OpcServer = ({ id, removeServer }) => {
 
     return (
-        <div className={styles.wrapper}>
+        <div className={styles.opcServer}>
             <h3 className='text_type_main_large'>Сервер {id + 1}</h3>
             <button type='button' className='btn-red btn-round'
                 onClick={e => removeServer(id)}

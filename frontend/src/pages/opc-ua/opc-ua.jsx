@@ -7,7 +7,7 @@ import AppHeader from '../../components/app-header/app-header';
 
 import styles from './opc-ua.module.scss';
 
-const OpcUa = ({headerTitle}) => {
+const OpcUa = ({ headerTitle }) => {
 
     const dispatch = useDispatch();
     const { form } = useSelector(store => store.opcua);
@@ -34,7 +34,7 @@ const OpcUa = ({headerTitle}) => {
     })
 
     const addServer = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         append({
             url1: '',
             url2_exists: false,
@@ -66,26 +66,27 @@ const OpcUa = ({headerTitle}) => {
 
     return (
         <>
-            <AppHeader title={headerTitle}/>
-            <div className={`mt-10 ${styles.container}`}>
-                <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        {fields.map((field, index) => (
-                            <div key={field.id} className={styles.serversWrapper}>
+            <AppHeader title={headerTitle} />
+            <div className='wrapper'>
+                <div className={styles.opcUa}>
+                    <FormProvider {...methods}>
+                        <form onSubmit={methods.handleSubmit(onSubmit)}>
+                            {fields.map((field, index) => (
                                 <OpcServer
+                                    key={field.id}
                                     id={index}
                                     removeServer={removeServer}
                                 />
-                            </div>
-                        ))}
-                        <footer className={styles.footer}>
-                            <div className='wrapper'>
-                                <button type='button' onClick={addServer} className='btn-green mr-10'>Добавить сервер</button>
-                                <button type='submit' className='btn-green'>Отправить</button>
-                            </div>
-                        </footer>
-                    </form>
-                </FormProvider>
+                            ))}
+                            <footer className={styles.footer}>
+                                <div className='wrapper'>
+                                    <button type='button' onClick={addServer} className='btn-green mr-10'>Добавить сервер</button>
+                                    <button type='submit' className='btn-green'>Отправить</button>
+                                </div>
+                            </footer>
+                        </form>
+                    </FormProvider>
+                </div>
             </div>
         </>
     )

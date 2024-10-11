@@ -2,6 +2,7 @@ import React from 'react';
 
 const Text = ({
     width = 400,
+    height = 40,
     placeholder = '',
     name,
     value,
@@ -17,7 +18,8 @@ const Text = ({
             className={`input ${className}`}
             placeholder={placeholder}
             style={{
-                width: width
+                width: width,
+                height: height
             }}
             autoComplete='off'
         />

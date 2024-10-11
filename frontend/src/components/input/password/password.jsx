@@ -2,6 +2,7 @@ import React from 'react';
 
 const Password = ({
     width = 400,
+    height = 40,
     placeholder = '',
     name,
     value,
@@ -17,7 +18,8 @@ const Password = ({
             className={`input ${className}`}
             placeholder={placeholder}
             style={{
-                width: width
+                width: width,
+                height: height
             }}
             autoComplete='new-password'
         />

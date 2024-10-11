@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table, Flex, Modal } from 'antd';
+import { Table, Flex } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import styles from './dd104.module.css';
 import { columns } from '../../utils/table-description';
 import DropDown from '../../components/drop-down/drop-down';
 import {
@@ -15,8 +14,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
 import AppHeader from '../../components/app-header/app-header';
+import styles from './dd104.module.scss';
 
-const Dd104 = ({headerTitle}) => {
+const Dd104 = ({ headerTitle }) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -97,7 +97,7 @@ const Dd104 = ({headerTitle}) => {
                         />
                         <button
                             className={`btn-green ml-auto no-select ${editBtnStyles}`}
-                            onClick={e => { navigate('/profile-editor')}}
+                            onClick={e => { navigate('/profile-editor') }}
                         >Редактировать профиль</button>
                     </>
                 )}
@@ -107,43 +107,44 @@ const Dd104 = ({headerTitle}) => {
 
     return (
         <>
-            <AppHeader title={headerTitle}/>
-            <div className={styles.profile}>
-                <div className={styles.header}>
-                    {headerContent()}
+            <AppHeader title={headerTitle} />
+            <div className={`wrapper`}>
+                <div className={styles.dd104Page}>
+                    <div className={styles.header}>
+                        {headerContent()}
+                    </div>
+                    <div className={styles.tableWrapper}>
+                        <Table
+                            rowKey={(record) => record.id}
+                            loading={isDataUploading}
+                            dataSource={activeTable}
+                            pagination={false}
+                            expandable={{
+                                expandedRowRender: (record) => (
+                                    <div>{record.comment}</div>
+                                )
+                            }}
+                            columns={columns}
+                            bordered={true}
+                        />
+                    </div>
+                    <footer className={styles.footer}>
+                        <Flex justify='space-between' className='wrapper'>
+                            <div>
+                                <button
+                                    className={`btn-blue mr-10 ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
+                                    onClick={onStartAllBtnClickHandler}
+                                    disabled={isDataUploading || hasImportantEssence}
+                                >Запустить всё</button>
+                                <button
+                                    className={`btn-blue ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
+                                    onClick={onStopAllBtnClickHandler}
+                                    disabled={isDataUploading || hasImportantEssence}
+                                >Остановить всё</button>
+                            </div>
+                        </Flex>
+                    </footer>
                 </div>
-                <div className={styles.tableWrapper}>
-                    <Table
-                        rowKey={(record) => record.id}
-                        loading={isDataUploading}
-                        dataSource={activeTable}
-                        pagination={false}
-                        expandable={{
-                            expandedRowRender: (record) => (
-                                <div>{record.comment}</div>
-                            )
-                        }}
-                        columns={columns}
-                        bordered={true}
-                    />
-                </div>
-                <footer className={styles.footer}>
-                    <Flex justify='space-between' className='wrapper'>
-                        <div>
-                            <button
-                                className={`btn-blue mr-10 ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
-                                onClick={onStartAllBtnClickHandler}
-                                disabled={isDataUploading || hasImportantEssence}
-                            >Запустить всё</button>
-                            <button
-                                className={`btn-blue ${footerBtnStyles} ${profileFailed && 'btn-inactive'}`}
-                                onClick={onStopAllBtnClickHandler}
-                                disabled={isDataUploading || hasImportantEssence}
-                            >Остановить всё</button>
-                        </div>
-                    </Flex>
-                </footer>
-
             </div>
         </>
     );

@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import { getDevicesNet, getDeviceFeatures } from '../../services/actions/dashboard';
 import { Flex, Table } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import styles from './dashboard.module.css';
 import AppHeader from '../../components/app-header/app-header';
+import dashboardTableSheme from '../../models/dashboard-table.sheme';
+import styles from './dashboard.module.scss';
 
-const Dashboard = ({headerTitle}) => {
+const Dashboard = ({ headerTitle }) => {
 
     const dispatch = useDispatch();
     const {
@@ -16,76 +17,25 @@ const Dashboard = ({headerTitle}) => {
         devices,
         deviceFeaturesRequest,
         deviceNetRequest
-    } = useSelector(store => store.device)
+    } = useSelector(store => store.device);
 
     useEffect(() => {
         dispatch(getDeviceFeatures())
         dispatch(getDevicesNet());
-    }, [])
+    }, [dispatch])
 
-    const columns = [
-        {
-            title: 'Индекс',
-            dataIndex: 'id',
-            key: 'id',
-            render: (text) => (
-                <div className='text_type_main_default'
-                    style={{ color: '#0d6efd' }}>
-                    {text + 1}.
-                </div>
-            )
-        },
-        {
-            title: 'IP',
-            dataIndex: 'ip',
-            key: 'ip',
-            render: (text) => {
-                if (text) {
-                    return <div className='text_type_main_default'>{text}</div>
-                } else {
-                    return <div className='text_type_main_default text_color_inactive'>—</div>
-                }
-
-            }
-        },
-        {
-            title: 'MAC',
-            dataIndex: 'mac',
-            key: 'mac',
-            render: (text) => (
-                <div className='text_type_main_default'>{text}</div>
-            )
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (text) => {
-                switch (text) {
-                    case 'up': {
-                        return <div className='text_type_main_default'
-                            style={{ color: '#28a745' }}
-                        >Up, configured</div>
-                    }
-                    case 'down': {
-                        return <div className='text_type_main_default'>Down</div>
-                    }
-                    default: {
-                        return <></>
-                    }
-                }
-            }
-        }
-    ];
+    const isDataUploding = 
+        deviceFeaturesRequest ||
+        deviceNetRequest;
 
     return (
         <>
-            <AppHeader title={headerTitle}/>
+            <AppHeader title={headerTitle} />
             <div className='wrapper'>
-                <div>
+                <div className={styles.dashboardPage}>
                     <Flex align='center'>
                         <div className='text_type_main_medium text_bold'>ПАК ОПТИ:</div>
-                        {deviceFeaturesRequest ? (
+                        {isDataUploding ? (
                             <LoadingOutlined className='ml-8' />
                         ) : (
                             <div className='text_type_main_default ml-4'>{serial}</div>
@@ -94,15 +44,13 @@ const Dashboard = ({headerTitle}) => {
                     </Flex>
                     <Flex align='center' className='mt-4'>
                         <div className='text_type_main_medium text_bold'>Лицензия:</div>
-                        {deviceFeaturesRequest ? (
+                        {isDataUploding ? (
                             <LoadingOutlined className='ml-8' />
                         ) : (
                             <div className='text_type_main_default ml-4'>{license}</div>
                         )}
                     </Flex>
-                </div>
-                <div className='mt-20'>
-                    <div>
+                    <div className='mt-20'>
                         <div className='text_type_main_medium text_bold'>Протоколы:</div>
                         <ul className={styles.protocolsList}>
                             <li>
@@ -113,19 +61,19 @@ const Dashboard = ({headerTitle}) => {
                             </li>
                         </ul>
                     </div>
-                </div>
-                <div className='mt-20'>
-                    <div className='text_type_main_medium text_bold'>Сетевые интерфейсы:</div>
-                    <div className={styles.tableWrapper}>
-                        <Table
-                            className='mt-20'
-                            rowKey={(record) => record.id}
-                            loading={deviceNetRequest}
-                            showHeader={false}
-                            columns={columns}
-                            dataSource={devices}
-                            pagination={false}
-                        />
+                    <div className='mt-20'>
+                        <div className='text_type_main_medium text_bold'>Сетевые интерфейсы:</div>
+                        <div className={styles.tableWrapper}>
+                            <Table
+                                className='mt-20'
+                                rowKey={(record) => record.id}
+                                loading={isDataUploding}
+                                showHeader={false}
+                                columns={dashboardTableSheme}
+                                dataSource={devices}
+                                pagination={false}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

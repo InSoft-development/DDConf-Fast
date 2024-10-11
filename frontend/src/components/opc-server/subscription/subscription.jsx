@@ -5,10 +5,10 @@ import Input from '../../input/input';
 import { Flex } from 'antd';
 import { useFormContext, Controller } from 'react-hook-form';
 
-const Subscription = ({ subscriptionId: id, serverId, removeSubscription }) => {
+const Subscription = ({ subscriptionId: id, serverId, removeSubscription}) => {
 
-    const { control } = useFormContext();
     const spaceName = `servers.${serverId}.subscriptions.${id}`;
+    const { control } = useFormContext();
 
     return (
         <div className={styles.wrapper}>
@@ -27,12 +27,13 @@ const Subscription = ({ subscriptionId: id, serverId, removeSubscription }) => {
                             width={377}
                             value={value}
                             onChange={onChange}
+                            placeholder='Введите интервал'
                         />
                     }}
                 />
 
             </Flex>
-            <Flex vertical className='mt-20'>
+            {/* <Flex vertical className='mt-20'>
                 <label htmlFor={`${spaceName}.items`} className='text_type_main_medium text_bold'>Секция запроса тега:</label>
                 <Controller
                     name={`${spaceName}.items`}
@@ -46,7 +47,7 @@ const Subscription = ({ subscriptionId: id, serverId, removeSubscription }) => {
                         />
                     }}
                 />
-            </Flex>
+            </Flex> */}
         </div>
     );
 }
