@@ -16,7 +16,7 @@ def fetch_device(_id: str) -> dict:
 		io = net_io_counters(pernic=True)
 		netfile = [x for x in listdir('/etc/systemd/network/') if Path(f'/etc/systemd/network/{x}').is_file() and 'network' in x and _id in x]
 		
-		if netfile and _id in io:
+		if (netfile or _id == 'lo') and _id in io: #WARNING: if someone renames loopback from 'lo' we're fucked
 			nicstat = Path(f'/sys/class/net/{_id}/operstate').read_text().strip() != 'down'
 			if nicstat:
 				devupt = float(Path('/proc/uptime').read_text().strip('\n').split()[0])
@@ -61,7 +61,7 @@ def fetch_device(_id: str) -> dict:
 	else:
 		return data
 
-#TODO broadcast?
+
 def save_device(data: dict):
 	
 	try:
@@ -88,6 +88,7 @@ Name={data['device']}
 Gateway={ip['gateway']}
 
 '''
+				#broadcast
 				stat = subprocess.run(f"ip addr add {ip['address']}/{ip['netmask']} brd + dev {data['device']}", capture_output=True, text=True)
 				if stat.stderr:
 					errors.append(f"error editing {data['device']}: couldn't set ip {ip} broadcast! details: {stat.stderr}")
@@ -108,6 +109,76 @@ Gateway={ip['gateway']}
 			Path('/home/txhost/.EOUTS/network').write_text(errors)
 		return {'result':'success' if not errors else None, 'error': errors if errors else None}
 	
+
+
+def nic_op(_id: str, op: str):
+	try:
+		if op not in ['up','down']:
+			raise ValueError(f"Invalid operation: {op}")
+		if _id not in get_nics():
+			raise ValueError(f"Invalid NIC: {_id}")
+		stat = subprocess.run(f"ip link set dev {_id} {op}".split(), capture_output=True, text=True)
+		if stat.stderr:
+			raise RuntimeError(f"Couldn't bring {op} iface {_id}: {stat.stderr}")
+	except Exception as e:
+		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
+		raise e
+
+
+def process_op(op: str):
+	try:
+		if not op in ['start','stop','restart']:
+			raise ValueError(f"Invalid operation: {op}")
+		stat = subprocess.run(f"systemctl {op} systemd-networkd.service".split(), capture_output=True, text=True)
+		if stat.stderr:
+			raise RuntimeError(f"Couldn't {op} systemd-networkd: {stat.stderr}")
+	except Exception as e:
+		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
+		raise e
+
+
+def _statparse(data:str) -> dict:
+	try:
+		data = data.split('\n')
+		output = {}
+		line = data[1]
+		i = 1
+		while not line == '':
+			line = data[i]
+			if ': ' in line:
+				output[line.split(': ')[0].strip(' ')] = ': '.join(line.split(': ')[1::])
+			# else:
+			# 	output['CGroup'] = f"{output['CGroup']}\n{line}"  
+			i+=1
+	except Exception as e:
+		syslog.syslog(syslog.LOG_CRIT, f'ddconf.network.statparse: Ошибка при парсинге блока статуса сервиса, подробности:   {str(e)}  ')
+		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
+		raise e
+	return output
+
+
+def netd_status():
+	try:
+		stat = subprocess.run(f"systemctl status systemd-networkd.service".split(), capture_output=True, text=True)
+		data = _statparse(stat.stdout)
+		if data:
+			if ("stopped" in data['Active'].lower() or 'dead' in data['Active'].lower()) and not 'failed' in data['Active'].lower():
+				return "Остановлен"
+			elif "activating" in data['Active'].lower():
+				return f"Запускается"
+			elif 'failed' in data['Active'].lower():
+				return f"Ошибка"
+			elif "running" in data['Active'].lower():
+				return f"Запущен"
+			else:
+				raise RuntimeError(data)
+		else:
+			msg = f"ddconf.network.netd_status: Ошибка: Парсинг статуса systemd-networkd передал пустой результат"
+			syslog.syslog(syslog.LOG_ERR, msg)
+			return f"Критическая ошибка"
+	except Exception as e:
+		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
+		raise e
 
 
 def nicfind(tgt, tgtv, arr) -> list: 
