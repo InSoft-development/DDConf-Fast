@@ -22,7 +22,7 @@ from datetime import datetime, timedelta, timezone
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
-# import pages.network as Net
+import pages.network as Net
 
 import models as Models
 from models import Token, TokenData, User, POST
@@ -506,8 +506,8 @@ def handle_network(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 			data = Net.fetch_device(REQ.params['id'])
 		elif REQ.method == 'save_device':
 			return Net.save_device(REQ.params)
-		
-		
+		elif REQ.method == 'process_op':
+			pass
 	except Exception as e:
 		tb=traceback.format_exc().strip().split('\n')[1::]
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_network: ERROR: {tb}")
