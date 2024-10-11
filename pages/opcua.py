@@ -259,10 +259,10 @@ def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'clie
 						
 						if "items" in line:
 							block = "items"
-							data["servers"][sercount]["subscriptions"][subcount]["items"] = []
+							# data["servers"][sercount]["subscriptions"][subcount]["items"] = []
 					
 					elif block == "items":
-						data["servers"][sercount]["subscriptions"][subcount]["items"].append(line)
+						data["servers"][sercount]["subscriptions"][subcount]["items"] = line if not "items" in data["servers"][sercount]["subscriptions"][subcount] else data["servers"][sercount]["subscriptions"][subcount]["items"] + f"\n{line}"
 						
 				
 				
