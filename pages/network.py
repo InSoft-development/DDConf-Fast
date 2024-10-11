@@ -37,7 +37,7 @@ def fetch_device(_id: str) -> dict:
 					# 	"broadcast": ,
 					# }
 				],
-				"protocol": subprocess.run(f"grep DHCP /etc/systemd/network/{netfile[0]}".split(), capture_output=True, text=True).stdout(),
+				"protocol": subprocess.run(f"grep DHCP /etc/systemd/network/{netfile[0]}".split(), capture_output=True, text=True).stdout,
 				#"uponboot": #dispatcher
 			}
 			
