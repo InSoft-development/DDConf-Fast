@@ -441,7 +441,7 @@ def handle_network(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 		elif REQ.method == 'save_device':
 			return Net.save_device(REQ.params)
 		elif REQ.method == 'process_op':
-			
+			pass
 	except Exception as e:
 		tb=traceback.format_exc().strip().split('\n')[1::]
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_network: ERROR: {tb}")
