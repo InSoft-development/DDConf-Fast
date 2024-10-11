@@ -104,7 +104,8 @@ Gateway={ip['gateway']}
 		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
 		raise e
 	else:
-		Path('/home/txhost/.EOUTS/network').write_text(errors) if errors else pass
+		if errors:
+			Path('/home/txhost/.EOUTS/network').write_text(errors) 
 		return {'result':'success' if not errors else None, 'error': errors if errors else None}
 	
 
