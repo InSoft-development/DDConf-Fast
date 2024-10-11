@@ -29,14 +29,14 @@ def fetch_device(_id: str) -> dict:
 				"mac": nicfind('family', 17, net_if_addrs()[_id])[0].address,
 				"rx": bytes2human(io[_id].bytes_recv),
 				"tx": bytes2human(io[_id].bytes_sent),
-				"ipv4": [] '''[
+				"ipv4": [
 					# {
 					# 	"address": ,
 					# 	"netmask": ,
 					# 	"gateway": ,
 					# 	"broadcast": ,
 					# }
-				]'''
+				],
 				"protocol": subprocess.run(f"grep DHCP /etc/systemd/network/{netfile[0]}".split(), capture_output=True, text=True).stdout(),
 				#"uponboot": #dispatcher
 			}
