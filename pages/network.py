@@ -36,7 +36,7 @@ def fetch_device(_id: str) -> dict:
 					# 	"gateway": ,
 					# 	"broadcast": ,
 					# }
-				]
+				],
 				"protocol": subprocess.run(f"grep DHCP /etc/systemd/network/{netfile[0]}".split(), capture_output=True, text=True).stdout(),
 				#"uponboot": #dispatcher
 			}
@@ -104,7 +104,8 @@ Gateway={ip['gateway']}
 		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
 		raise e
 	else:
-		Path('/home/txhost/.EOUTS/network').write_text(errors) if errors else pass
+		if errors:
+			Path('/home/txhost/.EOUTS/network').write_text(errors)
 		return {'result':'success' if not errors else None, 'error': errors if errors else None}
 	
 
