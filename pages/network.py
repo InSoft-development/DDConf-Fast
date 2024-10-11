@@ -72,6 +72,7 @@ def save_device(data: dict):
 			protocol: see ipv4
 			uponboot: wtf/dispatcher
 		'''
+		errors = [] 
 		
 		if data['device'] in get_nics():
 			msg = f'''[Match]
@@ -87,7 +88,13 @@ Name={data['device']}
 Gateway={ip['gateway']}
 
 '''
+				stat = subprocess.run(f"ip addr add {ip['address']}/{ip['netmask']} brd + dev {data['device']}", capture_output=True, text=True)
+				if stat.stderr:
+					errors.append(f"error editing {data['device']}: couldn't set ip {ip} broadcast! details: {stat.stderr}")
+			
 			Path(f'/etc/systemd/network/80-{data["device"]}.network').write_text(msg)
+			
+			
 		else:
 			raise KeyError(f"ddconf.network.save_device: invalid NIC id: {data['device']}, aborting.") 
 		
