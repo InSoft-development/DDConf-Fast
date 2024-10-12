@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Flex, Table, Divider, Modal } from 'antd';
 import Column from 'antd/es/table/Column';
-import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
+import { DeleteOutlined} from '@ant-design/icons';
 import DropDown from '../../components/drop-down/drop-down';
 import {
     initialize,
@@ -17,9 +17,14 @@ import classNames from 'classnames';
 import { isProfileNameValid } from '../../utils/isProfileNameValid';
 import AppHeader from '../../components/app-header/app-header';
 import styles from './profile-editor.module.scss';
+import useEditableTableHandler from '../../hooks/useEditableTableHandler';
 
 
 const ProfileEditor = ({ headerTitle }) => {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const {formValues, setFormValues, addRow, removeRow, changeCellValue} = useEditableTableHandler()
 
     const [saveAsProfileName, setSaveAsProfileName] = useState('');
     const [createProfileName, setCreateProfileName] = useState('');
@@ -29,9 +34,6 @@ const ProfileEditor = ({ headerTitle }) => {
     const [deleteProfileModalIsOpen, setDeleteProfileModalIsOpen] = useState(false);
 
 
-    const [formValues, setFormValues] = useState([]);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
     const {
         table,
         selectedProfile,
@@ -77,49 +79,6 @@ const ProfileEditor = ({ headerTitle }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         console.log(formValues);
-    }
-
-    const addRow = (e) => {
-        const newFormValues = [...formValues, {
-            id: formValues.length,
-            main: null,
-            second: null,
-            comment: null
-        }]
-
-        setFormValues(newFormValues);
-    }
-
-    const removeRow = (index) => {
-        const newFormData = [...formValues]
-            .filter((_, rowId) => rowId !== index)
-            .map((row, index) => {
-                return {
-                    ...row,
-                    id: index
-                }
-            })
-
-        setFormValues(newFormData)
-
-    }
-
-    const changeCellValue = (e) => {
-        const newValue = e.target.value;
-        const [index, fieldName] = e.target.id.split('.');
-
-        const newFormValues = [...formValues].map(row => {
-
-            if (row.id === Number(index)) {
-                return {
-                    ...row,
-                    [fieldName]: newValue
-                }
-            }
-
-            return row;
-        })
-        setFormValues(newFormValues);
     }
 
     const onReturnBtnClickHandler = (e) => {

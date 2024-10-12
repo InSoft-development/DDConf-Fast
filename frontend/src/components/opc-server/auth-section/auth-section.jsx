@@ -6,7 +6,7 @@ import { useWatch, useFormContext, Controller } from 'react-hook-form';
 const AuthSection = ({ serverId: id }) => {
 
     const spaceName = `servers.${id}`;
-    const { control, register } = useFormContext();
+    const { control } = useFormContext();
 
     const watchAuthType = useWatch({
         control,

@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Flex } from 'antd';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './network.module.css';
+import styles from './network.module.scss';
 import DeviceStatus from '../../components/network/device-status';
 import { getDevices, getDeviceFeatures } from '../../services/actions/network';
 import AppHeader from '../../components/app-header/app-header';
 
-const Network = ({headerTitle}) => {
+const Network = ({ headerTitle }) => {
 
     const dispatch = useDispatch();
     const {
@@ -35,8 +35,8 @@ const Network = ({headerTitle}) => {
 
     return (
         <>
-            <AppHeader title={headerTitle}/>
-            <div className={`text ${styles.networkWrapper}`}>
+            <AppHeader title={headerTitle} />
+            <div className='wrapper'>
                 {devicesListRequestSuccess && (
                     <>
                         <Flex align='center' justify='space-between'>
@@ -84,7 +84,6 @@ const Network = ({headerTitle}) => {
 
                     </>
                 )}
-
             </div>
         </>
     );
