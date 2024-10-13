@@ -9,6 +9,8 @@ export const GET_DEVICES_NET = 'dashboard/GET_DEVICES_NET';
 export const GET_DEVICES_NET_SUCCESS = 'dashboard/GET_DEVICES_NET_SUCCESS';
 export const GET_DEVICES_NET_FAILED = 'dashboard/GET_DEVICES_NET_FAILED';
 
+export const SET_DEFAULT_SLICE_STATE = 'dashboard/SET_DEFAULT_SLICE_STATE';
+
 
 export const getDeviceFeatures = () => (dispatch) => {
     dispatch({type: GET_DEVICE_FEATURES});

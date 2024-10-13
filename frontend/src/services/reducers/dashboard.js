@@ -7,6 +7,8 @@ import {
     GET_DEVICES_NET_SUCCESS,
     GET_DEVICES_NET_FAILED,
 
+    SET_DEFAULT_SLICE_STATE
+
  } from '../actions/dashboard';
 
 const initialState = {
@@ -75,6 +77,11 @@ export const deviceReducer = (state = initialState, action) => {
                 deviceNetRequest: false,
                 deviceNetRequestSuccess: false,
                 deviceNetRequestFailed: true,
+            }
+        }
+        case SET_DEFAULT_SLICE_STATE:{
+            return {
+                ...initialState,
             }
         }
         default: {

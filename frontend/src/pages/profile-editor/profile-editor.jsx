@@ -66,9 +66,8 @@ const ProfileEditor = ({ headerTitle }) => {
             isActive: true
         }));
 
-        return () => {
-            dispatch({ type: SET_DEFAULT_SLICE_STATE })
-        }
+        return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {

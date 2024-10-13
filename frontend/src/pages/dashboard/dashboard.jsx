@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getDevicesNet, getDeviceFeatures } from '../../services/actions/dashboard';
+import { getDevicesNet, getDeviceFeatures, SET_DEFAULT_SLICE_STATE } from '../../services/actions/dashboard';
 import { Flex, Table } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import AppHeader from '../../components/app-header/app-header';
@@ -22,9 +22,11 @@ const Dashboard = ({ headerTitle }) => {
     useEffect(() => {
         dispatch(getDeviceFeatures())
         dispatch(getDevicesNet());
+
+        return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
     }, [dispatch])
 
-    const isDataUploding = 
+    const isDataUploding =
         deviceFeaturesRequest ||
         deviceNetRequest;
 

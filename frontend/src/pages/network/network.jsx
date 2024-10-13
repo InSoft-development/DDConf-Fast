@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AppHeader from "../../components/app-header/app-header";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
-import { getDevices, getDeviceFeatures } from "../../services/actions/network";
+import { getDevices, getDeviceFeatures, SET_DEFAULT_SLICE_STATE } from "../../services/actions/network";
 import { useForm, useWatch, Controller } from "react-hook-form";
 import Input from "../../components/input/input";
 import DeviceInfo from "../../components/network/device-info";
@@ -27,6 +27,8 @@ const Network = ({ headerTitle }) => {
 
   useEffect(() => {
     dispatch(getDevices());
+
+    return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
   }, []);
 
   useEffect(() => {

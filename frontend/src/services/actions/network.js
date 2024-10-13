@@ -9,6 +9,8 @@ export const GET_NETWORK_DEVICE = 'network/GET_NETWORK_DEVICE';
 export const GET_NETWORK_DEVICE_SUCCESS = 'network/GET_NETWORK_DEVICE_SUCCESS';
 export const GET_NETWORK_DEVICE_FAILED = 'network/GET_NETWORK_DEVICE_FAILED';
 
+export const SET_DEFAULT_SLICE_STATE = 'network/SET_DEFAULT_SLICE_STATE';
+
 export const getDevices = () => (dispatch) => {
     dispatch({type: GET_DEVICES_LIST});
     request('network', 'list_devices')

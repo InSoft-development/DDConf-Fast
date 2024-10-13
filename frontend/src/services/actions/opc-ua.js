@@ -9,6 +9,8 @@ export const SEND_OPCUA_FORM_DATA = 'opc-ua/SEND_OPC_UA_FORM_DATA';
 export const SEND_OPCUA_FORM_DATA_SUCCESS = 'opc-ua/SEND_OPC_UA_FORM_DATA_SUCCESS';
 export const SEND_OPCUA_FORM_DATA_FAILED = 'opc-ua/SEND_OPC_UA_FORM_DATA_FAILED';
 
+export const SET_DEFAULT_SLICE_STATE = 'opc-ua/SET_DEFAULT_SLICE_STATE';
+
 export const getOpcUaForm = () => (dispatch) => {
     dispatch({type: GET_OPCUA_FORM_DATA})
     request('opcua','fetch_ua')

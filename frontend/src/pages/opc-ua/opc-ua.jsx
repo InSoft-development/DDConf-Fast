@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import OpcServer from '../../components/opc-server/opc-server';
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { getOpcUaForm, sendOpcUaForm } from '../../services/actions/opc-ua';
+import { getOpcUaForm, sendOpcUaForm, SET_DEFAULT_SLICE_STATE } from '../../services/actions/opc-ua';
 import AppHeader from '../../components/app-header/app-header';
 
 import styles from './opc-ua.module.scss';
@@ -58,11 +58,15 @@ const OpcUa = ({ headerTitle }) => {
 
     useEffect(() => {
         dispatch(getOpcUaForm())
-    }, [dispatch]);
+
+        return () => dispatch({ type: SET_DEFAULT_SLICE_STATE });
+
+        // eslint-disable-next-line
+    }, []);
 
     useEffect(() => {
         methods.reset(form)
-    }, [form])
+    }, [methods, form])
 
     return (
         <>

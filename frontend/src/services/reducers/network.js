@@ -4,7 +4,9 @@ import {
     GET_DEVICES_LIST_FAILED ,
     GET_NETWORK_DEVICE,
     GET_NETWORK_DEVICE_SUCCESS,
-    GET_NETWORK_DEVICE_FAILED
+    GET_NETWORK_DEVICE_FAILED,
+
+    SET_DEFAULT_SLICE_STATE
 } from '../actions/network';
 
 const initialState = {
@@ -73,6 +75,11 @@ export const networkReducer = (state = initialState, action) => {
                 deviceFeaturesRequest: false,
                 deviceFeaturesRequestSuccess: false,
                 deviceFeaturesRequestFailed: true,
+            }
+        }
+        case SET_DEFAULT_SLICE_STATE:{
+            return {
+                ...initialState
             }
         }
         default: {

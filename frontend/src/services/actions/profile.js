@@ -27,8 +27,6 @@ export const CHANGE_PROCESS_STATUS_FAILED = 'profile/CHANGE_PROCCESS_STATUS_FAIL
 
 export const SET_DEFAULT_SLICE_STATE = 'profile/SET_DEFAULT_SLICE_STATE';
 
-
-
 export const getProfiles = (cb = null) => (dispatch) => {
     dispatch({ type: PROFILE_REQUEST });
     request('dd104', 'fetch_initial')
