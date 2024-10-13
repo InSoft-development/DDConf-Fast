@@ -158,27 +158,28 @@ def _statparse(data:str) -> dict:
 
 
 def netd_status():
+	# status table: 0 == stopped, 1 == ok, 2 == starting, -1 == fail, -2 == anything else/error
 	try:
 		stat = subprocess.run(f"systemctl status systemd-networkd.service".split(), capture_output=True, text=True)
 		data = _statparse(stat.stdout)
 		if data:
 			if ("stopped" in data['Active'].lower() or 'dead' in data['Active'].lower()) and not 'failed' in data['Active'].lower():
-				return "Остановлен"
+				return 0#"Остановлен"
 			elif "activating" in data['Active'].lower():
-				return f"Запускается"
+				return 2#f"Запускается"
 			elif 'failed' in data['Active'].lower():
-				return f"Ошибка"
+				return -1#f"Ошибка"
 			elif "running" in data['Active'].lower():
-				return f"Запущен"
+				return 1#f"Запущен"
 			else:
 				raise RuntimeError(data)
 		else:
 			msg = f"ddconf.network.netd_status: Ошибка: Парсинг статуса systemd-networkd передал пустой результат"
 			syslog.syslog(syslog.LOG_ERR, msg)
-			return f"Критическая ошибка"
+			return -2#f"Критическая ошибка"
 	except Exception as e:
 		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
-		raise e
+		return -2#f"Критическая ошибка"
 
 
 def nicfind(tgt, tgtv, arr) -> list: 
