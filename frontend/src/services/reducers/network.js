@@ -1,10 +1,13 @@
-import { 
+import {
     GET_DEVICES_LIST,
     GET_DEVICES_LIST_SUCCESS,
-    GET_DEVICES_LIST_FAILED ,
+    GET_DEVICES_LIST_FAILED,
     GET_NETWORK_DEVICE,
     GET_NETWORK_DEVICE_SUCCESS,
     GET_NETWORK_DEVICE_FAILED,
+    SEND_DEVICE_FEATURES,
+    SEND_DEVICE_FEATURES_SUCCESS,
+    SEND_DEVICE_FEATURES_FAILED,
 
     SET_DEFAULT_SLICE_STATE
 } from '../actions/network';
@@ -21,11 +24,15 @@ const initialState = {
     deviceFeaturesRequest: false,
     deviceFeaturesRequestSuccess: false,
     deviceFeaturesRequestFailed: false,
+
+    sendDeviceFeaturesRequest: false,
+    sendDeviceFeaturesRequestSuccess: false,
+    sendDeviceFeaturesRequestFailed: false,
 }
 
 export const networkReducer = (state = initialState, action) => {
-    switch(action.type){
-        case GET_DEVICES_LIST:{
+    switch (action.type) {
+        case GET_DEVICES_LIST: {
             return {
                 ...state,
                 devicesListRequest: true,
@@ -33,7 +40,7 @@ export const networkReducer = (state = initialState, action) => {
                 devicesListRequestFailed: false,
             }
         }
-        case GET_DEVICES_LIST_SUCCESS:{
+        case GET_DEVICES_LIST_SUCCESS: {
             return {
                 ...state,
                 devicesListRequest: false,
@@ -43,7 +50,7 @@ export const networkReducer = (state = initialState, action) => {
                 listDevices: action.payload
             }
         }
-        case GET_DEVICES_LIST_FAILED:{
+        case GET_DEVICES_LIST_FAILED: {
             return {
                 ...state,
                 devicesListRequest: false,
@@ -51,7 +58,7 @@ export const networkReducer = (state = initialState, action) => {
                 devicesListRequestFailed: true,
             }
         }
-        case GET_NETWORK_DEVICE:{
+        case GET_NETWORK_DEVICE: {
             return {
                 ...state,
                 deviceFeaturesRequest: true,
@@ -59,7 +66,7 @@ export const networkReducer = (state = initialState, action) => {
                 deviceFeaturesRequestFailed: false,
             }
         }
-        case GET_NETWORK_DEVICE_SUCCESS:{
+        case GET_NETWORK_DEVICE_SUCCESS: {
             return {
                 ...state,
                 deviceFeaturesRequest: false,
@@ -69,7 +76,7 @@ export const networkReducer = (state = initialState, action) => {
                 device: action.payload
             }
         }
-        case GET_NETWORK_DEVICE_FAILED:{
+        case GET_NETWORK_DEVICE_FAILED: {
             return {
                 ...state,
                 deviceFeaturesRequest: false,
@@ -77,7 +84,31 @@ export const networkReducer = (state = initialState, action) => {
                 deviceFeaturesRequestFailed: true,
             }
         }
-        case SET_DEFAULT_SLICE_STATE:{
+        case SEND_DEVICE_FEATURES: {
+            return {
+                ...state,
+                sendDeviceFeaturesRequest: false,
+                sendDeviceFeaturesRequestSuccess: false,
+                sendDeviceFeaturesRequestFailed: false,
+            }
+        }
+        case SEND_DEVICE_FEATURES_SUCCESS: {
+            return {
+                ...state,
+                sendDeviceFeaturesRequest: false,
+                sendDeviceFeaturesRequestSuccess: false,
+                sendDeviceFeaturesRequestFailed: false,
+            }
+        }
+        case SEND_DEVICE_FEATURES_FAILED: {
+            return {
+                ...state,
+                sendDeviceFeaturesRequest: false,
+                sendDeviceFeaturesRequestSuccess: false,
+                sendDeviceFeaturesRequestFailed: false,
+            }
+        }
+        case SET_DEFAULT_SLICE_STATE: {
             return {
                 ...initialState
             }

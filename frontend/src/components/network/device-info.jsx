@@ -4,6 +4,7 @@ import { Flex } from 'antd';
 import styles from './device-info.module.scss';
 
 const DeviceInfo = ({ device }) => {
+
     return (
         <div className={styles.device}>
             <div className={styles.deviceRow}>
@@ -28,7 +29,7 @@ const DeviceInfo = ({ device }) => {
             </div>
             <div className={styles.deviceRow}>
                 <div className='text_type_main_default text_bold'>Ipv4:</div>
-                <div className='text_type_main_default'>{device?.ipv4.address || ''}</div>
+                <div className='text_type_main_default'>{device?.ipv4[0].address || ''}</div>
             </div>
         </div>
     );

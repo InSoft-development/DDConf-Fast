@@ -9,6 +9,10 @@ export const GET_NETWORK_DEVICE = 'network/GET_NETWORK_DEVICE';
 export const GET_NETWORK_DEVICE_SUCCESS = 'network/GET_NETWORK_DEVICE_SUCCESS';
 export const GET_NETWORK_DEVICE_FAILED = 'network/GET_NETWORK_DEVICE_FAILED';
 
+export const SEND_DEVICE_FEATURES = 'network/SEND_DEVICE_FEATURES';
+export const SEND_DEVICE_FEATURES_SUCCESS = 'network/SEND_DEVICE_FEATURES_SUCCESS';
+export const SEND_DEVICE_FEATURES_FAILED = 'network/SEND_DEVICE_FEATURE_FAILED';
+
 export const SET_DEFAULT_SLICE_STATE = 'network/SET_DEFAULT_SLICE_STATE';
 
 export const getDevices = () => (dispatch) => {
@@ -45,5 +49,19 @@ export const getDeviceFeatures = (id) => (dispatch) => {
         })
         .catch(error => {
             dispatch({type: GET_NETWORK_DEVICE_FAILED})
+        })
+}
+
+export const saveDeviceFeatures = (data) => (dispatch) => {
+    dispatch({type: SEND_DEVICE_FEATURES});
+    request('network', 'save_device', {
+        ...data
+    })
+        .then(res => checkResponce(res))
+        .then(res => {
+            dispatch({ type: SEND_DEVICE_FEATURES_SUCCESS })
+        })
+        .catch(error => {
+            dispatch({type: SEND_DEVICE_FEATURES_FAILED})
         })
 }
