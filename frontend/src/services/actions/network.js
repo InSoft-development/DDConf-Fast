@@ -16,7 +16,12 @@ export const getDevices = () => (dispatch) => {
         .then(res => {
             dispatch({
                 type: GET_DEVICES_LIST_SUCCESS,
-                payload: res.result
+                payload: res.result.map(list => {
+                    return {
+                        value: list,
+                        text: list,
+                    }
+                })
             })
         })
         .catch(error => {

@@ -1,8 +1,13 @@
+@import "../colors";
+
 $input-text-color: $gray-600;
 $input-font-family: $main-font-family, sans-serif;
 $input-font-size: 16px;
 $input-font-weight: 400;
-$input-border-color: $blueberry;
+$input-border-color: $gray-400;
+$input-border-color-focuced: $blueberry;
+$input-border-color-disabled: lighten($gray-400, 10%);
+
 
 
 // input - skeleton
@@ -18,10 +23,14 @@ $input-border-color: $blueberry;
 
 %input-shared:focus{
     outline: none;
-    border: 1px solid $input-border-color;
+    border: 1px solid $input-border-color-focuced;
     box-shadow: 0 0 7px 3px lighten($blueberry, 20%);
     -webkit-box-shadow:0 0 7px 3px lighten($blueberry, 20%);
     -moz-box-shadow: 0 0 7px 3px lighten($blueberry, 20%);
+}
+
+%input-shared:disabled{
+    border: 1px solid $input-border-color-disabled;
 }
 
 .input{

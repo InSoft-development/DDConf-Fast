@@ -1,92 +1,222 @@
-import React, { useEffect } from 'react';
-import { Flex } from 'antd';
-import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import styles from './network.module.scss';
-import DeviceStatus from '../../components/network/device-status';
-import { getDevices, getDeviceFeatures } from '../../services/actions/network';
-import AppHeader from '../../components/app-header/app-header';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import AppHeader from "../../components/app-header/app-header";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Flex } from "antd";
+import { getDevices, getDeviceFeatures } from "../../services/actions/network";
+import { useForm, useWatch, Controller } from "react-hook-form";
+import Input from "../../components/input/input";
+import DeviceInfo from "../../components/network/device-info";
+
+import styles from "./network.module.scss";
 
 const Network = ({ headerTitle }) => {
+  const dispatch = useDispatch();
+  const { control, handleSubmit, reset } = useForm();
+  const {
+    device,
+    deviceFeaturesRequest,
+    listDevices,
+    devicesListRequest,
+  } = useSelector((store) => store.network);
 
-    const dispatch = useDispatch();
-    const {
-        listDevices,
-        device,
-        devicesListRequestSuccess,
-        deviceFeaturesRequestSuccess
-    } = useSelector(store => store.network)
+  const watchProtocolValue = useWatch({
+    control,
+    name: 'protocol',
+  })
 
-    const { register, handleSubmit, reset } = useForm();
+  useEffect(() => {
+    dispatch(getDevices());
+  }, []);
 
-    useEffect(() => {
-        dispatch(getDevices());
-    }, [dispatch])
+  useEffect(() => {
+    reset(device);
+  }, [reset, device]);
 
-    useEffect(() => {
-        reset(device)
-    }, [reset, device])
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
+  const changeDevice = (e) => {
+    const selectedDevice = e.target.value;
+    dispatch(getDeviceFeatures(selectedDevice));
+  };
 
-    const onSubmit = (data) => {
-        console.log(data);
+  const hasDevice = device !== null;
+  const isFormUploading = deviceFeaturesRequest;
+  const isFormDisabled =
+    isFormUploading ||
+    !hasDevice
 
-    }
-
-    return (
-        <>
-            <AppHeader title={headerTitle} />
-            <div className='wrapper'>
-                {devicesListRequestSuccess && (
-                    <>
-                        <Flex align='center' justify='space-between'>
-                            <label htmlFor="devicesList">Устрйства: </label>
-                            <select name="devicesList"
-                                id="devicesList"
-                                defaultValue='none'
-                                onChange={e => dispatch(getDeviceFeatures(e.target.value))}
-                            >
-                                <option value="none">Не выбран</option>
-                                {listDevices?.map((device, index) => (
-                                    <option key={index}>{device}</option>
-                                ))}
-                            </select>
-                        </Flex>
-                        {deviceFeaturesRequestSuccess && (
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <Flex align='center' justify='space-between'>
-                                    <label htmlFor="">Status:</label>
-                                    <DeviceStatus device={device} />
-                                </Flex>
-                                <Flex align='center' justify='space-between'>
-                                    <label htmlFor="">Protocol</label>
-                                    <select name="" id="">
-                                        <option value="">Static address</option>
-                                        <option value="">Dynamic address</option>
-                                    </select>
-                                </Flex>
-                                <Flex align='center' justify='space-between'>
-                                    <label htmlFor="">IPv4 address</label>
-                                    <input type="text" {...register('ipv4.address')} />
-                                </Flex>
-                                <Flex align='center' justify='space-between'>
-                                    <label htmlFor="">IPv4 network</label>
-                                    <input type="text" {...register('ipv4.network')} />
-                                </Flex>
-
-                                <footer className={styles.footer}>
-                                    <div className='wrapper'>
-                                        <button type='submit' className='button btn-green'>Отправить</button>
-                                    </div>
-                                </footer>
-                            </form>
-                        )}
-
-                    </>
+  return (
+    <>
+      <AppHeader title={headerTitle} />
+      <div className="wrapper">
+        <div className={styles.networkPage}>
+          <div className={styles.row}>
+            <label
+              htmlFor="devices"
+              className="text_type_main_medium text_bold"
+            >
+              Устройства:
+            </label>
+            <Input.Select
+              options={listDevices}
+              name={"devices"}
+              defaultValue={"Не выбран"}
+              className={"input"}
+              loading={devicesListRequest}
+              loadingIcon={<LoadingOutlined />}
+              disabled={devicesListRequest}
+              onChange={changeDevice}
+            />
+          </div>
+          <div className={styles.row}>
+            <label className="text_type_main_medium text_bold">Статус:</label>
+            <DeviceInfo device={device} />
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.row}>
+              <label htmlFor="" className="text_type_main_medium text_bold">
+                Протоколы:
+              </label>
+              <Controller
+                control={control}
+                name={"protocol"}
+                render={({ field: { value, onChange } }) => (
+                  <Input.Select
+                    value={value}
+                    onChange={onChange}
+                    defaultValue={"Не установлен"}
+                    className={"input"}
+                    options={[
+                      {
+                        text: "Статичный",
+                        value: "static",
+                      },
+                      {
+                        text: "Динамичный",
+                        value: "dynamic",
+                      },
+                    ]}
+                    disabled={isFormDisabled}
+                    loading={isFormUploading}
+                    loadingIcon={<LoadingOutlined />}
+                  />
                 )}
+              />
             </div>
-        </>
-    );
-}
+            {/* IPv4 */}
+            <div className={styles.row}>
+              <label
+                htmlFor="ipv4.address"
+                className="text_type_main_medium text_bold"
+              >
+                IPv4 адресс:
+              </label>
+              <Controller
+                name={"ipv4.address"}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Input.Text
+                    name={"ipv4.address"}
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите адресс"
+                    className='input'
+                    disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
+                    loading={isFormUploading}
+                    loadingIcon={<LoadingOutlined />}
+                  />
+                )}
+              />
+            </div>
+            {/* IPv4  network */}
+            <div className={styles.row}>
+              <label
+                htmlFor="ipv4.netmask"
+                className="text_type_main_medium text_bold"
+              >
+                IPv4 маска:
+              </label>
+              <Controller
+                name={"ipv4.netmask"}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Input.Text
+                    name={"ipv4.netmask"}
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите маску"
+                    className='input'
+                    disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
+                    loading={isFormUploading}
+                    loadingIcon={<LoadingOutlined />}
+                  />
+                )}
+              />
+            </div>
+            <div className={styles.row}>
+              <label
+                htmlFor="ipv4.gateway"
+                className="text_type_main_medium text_bold"
+              >
+                IPv4 шлюз:
+              </label>
+              <Controller
+                name={"ipv4.gateway"}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Input.Text
+                    name={"ipv4.gateway"}
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите шлюз"
+                    className='input'
+                    disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
+                    loading={isFormUploading}
+                    loadingIcon={<LoadingOutlined />}
+                  />
+                )}
+              />
+            </div>
+            <div className={styles.row}>
+              <label
+                htmlFor="ipv4.broadcast"
+                className="text_type_main_medium text_bold"
+              >
+                IPv4 диапозон <br />
+                широковешания:
+              </label>
+              <Controller
+                name={"ipv4.broadcast"}
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Input.Text
+                    name={"ipv4.broadcast"}
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите диапозон широковешания"
+                    className='input'
+                    disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
+                    loading={isFormUploading}
+                    loadingIcon={<LoadingOutlined />}
+                  />
+                )}
+              />
+            </div>
+            <footer className={styles.footer}>
+              <Flex align="center">
+                <button type="submit" className="btn-green">
+                  Отправить
+                </button>
+              </Flex>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default Network;
