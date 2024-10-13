@@ -10,12 +10,12 @@ const Password = ({
     className = ''
 }) => {
     return (
-        <input type="password" 
-            id={name}        
+        <input type="password"
+            id={name}
             name={name}
             value={value || ''}
             onChange={onChange}
-            className={`input ${className}`}
+            className={className}
             placeholder={placeholder}
             style={{
                 width: width,

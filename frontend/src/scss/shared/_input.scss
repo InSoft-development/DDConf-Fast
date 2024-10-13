@@ -8,8 +8,6 @@ $input-border-color: $gray-400;
 $input-border-color-focuced: $blueberry;
 $input-border-color-disabled: lighten($gray-400, 10%);
 
-
-
 // input - skeleton
 %input-shared{
     border: 1px solid $gray-500;
@@ -36,6 +34,12 @@ $input-border-color-disabled: lighten($gray-400, 10%);
 .input{
     @extend %input-shared;
 }
+
+.input-unbordered{
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
 
 .input_border_sliced-right{
     border-top-right-radius: 0;

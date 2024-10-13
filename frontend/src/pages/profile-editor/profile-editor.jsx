@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Flex, Table, Divider, Modal } from 'antd';
 import Column from 'antd/es/table/Column';
-import { DeleteOutlined} from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import DropDown from '../../components/drop-down/drop-down';
 import {
     initialize,
@@ -24,7 +24,7 @@ const ProfileEditor = ({ headerTitle }) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {formValues, setFormValues, addRow, removeRow, changeCellValue} = useEditableTableHandler()
+    const { formValues, setFormValues, addRow, removeRow, changeCellValue } = useEditableTableHandler()
 
     const [saveAsProfileName, setSaveAsProfileName] = useState('');
     const [createProfileName, setCreateProfileName] = useState('');
@@ -248,7 +248,7 @@ const ProfileEditor = ({ headerTitle }) => {
                                     render={((_, __, index) => {
                                         return (
                                             <input
-                                                className={`input ${styles.inputWithOutFocused}`}
+                                                className={`input input-unbordered`}
                                                 id={`${index}.main`}
                                                 name={`${index}.main`}
                                                 type='text'
@@ -268,7 +268,7 @@ const ProfileEditor = ({ headerTitle }) => {
                                     render={(_, __, index) => {
                                         return (
                                             <input
-                                                className={`input ${styles.inputWithOutFocused}`}
+                                                className={'input input-unbordered'}
                                                 id={`${index}.second`}
                                                 name={`${index}.second`}
                                                 type='text'

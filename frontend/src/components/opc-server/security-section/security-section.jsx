@@ -42,6 +42,7 @@ const SecuritySection = ({ serverId: id }) => {
                                 value: 'Aes256_Sha256_RsaPss - Sign & Encrypt',
                                 text: 'Aes256_Sha256_RsaPss - Sign & Encrypt'
                             }]}
+                            className='input'
                         />
                     )}
                 />
@@ -52,7 +53,7 @@ const SecuritySection = ({ serverId: id }) => {
                 <Controller
                     control={control}
                     name={`${spaceName}.mesmode`}
-                    render={({field: {value, onChange}}) => (
+                    render={({ field: { value, onChange } }) => (
                         <Input.Select
                             value={value}
                             onChange={onChange}
@@ -67,6 +68,7 @@ const SecuritySection = ({ serverId: id }) => {
                                 value: 'Sign & Encrypt',
                                 text: 'Sign & Encrypt'
                             }]}
+                            className='input'
                         />
                     )}
                 />

@@ -26,7 +26,7 @@ const UrlSection = ({ serverId: id }) => {
                             <Input.Text
                                 name={`${spaceName}.url1`}
                                 placeholder='Введите URL 1'
-                                className='input_border_sliced-right'
+                                className='input input_border_sliced-right'
                                 width={360}
                                 value={value}
                                 onChange={onChange}
@@ -54,12 +54,13 @@ const UrlSection = ({ serverId: id }) => {
                     <Controller
                         name={`${spaceName}.url2`}
                         control={control}
-                        render={({field: {value, onChange}}) => (
+                        render={({ field: { value, onChange } }) => (
                             <Input.Text
                                 name={`${spaceName}.url2`}
                                 placeholder='Введите URL 2'
                                 value={value}
                                 onChange={onChange}
+                                className='input'
                             />
                         )}
                     />

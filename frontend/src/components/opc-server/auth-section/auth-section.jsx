@@ -29,6 +29,7 @@ const AuthSection = ({ serverId: id }) => {
                                         placeholder='Введите логин'
                                         value={value}
                                         onChange={onChange}
+                                        className='input'
                                     />
                                 )}
                             />
@@ -39,12 +40,13 @@ const AuthSection = ({ serverId: id }) => {
                             <Controller
                                 control={control}
                                 name={`${spaceName}.utoken_data.password`}
-                                render={({field: {value, onChange}}) => (
+                                render={({ field: { value, onChange } }) => (
                                     <Input.Password
                                         name={`${spaceName}.utoken_data.password`}
                                         value={value}
                                         onChange={onChange}
                                         placeholder='Введите пароль'
+                                        className='input'
                                     />
                                 )}
                             />
@@ -83,6 +85,7 @@ const AuthSection = ({ serverId: id }) => {
                                 value: 'username',
                                 text: 'По логину и паролю'
                             }]}
+                            className='input'
                         />
                     )}
                 />
