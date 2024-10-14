@@ -1,10 +1,10 @@
-import syslog, subprocess, time, json, traceback, re
+import syslog, subprocess, time, json, traceback, re, struct
 from shutil import move, copy2
 from pathlib import Path
 from os import W_OK, R_OK, access, makedirs, listdir
 from psutil import net_io_counters, net_if_addrs
 from netifaces import gateways
-
+from socket import inet_ntoa
 
 def get_nics() -> list:
 	return [x for x in net_if_addrs().keys() if x != 'lo']
@@ -22,6 +22,8 @@ def fetch_device(_id: str) -> dict:
 				devupt = float(Path('/proc/uptime').read_text().strip('\n').split()[0])
 				dmesgupt = float(subprocess.getoutput(f'dmesg | grep "{_id}: Link is Up"').split(']')[0][1::].strip())
 			
+			proto = subprocess.run(f"grep DHCP /etc/systemd/network/{netfile[0]}".split(), capture_output=True, text=True).stdout
+			
 			data = {
 				'device': _id,
 				"status": nicstat,
@@ -37,7 +39,7 @@ def fetch_device(_id: str) -> dict:
 					# 	"broadcast": ,
 					# }
 				],
-				"protocol": subprocess.run(f"grep DHCP /etc/systemd/network/{netfile[0]}".split(), capture_output=True, text=True).stdout,
+				"protocol": 'dynamic' if proto and proto.strip('\n').split('=')[1] == 'yes' else 'static',
 				#"uponboot": #dispatcher
 			}
 			
@@ -71,6 +73,9 @@ def save_device(data: dict):
 			ipv4: /etc/systemd/network/80-*.network
 			protocol: see ipv4
 			uponboot: wtf/dispatcher
+		
+		TODO: 
+			validation!
 		'''
 		errors = [] 
 		
@@ -80,11 +85,12 @@ Name={data['id']}
 
 [Network]
 '''
-			if data['protocol']:
-				msg = msg + "DHCP=yes\n"
+			if data['protocol'] == 'dynamic':
+				msg = msg + f"DHCP=yes\n"
 			else:
 				for ip in data['ipv4']:
-					msg = msg + f'''Address={ip['address']}/{ip['netmask']}
+					msg = msg + f'''Address={ip['address']}
+Netmask={nmdetransform(int(ip['netmask']))}
 Gateway={ip['gateway']}
 
 '''
@@ -223,3 +229,10 @@ def gwfind(_id: str) -> str:
 def nmtransform(nm: str) -> str:
 	# 255.255.255.0 -> 24
 	return sum(bin(int(x)).count('1') for x in nm.split('.'))
+	
+
+def nmdetransform(nm:int):
+	# 24 -> 255.255.255.0
+	host_bits = 32 - int(nm)
+	return inet_ntoa(struct.pack('!I', (1 << 32) - (1 << host_bits)))
+
