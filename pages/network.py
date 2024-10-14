@@ -95,7 +95,7 @@ Gateway={ip['gateway']}
 
 '''
 				#broadcast
-				stat = subprocess.run(f"ip addr add {ip['address']}/{ip['netmask']} brd + dev {data['id']}", capture_output=True, text=True)
+				stat = subprocess.run(f"ip addr add {ip['broadcast']} brd + dev {data['id']}".split(), capture_output=True, text=True)
 				if stat.stderr:
 					errors.append(f"error editing {data['id']}: couldn't set ip {ip} broadcast! details: {stat.stderr}")
 			
