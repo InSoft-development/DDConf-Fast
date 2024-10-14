@@ -1,8 +1,11 @@
 @import '../../scss/shared/common-defenition';
 
 .networkPage {
-    margin-top: 20px;
-    width: 780px;
+    width: 1080px;
+    height: calc( 100vh - ($header-summary-height + $footer-height));
+    padding-right: 20px;
+    margin: 20px 0;
+    overflow-y: scroll;
 }
 
 form > .row:not(:last-child),
@@ -14,7 +17,7 @@ form > .row:not(:last-child),
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .row>*:nth-child(1) {
@@ -26,10 +29,10 @@ form > .row:not(:last-child),
 }
 
 .footer {
-    box-sizing: border-box;
-    padding: 20px;
     width: 100%;
     height: $footer-height;
+    box-sizing: border-box;
+    padding: 20px;
     position: fixed;
     bottom: 0;
     left: 0;
