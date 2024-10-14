@@ -74,9 +74,9 @@ def save_device(data: dict):
 		'''
 		errors = [] 
 		
-		if data['device'] in get_nics():
+		if data['id'] in get_nics():
 			msg = f'''[Match]
-Name={data['device']}
+Name={data['id']}
 
 [Network]
 '''
@@ -89,15 +89,15 @@ Gateway={ip['gateway']}
 
 '''
 				#broadcast
-				stat = subprocess.run(f"ip addr add {ip['address']}/{ip['netmask']} brd + dev {data['device']}", capture_output=True, text=True)
+				stat = subprocess.run(f"ip addr add {ip['address']}/{ip['netmask']} brd + dev {data['id']}", capture_output=True, text=True)
 				if stat.stderr:
-					errors.append(f"error editing {data['device']}: couldn't set ip {ip} broadcast! details: {stat.stderr}")
+					errors.append(f"error editing {data['id']}: couldn't set ip {ip} broadcast! details: {stat.stderr}")
 			
-			Path(f'/etc/systemd/network/80-{data["device"]}.network').write_text(msg)
+			Path(f'/etc/systemd/network/80-{data["id"]}.network').write_text(msg)
 			
 			
 		else:
-			raise KeyError(f"ddconf.network.save_device: invalid NIC id: {data['device']}, aborting.") 
+			raise KeyError(f"ddconf.network.save_device: invalid NIC id: {data['id']}, aborting.") 
 		
 		
 		
