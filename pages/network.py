@@ -7,16 +7,16 @@ from netifaces import gateways
 
 
 def get_nics() -> list:
-	return list(net_if_addrs().keys())
+	return [x for x in net_if_addrs().keys() if x != 'lo']
 
 
 def fetch_device(_id: str) -> dict:
 	#_id = 'eth0', not 'eth0.network'
 	try:
-		io = net_io_counters(pernic=True)
+		io = {k:v for k, v in net_io_counters(pernic=True).items() if k!='lo'}
 		netfile = [x for x in listdir('/etc/systemd/network/') if Path(f'/etc/systemd/network/{x}').is_file() and 'network' in x and _id in x]
 		
-		if (netfile or _id == 'lo') and _id in io: #WARNING: if someone renames loopback from 'lo' we're fucked
+		if netfile and _id in io: #WARNING: if someone renames loopback from 'lo' we're fucked
 			nicstat = Path(f'/sys/class/net/{_id}/operstate').read_text().strip() != 'down'
 			if nicstat:
 				devupt = float(Path('/proc/uptime').read_text().strip('\n').split()[0])
