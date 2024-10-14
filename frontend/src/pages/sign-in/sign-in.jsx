@@ -3,7 +3,7 @@ import styles from './sign-in.module.css';
 import { Flex } from 'antd';
 import { useForm } from 'react-hook-form';
 
-const Login = () => {
+const SignIn = () => {
 
     const {register, handleSubmit} = useForm();
 
@@ -49,4 +49,4 @@ const Login = () => {
     );
 }
 
-export default Login;
+export default SignIn;

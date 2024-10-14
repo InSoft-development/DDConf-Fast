@@ -1,0 +1,50 @@
+@import '../../scss/colors';
+@import '../../scss/shared/common-defenition';
+
+.header{
+    height: $header-summary-height;    
+    position: relative;
+}
+
+.header:before{
+    content: '';
+    display: block;
+    width: 100%;
+    height: $header-upline-height;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background-color: $green;
+}
+
+.header > h6{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: $header-upline-height;
+    width: 100%;
+    color: #ffffff;
+    text-wrap: nowrap;
+}
+
+.header::after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: $header-body-height;
+    position: absolute;
+    top: $header-upline-height;
+    left: 0;
+    z-index: -1;
+    background-color: $gray-200;
+}
+
+.header > h4{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: $header-body-height;
+    text-wrap: nowrap;
+}

@@ -1,0 +1,42 @@
+@import '../../scss/shared/common-defenition';
+
+.networkPage {
+    width: 1080px;
+    height: calc( 100vh - ($header-summary-height + $footer-height));
+    padding-right: 20px;
+    margin: 20px 0;
+    overflow-y: scroll;
+}
+
+form > .row:not(:last-child),
+.networkPage>.row:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.row>*:nth-child(1) {
+    width: 300px;
+}
+
+.row>*:nth-child(2) {
+    width: 400px;
+}
+
+.footer {
+    width: 100%;
+    height: $footer-height;
+    box-sizing: border-box;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid var(--gray-300);
+    background-color: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+}

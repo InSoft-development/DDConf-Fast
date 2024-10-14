@@ -1,0 +1,45 @@
+@import "../../scss/colors";
+@import "../../scss/shared/common-defenition";
+
+.opcServer{
+    max-width: $opcua-server-width;
+    padding: 40px 20px 20px;
+    position: relative;
+    border: 1px solid $gray-400; 
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+
+.opcServer > h3{
+    position: absolute;
+    top: -16px;
+    left: 30px;
+    padding: 0 10px;
+    background-color: #fff;
+}
+
+.opcServer > *:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+h3 + button[class~="btn-round"]{
+    position: absolute;
+    top: -16px;
+    right: -16px;
+}
+
+.url1_ckeckbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+    width: 40px;
+
+    box-sizing: border-box;
+    border: 1px solid $gray-500;
+    border-left: none;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+}

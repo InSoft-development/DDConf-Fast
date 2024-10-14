@@ -1,0 +1,104 @@
+@import "./scss/colors";
+@import "./scss/shared/common-defenition";
+@import "./scss/shared/typography";
+@import "./scss/shared/button";
+@import "./scss/shared/input";
+@import "./scss/shared/indentations";
+@import "./scss/shared/vendors/normalize.css";
+@import "./scss/shared/settings";
+
+
+/* Add-ons */
+html {
+    margin-right: calc(-1 * (100vw - 100%));
+}
+
+.wrapper {
+    max-width: $layout-width;
+    margin: 0 auto;
+    padding: 0 $layout-external-indentation;
+    box-sizing: border-box;
+}
+
+.hidden{
+    display: none;
+}
+
+/* Кастомизация скроллбара в Chrome */
+*::-webkit-scrollbar{
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track{
+    background-color: $gray-200;
+    border-radius: 15px;
+}
+
+
+*::-webkit-scrollbar-thumb{
+    background-color: $gray-400;
+    border-radius: 15px;
+}
+
+/* fonts */
+@font-face {
+    font-family: 'Inter';
+    font-weight: 700;
+    src: local('Inter'),
+        url('./fonts/Inter/Inter-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 500;
+    src: local('Inter'),
+        url('./fonts/Inter/Inter-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-weight: 400;
+    src: local('Inter'),
+        url('./fonts/Inter/Inter-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    font-weight: 700;
+    src: local('HelveticaNeue'),
+        url('./fonts/HelveticaNeue/HelveticaNeueCyr-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    font-weight: 500;
+    src: local('HelveticaNeue'),
+        url('./fonts/HelveticaNeue/HelveticaNeueCyr-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Helvetica Neue';
+    font-weight: 400;
+    src: local('HelveticaNeue'),
+        url('./fonts/HelveticaNeue/HelveticaNeueCyr-Roman.ttf');
+}
+
+
+
+
+
+
+/* Переопределение Antd-Design стилей */
+/* Исправление отсутсвсия props'а для Drawer - невозможность позиционировать кнопку справа */
+.ant-drawer-header-title {
+    flex-direction: row-reverse;
+}
+
+.ant-drawer-header-title>button {
+    margin-right: 0;
+}
+
+.ant-drawer .ant-drawer-body{
+    padding: 0;
+}

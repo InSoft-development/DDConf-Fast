@@ -1,0 +1,31 @@
+@import '../../scss/colors';
+
+.device{
+    width: 400px;
+    padding: 20px;
+    border: 1px solid $gray-400;
+    border-radius: 15px;
+}
+
+.device > .deviceRow:not(:last-child){
+    margin-bottom: 10px;
+}
+
+.deviceRow{
+    display: flex;
+    flex-direction: row;
+    align-items: self-start;
+    justify-content: space-between;
+}
+
+.deviceRow > div:nth-child(1){
+    width: 100px;
+}
+
+.deviceRow > div:nth-child(2){
+    width: 100%;
+    margin-left: 10px;
+    text-wrap: wrap;
+    word-break: break-all;
+    text-align: left;    
+}

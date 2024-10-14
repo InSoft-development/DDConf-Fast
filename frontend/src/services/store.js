@@ -6,13 +6,15 @@ import {profileReducer} from './reducers/profile';
 import { deviceReducer } from './reducers/dashboard';
 import { opcuaReducer } from './reducers/opc-ua';
 import { profileEditorReducer } from './reducers/profile-editor';
+import { networkReducer } from './reducers/network';
 
 const rootReducer = combineReducers({
     profile: profileReducer,
     modals: modalsReducer,
     device: deviceReducer,
     opcua: opcuaReducer,
-    profileEditor: profileEditorReducer
+    profileEditor: profileEditorReducer,
+    network: networkReducer
 });
 
 export const store = configureStore({

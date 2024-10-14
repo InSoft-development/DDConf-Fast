@@ -1,0 +1,20 @@
+@import "../../scss/shared/common-defenition";
+
+.opcUa{
+    height: calc(100vh - (#{$header-summary-height} + #{$footer-height}));
+    overflow-y: scroll;
+    padding-top: 30px;
+}
+
+.footer{
+    padding: 20px 0;
+    width: 100%;
+    height: $footer-height;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid var(--gray-300);
+    background-color: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+    overflow-x: hidden;
+}

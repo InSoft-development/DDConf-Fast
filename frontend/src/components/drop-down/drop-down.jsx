@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CaretDownOutlined, LoadingOutlined } from '@ant-design/icons'
-import styles from './drop-down.module.css';
+import styles from './drop-down.module.scss';
 import { Flex } from 'antd';
 import classNames from 'classnames';
 
@@ -51,7 +51,7 @@ const DropDown = ({
 
     return (
         <Flex align='center'>
-            <div className={`text mr-10 ${styles.dropDown}`}
+            <div className={`text_type_main_default mr-10 ${styles.dropDown}`}
                 onClick={onArrowClickHandler}
             >
                 <div className='mr-6'

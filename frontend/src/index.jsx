@@ -6,7 +6,7 @@ import { App as AntdApp } from 'antd';
 
 import {store} from './services/store';
 import App from './components/app/app';
-import './index.css';
+import './index.scss';
 
 
 const root = ReactDOM.createRoot(

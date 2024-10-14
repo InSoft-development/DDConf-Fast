@@ -1,0 +1,16 @@
+@import "../../../scss/colors";
+
+.wrapper{
+    position: relative;
+    border: 1px solid $gray-400;
+    border-radius: 15px;
+    padding: 40px 20px 20px;
+}
+
+.wrapper > h3{
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: 0 10px;
+    background-color: #fff;
+}

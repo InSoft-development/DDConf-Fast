@@ -1,0 +1,9 @@
+@import '../../../scss/colors';
+
+.checkbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid $gray-500;
+}

@@ -1,66 +1,59 @@
-import React, {useEffect} from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Drawer } from 'antd';
+import { NavLink } from 'react-router-dom';
+import {
+    HomeOutlined,
+    ProfileOutlined,
+    ApiOutlined
+} from '@ant-design/icons';
 import { CLOSE_SIDEBAR } from '../../services/actions/modals';
-import {NavLink} from 'react-router-dom';
-import { CloseOutlined, HomeOutlined, ProfileOutlined} from '@ant-design/icons';
-import styles from './sidebar.module.css';
+import styles from './sidebar.module.scss';
 
 const Sidebar = () => {
 
     const dispatch = useDispatch();
+    const { sidebarIsOpen } = useSelector(state => state.modals);
 
-    useEffect(() => {
-
-        document.addEventListener('keydown', (e) => {
-            if(e.key === 'Escape'){
-                closeSidebar();
-            }
-        });
-
-        return () => {
-            document.removeEventListener('keydown', (e) => {
-                if(e.key === 'Escape'){
-                    closeSidebar();
-                }
-            })
-        }
-
-    }, [])
-
-
-    const closeSidebar = () => {
-        dispatch({type: CLOSE_SIDEBAR});
+    const onCloseHandler = () => {
+        dispatch({ type: CLOSE_SIDEBAR });
     }
 
-    const navLink = ({isActive}) => isActive ? styles.linkActive : styles.link;
-
     return (
-        <div className={`text ${styles.sidebar}`}>
-            <aside className={styles.aside}>
-                <div className={styles.clsBtn} onClick={e => closeSidebar()}><CloseOutlined/></div>
-                <div>
-                    <h2 className='text text_type_main mt-10 ml-20'>ДД Конфигуртор</h2>
-                    <nav className='mt-40'>
-                        <ul className={styles.navigationLink}>
-                            <NavLink to='/' className={navLink} onClick={e => closeSidebar()}>
-                                <HomeOutlined style={{marginRight: 10}}/>
-                                Дашборд
-                            </NavLink>
-                            <NavLink to='/dd104' className={navLink} onClick={e => closeSidebar()}>
-                                <ProfileOutlined style={{marginRight: 10}}/>
-                                МЭК 104
-                            </NavLink>
-                            <NavLink to='/opcua' className={navLink} onClick={e => closeSidebar()}>
-                                <ProfileOutlined style={{marginRight: 10}}/>
-                                OPC UA
-                            </NavLink>
-                        </ul>
-                    </nav>
-                </div>
-            </aside>
-        </div>
+        <Drawer open={sidebarIsOpen}
+            placement='left'
+            onClose={onCloseHandler}
+            keyboard={true}
+        >
+            <h2 className='text_type_main_large text_bold ml-10 mt-10'>ДД Конфигуратор</h2>
+            <ul className={styles.navigationList}>
+                <NavLink to='/' onClick={onCloseHandler} className='text_type_main_default' end>
+                    <li>
+                        <HomeOutlined style={{ marginRight: 10 }} />
+                        Дашборд
+                    </li>
+                </NavLink>
+                <NavLink to='/dd104' className='text_type_main_default' onClick={onCloseHandler} end>
+                    <li>
+                        <ProfileOutlined style={{ marginRight: 10 }} />
+                        МЭК 104
+                    </li>
+                </NavLink>
+                <NavLink to='/opcua' className='text_type_main_default' onClick={onCloseHandler} end >
+                    <li>
+                        <ProfileOutlined style={{ marginRight: 10 }} />
+                        OPC UA
+                    </li>
+                </NavLink>
+                <NavLink to='/network' className='text_type_main_default' onClick={onCloseHandler} end >
+                    <li>
+                        <ApiOutlined style={{ marginRight: 10 }} />
+                        Сетевые интерфейсы
+                    </li>
+                </NavLink>
+            </ul>
+        </Drawer>
     );
 }
 
 export default Sidebar;
-

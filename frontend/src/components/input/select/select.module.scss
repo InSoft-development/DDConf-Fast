@@ -1,0 +1,15 @@
+.selectWrapper{
+    box-sizing: border-box;
+    position: relative;
+    display: inline;
+}
+
+.loadingIcon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
+}

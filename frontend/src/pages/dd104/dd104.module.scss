@@ -1,6 +1,7 @@
-.profile{
-    margin-top: 20px;
-    padding: 10px 15px;
+@import '../../scss/shared/common-defenition';
+
+.dd104Page{
+    padding-top: 10px;
 }
 
 .header{
@@ -21,6 +22,7 @@
 .footer{
     padding: 20px 0;
     width: 100%;
+    height: $footer-height;
     position: fixed;
     bottom: 0;
     left: 0;
