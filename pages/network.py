@@ -4,7 +4,7 @@ from pathlib import Path
 from os import W_OK, R_OK, access, makedirs, listdir
 from psutil import net_io_counters, net_if_addrs
 from netifaces import gateways
-from socket import inet_ntoa
+from socket import inet_ntoa, inet_aton
 
 def get_nics() -> list:
 	return [x for x in net_if_addrs().keys() if x != 'lo']
@@ -79,7 +79,7 @@ def save_device(data: dict):
 		'''
 		errors = [] 
 		
-		if data['id'] in get_nics():
+		if validate_devdata(data):
 			msg = f'''[Match]
 Name={data['id']}
 
@@ -95,7 +95,7 @@ Gateway={ip['gateway']}
 
 '''
 				#broadcast
-				stat = subprocess.run(f"ip addr add {ip['broadcast']} brd + dev {data['id']}".split(), capture_output=True, text=True)
+				stat = subprocess.run(f"ip addr add brd {ip['broadcast']} dev {data['id']}".split(), capture_output=True, text=True)
 				if stat.stderr:
 					errors.append(f"error editing {data['id']}: couldn't set ip {ip} broadcast! details: {stat.stderr}")
 			
@@ -103,7 +103,7 @@ Gateway={ip['gateway']}
 			
 			
 		else:
-			raise KeyError(f"ddconf.network.save_device: invalid NIC id: {data['id']}, aborting.") 
+			raise KeyError(f"ddconf.network.save_device: invalid data received: {data}, aborting.") 
 		
 		
 		
@@ -114,6 +114,43 @@ Gateway={ip['gateway']}
 		if errors:
 			Path('/home/txhost/.EOUTS/network').write_text(errors)
 		return {'result':'success' if not errors else None, 'error': errors if errors else None}
+	
+
+#TODO
+def validate_devdata(data: dict) -> bool:
+	
+	try:
+		
+		for k,v in data.items():
+			if k == 'id':
+				if not data['id'] or data['id'] not in get_nics():
+					return False
+			elif if k == 'ipv4':
+				if v:
+					for i in v:
+						for _k, _v in v:
+							if _k == 'address' or _k == 'gateway' or _k == 'broadcast':
+								_ = inet_aton(v)
+							elif _k == 'netmask':
+								if type(_v) == int:
+									_ = nmdetransform(_v)
+								elif type(_v) == str:
+									_ = nmtransform(_v)
+							else:
+								return False
+			elif if k == 'protocol':
+				if v != 'static' and v != 'dynamic':
+					return False
+			else:
+				return False
+		
+	except Exception:
+		return False
+	else:
+		return True
+	
+	
+	
 	
 
 
