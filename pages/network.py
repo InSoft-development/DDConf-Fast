@@ -6,6 +6,12 @@ from psutil import net_io_counters, net_if_addrs
 from netifaces import gateways
 from socket import inet_ntoa, inet_aton
 
+
+#TODO daemon-reload, restart networkd, restart resolved
+
+
+
+
 def get_nics() -> list:
 	return [x for x in net_if_addrs().keys() if x != 'lo']
 
@@ -73,9 +79,6 @@ def save_device(data: dict):
 			ipv4: /etc/systemd/network/80-*.network
 			protocol: see ipv4
 			uponboot: wtf/dispatcher
-		
-		TODO: 
-			validation!
 		'''
 		errors = [] 
 		
@@ -101,10 +104,19 @@ Gateway={ip['gateway']}
 			
 			Path(f'/etc/systemd/network/80-{data["id"]}.network').write_text(msg)
 			
+			stat = subprocess.run(f"systemctl daemon-reload".split(), capture_output=True, text=True)
+			if stat.stderr:
+				errors.append(f"error editing {data['id']}: systemctl daemon-reload returned an error! details: {stat.stderr}")
+			stat = subprocess.run(f"systemctl restart systemd-networkd".split(), capture_output=True, text=True)
+			if stat.stderr:
+				errors.append(f"error editing {data['id']}: restarting systemd-networkd returned an error! details: {stat.stderr}")
+			stat = subprocess.run(f"systemctl restart systemd-resolved".split(), capture_output=True, text=True)
+			if stat.stderr:
+				errors.append(f"error editing {data['id']}: restarting systemd-resolved returned an error! details: {stat.stderr}")
+			
 			
 		else:
 			raise KeyError(f"ddconf.network.save_device: invalid data received: {data}, aborting.") 
-		
 		
 		
 	except Exception as e:
@@ -114,9 +126,8 @@ Gateway={ip['gateway']}
 		if errors:
 			Path('/home/txhost/.EOUTS/network').write_text(errors)
 		return {'result':'success' if not errors else None, 'error': errors if errors else None}
-	
 
-#TODO
+
 def validate_devdata(data: dict) -> bool:
 	
 	try:
@@ -148,10 +159,6 @@ def validate_devdata(data: dict) -> bool:
 		return False
 	else:
 		return True
-	
-	
-	
-	
 
 
 def nic_op(_id: str, op: str):
@@ -266,7 +273,7 @@ def gwfind(_id: str) -> str:
 def nmtransform(nm: str) -> str:
 	# 255.255.255.0 -> 24
 	return sum(bin(int(x)).count('1') for x in nm.split('.'))
-	
+
 
 def nmdetransform(nm:int):
 	# 24 -> 255.255.255.0
