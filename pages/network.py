@@ -136,7 +136,7 @@ def validate_devdata(data: dict) -> bool:
 			if k == 'id':
 				if not data['id'] or data['id'] not in get_nics():
 					return False
-			elif if k == 'ipv4':
+			elif k == 'ipv4':
 				if v:
 					for i in v:
 						for _k, _v in v:
@@ -149,7 +149,7 @@ def validate_devdata(data: dict) -> bool:
 									_ = nmtransform(_v)
 							else:
 								return False
-			elif if k == 'protocol':
+			elif k == 'protocol':
 				if v != 'static' and v != 'dynamic':
 					return False
 			else:
