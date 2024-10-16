@@ -59,6 +59,9 @@ def fetch_device(_id: str) -> dict:
 					'broadcast': ip.broadcast
 				})
 			
+			if not data['ipv4']:
+				data['ipv4'] = None
+			
 			#TODO dispatcher up on boot
 			data['uponboot'] = True
 		else:
