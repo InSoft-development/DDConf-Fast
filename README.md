@@ -25,6 +25,6 @@ DataDiode Configuration Server developed with FastAPI
 | | "save_device"| <pre>{<br/>  "id": string,<br/>  "ipv4": \[<br/>    {<br/>      "address": string,<br/>      "netmask": string,<br/>      "gateway": string<br/>      "broadcast": string<br/>    }<br/>  \] \| null,<br/>  "protocol": "static" \| "dynamic",<br/>}</pre> | <pre>{<br/>  "result": string \| null,<br/>  "errors": null \| string<br/>}</pre> | при значении поля protocol=dynamic данные из ipv4 будут проигнорированы. | 
 | | "process_op" |<pre>{<br/>  "op":"start" \|"restart" \| "stop"<br/>} </pre>| <pre>{<br/>  "result": "success" \| null,<br/>  "error": null \| string<br/>}</pre> |  |
 | | "nic_op" |<pre>{<br/>  "op":"up"\|"down",<br/>  "target":string<br/>} </pre>| <pre>{<br/>  "result": "success" \| null,<br/>  "error": null \| string<br/>}</pre> | target: NIC id |
-| | "nic_op" | | <pre>{<br/>  "result": "Остановлен" \| "Критическая ошибка" \| "Ошибка" \| "Запускается" \| "Запущен" \| null,<br/>  "error": null \| string<br/>}</pre> |  |
+| | "netd_status" | | <pre>{<br/>  "result": -2 \| -1 \| 0 \| 1 \| 2 \| null,<br/>  "error": null \| string<br/>}</pre> |  |
 
 
