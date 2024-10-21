@@ -44,7 +44,7 @@ const DeviceInfo = ({ device }) => {
             </div>
             <div className={styles.deviceRow}>
                 <div className='text_type_main_default text_bold'>Ipv4:</div>
-                <div className='text_type_main_default'>{device?.ipv4[0].address || ''}</div>
+                <div className='text_type_main_default'>{device?.ipv4?.[0]?.address || ''}</div>
             </div>
         </div>
     );
