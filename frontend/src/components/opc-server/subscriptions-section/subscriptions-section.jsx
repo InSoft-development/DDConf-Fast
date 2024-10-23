@@ -3,7 +3,7 @@ import { useFieldArray } from 'react-hook-form';
 import Subscription from '../subscription/subscription';
 import { useFormContext } from 'react-hook-form';
 
-const SubscriptionsSection = ({serverId: id}) => {
+const SubscriptionsSection = ({ serverId: id }) => {
 
     const {control} = useFormContext();
 

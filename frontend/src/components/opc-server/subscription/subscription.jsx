@@ -5,7 +5,7 @@ import Input from '../../input/input';
 import { Flex } from 'antd';
 import { useFormContext, Controller } from 'react-hook-form';
 
-const Subscription = ({ subscriptionId: id, serverId, removeSubscription}) => {
+const Subscription = ({ subscriptionId: id, serverId, removeSubscription }) => {
 
     const spaceName = `servers.${serverId}.subscriptions.${id}`;
     const { control } = useFormContext();
@@ -21,33 +21,34 @@ const Subscription = ({ subscriptionId: id, serverId, removeSubscription}) => {
                 <Controller
                     control={control}
                     name={`${spaceName}.interval`}
-                    render={({ field: { value, onChange } }) => {
+                    render={({ field: { value, onChange } }) => (
                         <Input.Number
                             name={`${spaceName}.interval`}
                             width={377}
                             value={value}
                             onChange={onChange}
+                            className='input'
                             placeholder='Введите интервал'
                         />
-                    }}
+                    )}
                 />
 
             </Flex>
-            {/* <Flex vertical className='mt-20'>
+            <Flex vertical className='mt-20'>
                 <label htmlFor={`${spaceName}.items`} className='text_type_main_medium text_bold'>Секция запроса тега:</label>
                 <Controller
                     name={`${spaceName}.items`}
                     control={control}
-                    render={({field: {value, onChange}}) => {
+                    render={({ field: { value, onChange } }) => (
                         <Input.Textarea
                             placeholder='Введите тег'
                             name={`${spaceName}.items`}
                             value={value}
                             onChange={onChange}
                         />
-                    }}
+                    )}
                 />
-            </Flex> */}
+            </Flex>
         </div>
     );
 }
