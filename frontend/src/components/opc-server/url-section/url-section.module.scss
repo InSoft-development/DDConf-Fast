@@ -1,0 +1,21 @@
+@import '../../../scss/colors';
+
+.checkbox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $gray-500;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-left: none;
+    color: white;
+    cursor: pointer;
+}
+
+.checkboxGreen{
+    background-color: lighten($green, 5%);
+}
+
+.checkboxRed{
+    background-color: $red;
+}

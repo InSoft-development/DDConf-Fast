@@ -11,7 +11,7 @@ const Select = ({
     width = 400,
     height = 42,
     disabled = false,
-    defaultValue = undefined,
+    defaultValue,
     className = ''
 }) => {
 
@@ -26,13 +26,14 @@ const Select = ({
                 className={className}
                 value={value}
                 onChange={onChange}
+                defaultValue={defaultValue}
                 style={{
                     width: width,
                     height: height
                 }}
             >
                 {defaultValue && (
-                    <option disabled hidden selected>{defaultValue}</option>
+                    <option disabled hidden>{defaultValue}</option>
                 )}
                 {options.map(({ value, text }, index) => (
                     <option key={index} value={value}>{text}</option>

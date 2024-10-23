@@ -1,8 +1,11 @@
 import React from 'react';
 import { Flex } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import Input from '../../input/input';
 import { useWatch, useFormContext, Controller } from 'react-hook-form';
+import classNames from 'classnames';
+
+import styles from './url-section.module.scss';
 
 const UrlSection = ({ serverId: id }) => {
 
@@ -12,6 +15,12 @@ const UrlSection = ({ serverId: id }) => {
     const watchUrl2Exists = useWatch({
         control,
         name: `${spaceName}.url2_exists`
+    })
+
+    const checkboxClass = classNames({
+        [styles.checkbox]: true,
+        [styles.checkboxGreen]: !watchUrl2Exists,
+        [styles.checkboxRed]: watchUrl2Exists,
     })
 
     return (
@@ -41,7 +50,10 @@ const UrlSection = ({ serverId: id }) => {
                                 name={`${spaceName}.url2_exists`}
                                 value={value}
                                 onChange={onChange}
-                                icon={<PlusOutlined />}
+                                icon={
+                                    watchUrl2Exists ? <MinusOutlined/> : <PlusOutlined/>
+                                }
+                                className={checkboxClass}
                             />
                         )}
                     />

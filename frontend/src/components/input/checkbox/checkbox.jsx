@@ -1,6 +1,4 @@
 import React from 'react';
-import styles from './checkbox.module.scss';
-import classNames from 'classnames';
 
 const Checkbox = ({
     name,
@@ -12,17 +10,16 @@ const Checkbox = ({
     icon=''
 }) => {
 
-    const checkboxClasses = classNames(
-        styles.checkbox,
-    );
-
     return (
         <>
-            <label htmlFor={name} style={{
-                width: width,
-                height: height,
-            }}
-            className={checkboxClasses}>
+            <label 
+                htmlFor={name}
+                style={{
+                    width: width,
+                    height: height,
+                }}
+                className={className}
+            >
                 {icon}
             </label>
             <input 
@@ -31,7 +28,7 @@ const Checkbox = ({
                 name={name}
                 value={value}
                 onChange={onChange}
-                className={`hidden ${className}`}
+                className={`hidden`}
                 autoComplete='off'
             />
         </>
