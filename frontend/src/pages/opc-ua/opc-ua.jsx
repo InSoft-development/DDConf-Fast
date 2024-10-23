@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import OpcServer from '../../components/opc-server/opc-server';
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
+import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
+import OpcServer from '../../components/opc-server/opc-server';
+import Restore from '../../components/opc-server/restore/restore';
 import { getOpcUaForm, sendOpcUaForm, SET_DEFAULT_SLICE_STATE } from '../../services/actions/opc-ua';
 import AppHeader from '../../components/app-header/app-header';
 
@@ -75,6 +76,7 @@ const OpcUa = ({ headerTitle }) => {
                 <div className={styles.opcUa}>
                     <FormProvider {...methods}>
                         <form onSubmit={methods.handleSubmit(onSubmit)}>
+                            <Restore/>
                             {fields.map((field, index) => (
                                 <OpcServer
                                     key={field.id}
