@@ -81,12 +81,12 @@ const Network = ({ headerTitle }) => {
 						/>
 					</div>
 					<div className={styles.row}>
-						<label className="text_type_main_medium text_bold">Статус:</label>
+						<div className="text_type_main_medium text_bold">Статус:</div>
 						<DeviceInfo device={device} />
 					</div>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className={styles.row}>
-							<label htmlFor="" className="text_type_main_medium text_bold">
+							<label htmlFor="protocol" className="text_type_main_medium text_bold">
 								Протоколы:
 							</label>
 							<Controller
@@ -94,6 +94,7 @@ const Network = ({ headerTitle }) => {
 								name={"protocol"}
 								render={({ field: { value, onChange } }) => (
 									<Input.Select
+										name={"protocol"}
 										value={value}
 										onChange={onChange}
 										defaultValue={"Не установлен"}
@@ -121,7 +122,7 @@ const Network = ({ headerTitle }) => {
 								htmlFor="ipv4.0.address"
 								className="text_type_main_medium text_bold"
 							>
-								IPv4 адресс:
+								IPv4 адрес:
 							</label>
 							<Controller
 								name={"ipv4.0.address"}
@@ -131,7 +132,7 @@ const Network = ({ headerTitle }) => {
 										name={"ipv4.0.address"}
 										value={value}
 										onChange={onChange}
-										placeholder="Введите адресс"
+										placeholder="Введите адрес"
 										className='input'
 										disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
 										loading={isFormUploading}
@@ -194,7 +195,7 @@ const Network = ({ headerTitle }) => {
 								htmlFor="ipv4.0.broadcast"
 								className="text_type_main_medium text_bold"
 							>
-								IPv4 диапозон <br />
+								IPv4 диапазон <br />
 								широковешания:
 							</label>
 							<Controller
@@ -205,7 +206,7 @@ const Network = ({ headerTitle }) => {
 										name={"ipv4.0.broadcast"}
 										value={value}
 										onChange={onChange}
-										placeholder="Введите диапозон широковешания"
+										placeholder="Введите диапазон широковешания"
 										className='input'
 										disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
 										loading={isFormUploading}
