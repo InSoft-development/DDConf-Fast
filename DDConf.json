@@ -6,9 +6,9 @@
 	}, 
 	"opcua":{
 		"confdir":"/etc/dd/opcua/configs/", 
-		"base":"/opt/dd/ddOPCUAclient/bin", 
+		"base":"/opt/dd/ddOPCUAclient/bin"
 	}, 
-	"ddconf":{
+	"ddcs":{
 		"host":"0.0.0.0", 
 		"port":8000, 
 		"protocols":[
