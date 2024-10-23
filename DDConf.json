@@ -1,0 +1,19 @@
+{
+	"dd104":{
+		"recvaddr":"192.168.100.10", 
+		"confdir":"/etc/dd/dd104/configs/", 
+		"loadoutdir":"/etc/dd/dd104/loadouts/"
+	}, 
+	"opcua":{
+		"confdir":"/etc/dd/opcua/configs/", 
+		"base":"/opt/dd/ddOPCUAclient/bin", 
+	}, 
+	"ddconf":{
+		"host":"0.0.0.0", 
+		"port":8000, 
+		"protocols":[
+			{"name":"dd104", "service":"dd104client.service", "bin":"/opt/dd/dd104client"}, 
+			{"name":"OPCUA", "service":"ddOPCUAclient.service","bin":"/opt/dd/ddopcuaclient"}
+		]
+	}
+}
