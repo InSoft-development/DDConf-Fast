@@ -59,6 +59,7 @@ class OPCUADefaults(BaseModel):
 class DDCSDefaults(BaseModel):
 	host: str
 	port: str | int
+	mode: str
 	protocols: List[ProcDefaults]
 
 
