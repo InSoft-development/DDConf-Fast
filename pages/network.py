@@ -10,8 +10,6 @@ from socket import inet_ntoa, inet_aton
 #TODO daemon-reload, restart networkd, restart resolved
 
 
-
-
 def get_nics() -> list:
 	return [x for x in net_if_addrs().keys() if x != 'lo']
 
