@@ -98,7 +98,12 @@ const dashboardSlice = createSlice({
         builder.addCase(fetchNetwork.fulfilled, (state, action) => {
             state.fetchNetworkStatus = 'fulfielled';
             state.fetchNetworkError = null;
-            state.protocols = action.payload.result;
+            state.network = action.payload.result.map((net, i) => {
+                return {
+                    ...net,
+                    id: i
+                }
+            });
         });
         builder.addCase(fetchNetwork.rejected, (state, action) => {
             state.fetchNetworkStatus = 'rejected';

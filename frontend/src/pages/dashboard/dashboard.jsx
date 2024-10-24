@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getDevicesNet, getDeviceFeatures, SET_DEFAULT_SLICE_STATE } from '../../services/actions/dashboard';
+import { fetchInitial, fetchNetwork } from '../../services/slices/dashboard';
 import { Flex, Table } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import AppHeader from '../../components/app-header/app-header';
@@ -14,21 +14,22 @@ const Dashboard = ({ headerTitle }) => {
     const {
         serial,
         license,
-        devices,
-        deviceFeaturesRequest,
-        deviceNetRequest
+        network,
+        fetchInitialStatus,
+        fetchNetworkStatus
     } = useSelector(store => store.device);
 
     useEffect(() => {
-        dispatch(getDeviceFeatures())
-        dispatch(getDevicesNet());
+        dispatch(fetchInitial())
+        dispatch(fetchNetwork());
 
-        return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
+        // return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
     }, [dispatch])
 
-    const isDataUploding =
-        deviceFeaturesRequest ||
-        deviceNetRequest;
+    const isDataUploading =
+        fetchInitialStatus === 'pending' ||
+        fetchNetworkStatus === 'pending'
+
 
     return (
         <>
@@ -37,7 +38,7 @@ const Dashboard = ({ headerTitle }) => {
                 <div className={styles.dashboardPage}>
                     <Flex align='center'>
                         <div className='text_type_main_medium text_bold'>ПАК ОПТИ:</div>
-                        {isDataUploding ? (
+                        {isDataUploading ? (
                             <LoadingOutlined className='ml-8' />
                         ) : (
                             <div className='text_type_main_default ml-4'>{serial}</div>
@@ -46,7 +47,7 @@ const Dashboard = ({ headerTitle }) => {
                     </Flex>
                     <Flex align='center' className='mt-4'>
                         <div className='text_type_main_medium text_bold'>Лицензия:</div>
-                        {isDataUploding ? (
+                        {isDataUploading ? (
                             <LoadingOutlined className='ml-8' />
                         ) : (
                             <div className='text_type_main_default ml-4'>{license}</div>
@@ -69,10 +70,10 @@ const Dashboard = ({ headerTitle }) => {
                             <Table
                                 className='mt-20'
                                 rowKey={(record) => record.id}
-                                loading={isDataUploding}
+                                loading={isDataUploading}
                                 showHeader={false}
                                 columns={dashboardTableSheme}
-                                dataSource={devices}
+                                dataSource={network}
                                 pagination={false}
                             />
                         </div>
