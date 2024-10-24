@@ -13,8 +13,20 @@
 		"port":8000, 
 		"mode":"tx",
 		"protocols":[
-			{"name":"dd104", "service":"dd104client.service", "bin":"/opt/dd/dd104client"}, 
-			{"name":"OPCUA", "service":"ddOPCUAclient.service","bin":"/opt/dd/ddopcuaclient"}
+			{
+				"name":"dd104", 
+				"link":"/dd104", 
+				"title":"МЭК 104",
+				"service":"dd104client", 
+				"bin":"/opt/dd/dd104client"
+			}, 
+			{
+				"name":"opcua", 
+				"link":"/opcua",
+				"title":"OPC UA",
+				"service":"ddOPCUAclient",
+				"bin":"/opt/dd/ddopcuaclient"
+			}
 		]
 	}
 }

@@ -27,7 +27,17 @@ import pages.network as Net
 import models as Models
 from models import Token, TokenData, User, POST
 
-_mode = 'tx'
+
+# DEFAULTS and CONFIGS
+BASE_DIR = Path(__file__).parent
+DEFAULTS = None
+
+if Path('/etc/dd/DDConf.json').is_file():
+	DEFAULTS = Models.MainDefaults.model_validate_json(Path('/etc/dd/DDConf.json').read_text())
+else:
+	syslog.syslog(syslog.LOG_CRIT, f"ddconf.main: ERROR: couldn't get the config, /etc/dd/DDConf.json doesn't exist! exiting.")
+	os._exit(os.EX_CONFIG)
+
 
 #Auth
 SECRET_KEY=Path('/etc/dd/ddconf/.auth/secret').read_text()
@@ -121,9 +131,6 @@ async def lifespan(app: FastAPI):
 # oauth2_scheme = Login.oauth2_scheme
 
 app = FastAPI(docs_url=None, redoc_url=None, lifespan=lifespan)
-
-
-BASE_DIR = Path(__file__).parent
 
 
 origins = [
@@ -258,7 +265,7 @@ def get_any(_path: str):#, token: Annotated[str, Depends(get_current_user)]):
 def login():
 	pass#TODO
 
-
+#TODO defaults
 @app.post("/dashboard")
 def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
@@ -274,8 +281,14 @@ def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 			
 		elif REQ.method == "fetch_protocols":
 			
-			return Dashboard.fetch_protocols()
+			return [{"name":x.name, "link":x.link, "title":x.title} for x in DEFAULTS.ddcs.protocols]
 			
+		elif REQ.method == 'fetch_status':
+			svc = next((i for i in DEFAULTS.ddcs.protocols if i.name == REQ.params), None)
+			if svc:
+				return Dashboard.fetch_status(svc)
+			else:
+				raise RuntimeError(f"{REQ.params} not found in config!")
 		
 	except Exception as e:
 		tb = traceback.format_exc().strip().split('\n')[1::]
@@ -284,6 +297,7 @@ def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 		return {"result": None, "error": msg}
 
 
+#TODO: indexes
 @app.post("/dd104")
 def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	try:
@@ -402,7 +416,6 @@ def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -
 		return {"result": data, "error":None if not errs else errs}
 
 
-#TODO
 @app.post('/opcua')
 def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]):
 	
@@ -412,9 +425,9 @@ def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)])
 	try:
 		
 		if REQ.method == 'post_ua':
-			data = OPCUA.make_file(REQ.params, f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
+			data = OPCUA.make_file(REQ.params, f"/etc/dd/opcua/ddOPCUA{'server' if DEFAULTS.ddcs.mode == 'rx' else 'client'}.ini")
 		elif REQ.method == 'fetch_ua':
-			data = OPCUA.fetch_file(f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini")
+			data = OPCUA.fetch_file(f"/etc/dd/opcua/ddOPCUA{'server' if DEFAULTS.ddcs.mode == 'rx' else 'client'}.ini")
 		
 		
 	except Exception as e:

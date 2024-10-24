@@ -41,6 +41,8 @@ class User(BaseModel):
 
 class ProcDefaults(BaseModel):
 	name: str
+	title: str
+	link: str
 	service: str 
 	bin: str
 
