@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchInitial, fetchNetwork } from '../../services/slices/dashboard';
+import { fetchNetwork, clearSlice } from '../../services/slices/dashboard';
 import { Flex, Table } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import AppHeader from '../../components/app-header/app-header';
@@ -15,21 +15,17 @@ const Dashboard = ({ headerTitle }) => {
         serial,
         license,
         network,
+        protocols,
         fetchInitialStatus,
-        fetchNetworkStatus
-    } = useSelector(store => store.device);
+        fetchNetworkStatus,
+        fetchProtocolsStatus
+    } = useSelector(store => store.dashboard);
 
     useEffect(() => {
-        dispatch(fetchInitial())
         dispatch(fetchNetwork());
 
-        // return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
-    }, [dispatch])
-
-    const isDataUploading =
-        fetchInitialStatus === 'pending' ||
-        fetchNetworkStatus === 'pending'
-
+        return () => dispatch(clearSlice())
+    }, [dispatch]);
 
     return (
         <>
@@ -38,7 +34,7 @@ const Dashboard = ({ headerTitle }) => {
                 <div className={styles.dashboardPage}>
                     <Flex align='center'>
                         <div className='text_type_main_medium text_bold'>ПАК ОПТИ:</div>
-                        {isDataUploading ? (
+                        {fetchInitialStatus === 'pending' ? (
                             <LoadingOutlined className='ml-8' />
                         ) : (
                             <div className='text_type_main_default ml-4'>{serial}</div>
@@ -47,7 +43,7 @@ const Dashboard = ({ headerTitle }) => {
                     </Flex>
                     <Flex align='center' className='mt-4'>
                         <div className='text_type_main_medium text_bold'>Лицензия:</div>
-                        {isDataUploading ? (
+                        {fetchInitialStatus === 'pending' ? (
                             <LoadingOutlined className='ml-8' />
                         ) : (
                             <div className='text_type_main_default ml-4'>{license}</div>
@@ -56,12 +52,17 @@ const Dashboard = ({ headerTitle }) => {
                     <div className='mt-20'>
                         <div className='text_type_main_medium text_bold'>Протоколы:</div>
                         <ul className={styles.protocolsList}>
-                            <li>
-                                <Link to='/dd104' className='text_type_main_default'>МЭК 104</Link>
-                            </li>
-                            <li>
-                                <Link to='/opcua' className='text_type_main_default'>OPC UA</Link>
-                            </li>
+                            {fetchProtocolsStatus === 'pending' ? (
+                                <LoadingOutlined className='ml-8' />
+                            ) : (
+                                <>
+                                    {protocols.map((protocol, index) => (
+                                        <li key={index}>
+                                            <Link to='/#' className='text_type_main_default'>{protocol.name}</Link>
+                                        </li>
+                                    ))}
+                                </>
+                            )}
                         </ul>
                     </div>
                     <div className='mt-20'>
@@ -70,7 +71,7 @@ const Dashboard = ({ headerTitle }) => {
                             <Table
                                 className='mt-20'
                                 rowKey={(record) => record.id}
-                                loading={isDataUploading}
+                                loading={fetchNetworkStatus === 'pending'}
                                 showHeader={false}
                                 columns={dashboardTableSheme}
                                 dataSource={network}

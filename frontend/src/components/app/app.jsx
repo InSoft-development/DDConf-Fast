@@ -1,9 +1,19 @@
 import { Routes, Route } from 'react-router-dom';
-
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchInitial, fetchProtocols } from '../../services/slices/dashboard';
 import Layout from '../layout/layout';
 import { SignIn, Dd104, Dashboard, OpcUa, ProfileEditor, Network } from '../../pages';
+import ProtectedRoute from '../../hoc/protected-route';
 
 const App = () => {
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchInitial());
+        dispatch(fetchProtocols());
+    }, [])
 
     return (
         <>
@@ -13,14 +23,20 @@ const App = () => {
                         <Dashboard headerTitle={'Дашборд'} />
                     }></Route>
                     <Route path='dd104' element={
-                        <Dd104 headerTitle={'Протокол МЭК 104'} />
+                        <ProtectedRoute protocol={'dd104'}>
+                            <Dd104 headerTitle={'Протокол МЭК 104'} />
+                        </ProtectedRoute>
                     }>
                     </Route>
                     <Route path='profile-editor' element={
-                        <ProfileEditor headerTitle={'Протокол МЭК 104'} />
+                        <ProtectedRoute protocol={'dd104'}>
+                            <ProfileEditor headerTitle={'Протокол МЭК 104'} />
+                        </ProtectedRoute>
                     }></Route>
                     <Route path='opcua' element={
-                        <OpcUa headerTitle={'OPC UA'} />
+                        <ProtectedRoute protocol={'opcua'}>
+                            <OpcUa headerTitle={'OPC UA'} />
+                        </ProtectedRoute>
                     }></Route>
                     <Route path='network' element={
                         <Network headerTitle={'Сетевые интерфейсы'} />

@@ -61,6 +61,13 @@ const fetchNetwork = createAsyncThunk(
 const dashboardSlice = createSlice({
     name: 'dashboard',
     initialState: initialState,
+    reducers: {
+        clearSlice: (state, action) => {
+            state.network = [];
+            state.fetchNetworkStatus = false;
+            state.fetchNetworkError = false;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchInitial.pending, state => {
             state.fetchInitialStatus = 'pending';
@@ -84,7 +91,7 @@ const dashboardSlice = createSlice({
         builder.addCase(fetchProtocols.fulfilled, (state, action) => {
             state.fetchProtocolsStatus = 'fulfilled';
             state.fetchProtocolsError = null;
-            state.protocols = action.payload.result.protocols;
+            state.protocols = action.payload.result;
         });
         builder.addCase(fetchProtocols.rejected, (state, action) => {
             state.fetchProtocolsStatus = 'rejected';
@@ -113,4 +120,5 @@ const dashboardSlice = createSlice({
 });
 
 export { fetchInitial, fetchProtocols, fetchNetwork };
+export const { clearSlice } = dashboardSlice.actions;
 export default dashboardSlice.reducer;

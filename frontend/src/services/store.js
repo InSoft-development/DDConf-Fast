@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 
 import { modalsReducer } from './reducers/modals';
 import {profileReducer} from './reducers/profile';
-import deviceReducer from './slices/dashboard';
+import dashboardSlice from './slices/dashboard';
 import { opcuaReducer } from './reducers/opc-ua';
 import { profileEditorReducer } from './reducers/profile-editor';
 import { networkReducer } from './reducers/network';
@@ -11,7 +11,7 @@ import { networkReducer } from './reducers/network';
 const rootReducer = combineReducers({
     profile: profileReducer,
     modals: modalsReducer,
-    device: deviceReducer,
+    dashboard: dashboardSlice,
     opcua: opcuaReducer,
     profileEditor: profileEditorReducer,
     network: networkReducer
