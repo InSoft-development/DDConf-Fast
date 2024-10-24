@@ -13,6 +13,7 @@ const App = () => {
     useEffect(() => {
         dispatch(fetchInitial());
         dispatch(fetchProtocols());
+        //eslint-disable-next-line
     }, [])
 
     return (

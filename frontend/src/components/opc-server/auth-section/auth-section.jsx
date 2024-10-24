@@ -61,7 +61,7 @@ const AuthSection = ({ serverId: id }) => {
                 return <></>
             }
         }
-    }, [watchAuthType])
+    }, [watchAuthType, spaceName, control])
 
     return (
         <>

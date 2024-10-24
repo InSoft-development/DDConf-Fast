@@ -43,7 +43,7 @@ const Dd104 = ({ headerTitle }) => {
         return () => {
             dispatch({ type: SET_DEFAULT_SLICE_STATE })
         }
-
+        // eslint-disable-next-line
     }, [])
 
     const onStartAllBtnClickHandler = () => {

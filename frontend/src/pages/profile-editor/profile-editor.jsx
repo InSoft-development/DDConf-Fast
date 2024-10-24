@@ -72,7 +72,7 @@ const ProfileEditor = ({ headerTitle }) => {
 
     useEffect(() => {
         setFormValues(table)
-    }, [table])
+    }, [table, setFormValues]);
 
     // form handlers
     const onSubmit = (e) => {

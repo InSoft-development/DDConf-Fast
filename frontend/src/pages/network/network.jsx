@@ -29,6 +29,7 @@ const Network = ({ headerTitle }) => {
 		dispatch(getDevices());
 
 		return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
+		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {

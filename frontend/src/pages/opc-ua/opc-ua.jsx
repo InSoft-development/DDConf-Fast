@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import OpcServer from '../../components/opc-server/opc-server';
 import Restore from '../../components/opc-server/restore/restore';
-import { getOpcUaForm, sendOpcUaForm, SET_DEFAULT_SLICE_STATE } from '../../services/actions/opc-ua';
+import { getOpcUaForm, SET_DEFAULT_SLICE_STATE } from '../../services/actions/opc-ua';
 import AppHeader from '../../components/app-header/app-header';
 
 import styles from './opc-ua.module.scss';
