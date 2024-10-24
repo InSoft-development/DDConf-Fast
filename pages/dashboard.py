@@ -3,7 +3,7 @@ from pathlib import Path
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 
-from ../Models import ProcDefaults
+# from DDConf-Fast.models import ProcDefaults
 
 def fetch_net() -> dict:
 	# {'mac':'', 'ip':'', 'status':''}
@@ -97,7 +97,7 @@ def proc_status(svc: str) -> int:
 		return -2#f"Критическая ошибка"
 
 
-def fetch_status(svc: ProcDefaults) -> dict:
+def fetch_status(svc) -> dict:
 	
 	try:
 		data = None
