@@ -71,11 +71,11 @@ const dashboardSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchInitial.pending, state => {
             state.fetchInitialStatus = 'pending';
-            state.fetchInitialError = null;
+            state.fetchInitialError = false;
         });
         builder.addCase(fetchInitial.fulfilled, (state, action) => {
             state.fetchInitialStatus = 'fulfilled';
-            state.fetchInitialError = null;
+            state.fetchInitialError = false;
             state.serial = action.payload.result.serial;
             state.license = action.payload.result.license;
         });
@@ -86,11 +86,11 @@ const dashboardSlice = createSlice({
 
         builder.addCase(fetchProtocols.pending, state => {
             state.fetchProtocolsStatus = 'pending';
-            state.fetchProtocolsError = null;
+            state.fetchProtocolsError = false;
         });
         builder.addCase(fetchProtocols.fulfilled, (state, action) => {
             state.fetchProtocolsStatus = 'fulfilled';
-            state.fetchProtocolsError = null;
+            state.fetchProtocolsError = false;
             state.protocols = action.payload.result;
         });
         builder.addCase(fetchProtocols.rejected, (state, action) => {
@@ -100,11 +100,11 @@ const dashboardSlice = createSlice({
 
         builder.addCase(fetchNetwork.pending, state => {
             state.fetchNetworkStatus = 'pending';
-            state.fetchNetworkError = null;
+            state.fetchNetworkError = false;
         });
         builder.addCase(fetchNetwork.fulfilled, (state, action) => {
             state.fetchNetworkStatus = 'fulfielled';
-            state.fetchNetworkError = null;
+            state.fetchNetworkError = false;
             state.network = action.payload.result.map((net, i) => {
                 return {
                     ...net,
