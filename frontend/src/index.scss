@@ -15,6 +15,7 @@ html {
 
 .wrapper {
     max-width: $layout-width;
+    min-width: $layout-min-width;
     margin: 0 auto;
     padding: 0 $layout-external-indentation;
     box-sizing: border-box;

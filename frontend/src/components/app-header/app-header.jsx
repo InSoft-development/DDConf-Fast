@@ -14,6 +14,8 @@ const AppHeader = ({title}) => {
 
     return (
         <header className={styles.header}>
+            <div className={styles.upLine}></div>
+            <div className={styles.downLine}></div>
             <h6 className='wrapper text_type_main_small text_bold'>ДД Конфигуратор</h6>
             <h4 className='wrapper text_type_main_extra-large'>
                 <MenuOutlined className='mr-14' 

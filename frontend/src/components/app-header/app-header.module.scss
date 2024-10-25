@@ -6,38 +6,33 @@
     position: relative;
 }
 
-.header:before{
-    content: '';
-    display: block;
-    width: 100%;
+.upLine{
+    width: 100vw;
     height: $header-upline-height;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
     background-color: $green;
 }
 
-.header > h6{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: $header-upline-height;
-    width: 100%;
-    color: #ffffff;
-    text-wrap: nowrap;
-}
-
-.header::after{
-    content: '';
-    display: block;
-    width: 100%;
+.downLine{
+    width: 100vw;
     height: $header-body-height;
-    position: absolute;
+    background-color: $gray-300;
+    position: fixed;
     top: $header-upline-height;
     left: 0;
     z-index: -1;
-    background-color: $gray-200;
+}
+
+.header > h6{
+    width: 100%;
+    height: $header-upline-height;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: #fff;
 }
 
 .header > h4{
