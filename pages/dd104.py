@@ -6,11 +6,12 @@ from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 from time import sleep 
 
-from models import Defaults
+from models import DD104Defaults
 # Globals
-_mode = 'tx'
+pdef = json.loads(Path("/etc/dd/DDConf.json").read_text())
+_mode = pdef['mode']
 
-DEFAULTS = Defaults("/etc/dd/DDConf.json") #change this parameter later to a CLI parameter
+DEFAULTS = DD104Defaults(**next(x['config'] for x in pdef['protocols'] if x['name']=='dd104')) 
 # /Globals
 
 def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
@@ -35,7 +36,7 @@ def _archive_d(filepath:str, location=f'/etc/dd/dd104/archive.d'):
 
 def rm_inis():
 	try:
-		dest = Path(Defaults.DD["INIDIR"])
+		dest = Path(DEFAULTS.confdir)
 		for ini in listdir(dest):
 			(dest/ini).unlink()
 			syslog.syslog(syslog.LOG_INFO, f"ddconf.dd104.rm_inis: {str(dest/ini)} file was removed")
@@ -71,16 +72,16 @@ def delete_ld(name: str):
 			if name == get_active_ld():
 				rm_services()
 				rm_inis()
-				(Path(Defaults.DD['LOADOUTDIR'])/'.ACTIVE.loadout').unlink()
+				(Path(DEFAULTS.loadoutdir)/'.ACTIVE.loadout').unlink()
 			
-			_f = Path(Defaults.DD['LOADOUTDIR'])/f"{name}{'.loadout' if '.loadout' not in name else ''}"
+			_f = Path(DEFAULTS.loadoutdir)/f"{name}{'.loadout' if '.loadout' not in name else ''}"
 			_f.unlink()
 		else:
 			raise ValueError(f"ddconf.dd104.delete_ld: loadout name {name} is invalid.")
 	except ValueError as v:
 		raise v
 	except Exception as e:
-		msg = f"ddconf.dd104.delete_ld: couldn't remove loadout file {str(Path(Defaults.DD['LOADOUTDIR'])/f'{name}.loadout')}."
+		msg = f"ddconf.dd104.delete_ld: couldn't remove loadout file {str(Path(DEFAULTS.loadoutdir)/f'{name}.loadout')}."
 		#DEBUG
 		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
 		raise RuntimeError(e)
@@ -98,13 +99,13 @@ def create_inis(data: list):
 				if not proc['main']:
 					proc['main'] = proc['second']
 					proc['second'] = None
-				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={Defaults.RXADDR}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
+				msg = f"# Файл сгенерирован Сервисом Конфигурации Диода Данных;\n# comment: {proc['comment']}\nreceiver\naddress={DEFAULTS.recvaddr}\n\nserver\naddress1={proc['main'].split(':')[0]}\nport1={proc['main'].split(':')[1]}"
 				if proc['second']:
 					msg = msg+f"\naddress2={proc['second'].split(':')[0]}\nport2={proc['second'].split(':')[1]}"
 				
-				(Path(Defaults.DD["INIDIR"])/f"dd104client{COUNT}.ini").write_text(msg)
-				syslog.syslog(syslog.LOG_INFO, f'ddconf.dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
-				print(f'ddconf.dd104.create_inis: Created a file at {(str(Path(Defaults.DD["INIDIR"])/"dd104client")+str(COUNT)+".ini")}. ')
+				(Path(DEFAULTS.confdir)/f"dd104client{COUNT}.ini").write_text(msg)
+				syslog.syslog(syslog.LOG_INFO, f'ddconf.dd104.create_inis: Created a file at {(str(Path(DEFAULTS.confdir)/"dd104client")+str(COUNT)+".ini")}. ')
+				print(f'ddconf.dd104.create_inis: Created a file at {(str(Path(DEFAULTS.confdir)/"dd104client")+str(COUNT)+".ini")}. ')
 				
 			else:
 				raise ValueError(f"process {COUNT} data is invalid ({proc})")
@@ -120,7 +121,7 @@ def create_services(count:int):
 	try:
 		
 		for i in range(0, count): #why was this +2 ??? and didn't change in develop!!!
-			msg = f"[Unit]\nDescription=dd104client\nAfter=hasplmd.service\n[Service]\nKillMode=mixed\nExecStartPre=/bin/sleep 5\nExecStart=/opt/dd/{'dd104client/dd104client' if _mode=='tx' else 'dd104server/dd104server'} -c {Defaults.DD['INIDIR']}dd104{'client' if _mode=='tx' else 'server'}{i}.ini\nRestart=always\nUser=dd\nGroup=dd\n\n[Install]\nWantedBy=multi-user.target"
+			msg = f"[Unit]\nDescription=dd104client\nAfter=hasplmd.service\n[Service]\nKillMode=mixed\nExecStartPre=/bin/sleep 5\nExecStart=/opt/dd/{'dd104client/dd104client' if _mode=='tx' else 'dd104server/dd104server'} -c {DEFAULTS.confdir}dd104{'client' if _mode=='tx' else 'server'}{i}.ini\nRestart=always\nUser=dd\nGroup=dd\n\n[Install]\nWantedBy=multi-user.target"
 			
 			_ = Path(f'/etc/systemd/system/{"dd104client" if _mode=="tx" else "dd104server"}{i}.service').write_text(msg)
 			
@@ -184,7 +185,7 @@ def save_ld(filename: str, data : dict) -> None:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
 		if validate_ld_data(data):
-			(Path(Defaults.DD["LOADOUTDIR"])/filename).write_text(json.dumps(data))
+			(Path(DEFAULTS.loadoutdir)/filename).write_text(json.dumps(data))
 			if filename == get_active_ld():
 				apply_ld(filename)
 		else:
@@ -202,8 +203,8 @@ def apply_ld(filename: str) -> None:
 	try:
 		if not filename.split('.')[-1] == 'loadout':
 			filename = filename+".loadout"
-		if (Path(Defaults.DD["LOADOUTDIR"])/filename).is_file():
-			data = json.loads((Path(Defaults.DD["LOADOUTDIR"])/filename).read_text())
+		if (Path(DEFAULTS.loadoutdir)/filename).is_file():
+			data = json.loads((Path(DEFAULTS.loadoutdir)/filename).read_text())
 			if type(data) == list:
 				rm_inis()
 				rm_services()
@@ -220,10 +221,10 @@ def apply_ld(filename: str) -> None:
 		else:
 			raise FileNotFoundError(f"Attempted to apply {filename}; file doesn't exist or is unavailable.")
 		
-		if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").is_file():
-			(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").unlink()
+		if (Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").is_file():
+			(Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").unlink()
 		
-		(Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").symlink_to(Defaults.DD["LOADOUTDIR"]+filename)
+		(Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").symlink_to(DEFAULTS.loadoutdir+filename)
 		
 		return "success"
 	except Exception as e:
@@ -234,10 +235,10 @@ def apply_ld(filename: str) -> None:
 
 def get_processes(LD_ID: str) -> list:
 	# will return a list of dicts with fields "main", "secondary", "comment" 
-	loadouts = [x for x in listdir(Defaults.DD["LOADOUTDIR"]) if (Path(Defaults.DD["LOADOUTDIR"])/x).is_file() and (Path(Defaults.DD["LOADOUTDIR"])/x).name.split('.')[-1] == 'loadout']
+	loadouts = [x for x in listdir(DEFAULTS.loadoutdir) if (Path(DEFAULTS.loadoutdir)/x).is_file() and (Path(DEFAULTS.loadoutdir)/x).name.split('.')[-1] == 'loadout']
 	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
 	if ID in loadouts:
-		data = json.loads((Path(Defaults.DD["LOADOUTDIR"])/ID).read_text())
+		data = json.loads((Path(DEFAULTS.loadoutdir)/ID).read_text())
 		for i in data:
 			if 'main' not in i or not i['main']:
 				if 'second' in i and i['second']:
@@ -258,7 +259,7 @@ def get_processes(LD_ID: str) -> list:
 def get_active_ld() -> str:
 	# returns the active ld ID (!!!)
 	try:
-		return ((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().name.split('.')[:-1:])) if (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").exists() and  (Path(Defaults.DD["LOADOUTDIR"])/".ACTIVE.loadout").resolve().is_file() else None
+		return ((Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").resolve().name if (Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").resolve().name.split('.')[-1] != 'loadout' else '.'.join((Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").resolve().name.split('.')[:-1:])) if (Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").exists() and  (Path(DEFAULTS.loadoutdir)/".ACTIVE.loadout").resolve().is_file() else None
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.get_active_ld: Error: {str(e)}")
 		return f"Ошибка: {str(e)}"
@@ -266,7 +267,7 @@ def get_active_ld() -> str:
 
 def list_ld() -> list:
 	# lists loadout IDs !!!
-	return ['.'.join(x.split('.')[:-1:]) for x in listdir(Defaults.DD["LOADOUTDIR"]) if (Path(Defaults.DD["LOADOUTDIR"])/x).is_file() and (Path(Defaults.DD["LOADOUTDIR"])/x).name.split('.')[-1] == 'loadout' and (Path(Defaults.DD["LOADOUTDIR"])/x).name != ".ACTIVE.loadout"]
+	return ['.'.join(x.split('.')[:-1:]) for x in listdir(DEFAULTS.loadoutdir) if (Path(DEFAULTS.loadoutdir)/x).is_file() and (Path(DEFAULTS.loadoutdir)/x).name.split('.')[-1] == 'loadout' and (Path(DEFAULTS.loadoutdir)/x).name != ".ACTIVE.loadout"]
 	# return ["a", "b", "ne b"]
 
 
