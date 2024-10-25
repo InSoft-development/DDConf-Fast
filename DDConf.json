@@ -22,8 +22,8 @@
 			"service":"ddOPCUAclient",
 			"bin":"/opt/dd/ddopcuaclient",
 			"config": {
-				"confdir":"/etc/dd/opcua/configs/", 
-				"base":"/opt/dd/ddOPCUAclient/bin"
+				"confdir":"/etc/dd/opcua/", 
+				"base":"/opt/dd/ddOPCUAclient/bin/"
 			}
 		}
 	]
