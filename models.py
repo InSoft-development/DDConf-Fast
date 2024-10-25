@@ -39,15 +39,6 @@ class User(BaseModel):
 # 	hashed_password: str
 
 
-class ProcDefaults(BaseModel):
-	name: str
-	title: str
-	link: str
-	service: str 
-	bin: str
-	config: DD104Defaults | OPCUADefaults
-
-
 class DD104Defaults(BaseModel):
 	recvaddr: str
 	confdir: str | Path
@@ -57,6 +48,15 @@ class DD104Defaults(BaseModel):
 class OPCUADefaults(BaseModel):
 	base: str
 	confdir: str | Path
+
+
+class ProcDefaults(BaseModel):
+	name: str
+	title: str
+	link: str
+	service: str 
+	bin: str
+	config: DD104Defaults | OPCUADefaults
 
 
 class DDCSDefaults(BaseModel):
