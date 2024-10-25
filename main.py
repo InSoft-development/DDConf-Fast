@@ -426,11 +426,11 @@ def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)])
 	errs = []
 	
 	try:
-		proc = next(x['config'] for x in DEFAULTS.protocols if x['name']=='opcua')
+		proc = next(x.config for x in DEFAULTS.protocols if x.name=='opcua')
 		if REQ.method == 'post_ua':
-			data = OPCUA.make_file(REQ.params, f"{DEFAULTS.config.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
+			data = OPCUA.make_file(REQ.params, f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
 		elif REQ.method == 'fetch_ua':
-			data = OPCUA.fetch_file(f"{DEFAULTS.config.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
+			data = OPCUA.fetch_file(f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
 		
 		
 	except Exception as e:
