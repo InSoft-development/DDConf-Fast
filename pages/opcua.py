@@ -6,17 +6,18 @@ from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 from tempfile import SpooledTemporaryFile
 
-from models import Defaults
+from models import OPCUADefaults
 # Globals
-_mode = 'tx'
+pdef = json.loads(Path("/etc/dd/DDConf.json").read_text())
+_mode = pdef['mode']
 
-DEFAULTS = Defaults("/etc/dd/DDConf.json") #change this parameter later to a CLI parameter
+DEFAULTS = OPCUADefaults(**next(x['config'] for x in pdef['protocols'] if x['name']=='opcua')) 
 # /Globals
 
 
 def rm_inis():
 	try:
-		dest = Path(DEFAULTS.OPCUA['INIDIR'])
+		dest = Path(DEFAULTS.confdir)
 		for ini in listdir(dest):
 			(dest/ini).unlink()
 			syslog.syslog(syslog.LOG_INFO, f"ddconf.opcua.rm_inis: {str(dest/ini)} file was removed")
@@ -135,9 +136,8 @@ def validate_url(url:str) -> str:
 	
 
 
-def make_file(data: dict, fname="/etc/dd/opcua/config.ini") -> str:
+def make_file(data: dict, fname="{DEFAULTS.confdir}/config.ini") -> str:
 	#WARNING god help you who reads this
-	#TODO certs
 	
 	try:
 		if Path(fname).is_file():
@@ -192,8 +192,7 @@ items
 	return "success"
 
 
-def fetch_file(path=f"/etc/dd/opcua/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini") -> dict:
-	#TODO
+def fetch_file(path=f"{DEFAULTS.confdir}/ddOPCUA{'server' if _mode == 'rx' else 'client'}.ini") -> dict:
 	
 	try:
 		data = {"restore":None, "servers": [], "servers_len":0}

@@ -1,4 +1,4 @@
-import json, syslog, traceback, datetime, os, jwt
+import json, syslog, traceback, datetime, os, jwt, importlib.util
 from typing import Union, Annotated
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket
@@ -18,25 +18,28 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 
-# from pages.router import router as router_pages
+
 import pages.dd104 as DD104
 import pages.dashboard as Dashboard
 import pages.opcua as OPCUA
 import pages.network as Net
 
-import models as Models
-from models import Token, TokenData, User, POST
+from models import Token, TokenData, User, POST, DDCSDefaults
 
-
+#TODO: conditional imports
 # DEFAULTS and CONFIGS
 BASE_DIR = Path(__file__).parent
 DEFAULTS = None
 
 if Path('/etc/dd/DDConf.json').is_file():
-	DEFAULTS = Models.MainDefaults.model_validate_json(Path('/etc/dd/DDConf.json').read_text())
+	DEFAULTS = DDCSDefaults.model_validate_json(Path('/etc/dd/DDConf.json').read_text())
 else:
 	syslog.syslog(syslog.LOG_CRIT, f"ddconf.main: ERROR: couldn't get the config, /etc/dd/DDConf.json doesn't exist! exiting.")
 	os._exit(os.EX_CONFIG)
+
+
+# for proto in DEFAULTS.protocols:
+# 	if 
 
 
 #Auth
@@ -347,10 +350,10 @@ def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 			
 		elif REQ.method == "fetch_protocols":
 			
-			return Dashboard.fetch_protocols(DEFAULTS.ddcs.protocols)
+			return Dashboard.fetch_protocols(DEFAULTS.protocols)
 			
 		elif REQ.method == 'fetch_status':
-			svc = next((i for i in DEFAULTS.ddcs.protocols if i.name == REQ.params), None)
+			svc = next((i for i in DEFAULTS.protocols if i.name == REQ.params), None)
 			if svc:
 				return Dashboard.fetch_status(svc)
 			else:
@@ -489,11 +492,11 @@ def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)])
 	errs = []
 	
 	try:
-		
+		proc = **next(x['config'] for x in DEFAULTS.protocols if x['name']=='opcua')
 		if REQ.method == 'post_ua':
-			data = OPCUA.make_file(REQ.params, f"/etc/dd/opcua/ddOPCUA{'server' if DEFAULTS.ddcs.mode == 'rx' else 'client'}.ini")
+			data = OPCUA.make_file(REQ.params, f"{DEFAULTS.config.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
 		elif REQ.method == 'fetch_ua':
-			data = OPCUA.fetch_file(f"/etc/dd/opcua/ddOPCUA{'server' if DEFAULTS.ddcs.mode == 'rx' else 'client'}.ini")
+			data = OPCUA.fetch_file(f"{DEFAULTS.config.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
 		
 		
 	except Exception as e:
