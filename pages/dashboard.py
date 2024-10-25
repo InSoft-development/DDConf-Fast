@@ -40,15 +40,15 @@ def fetch_initial() -> dict: # fetch s/n and license
 		return { "result": None, "error": msg }
 
 
-# def fetch_protocols() -> list:
-# 	
-# 	try:
-# 		data = [{"name":x['name'], 'status':status(x['svcpath'])} for x in json.loads(Path("/etc/dd/DDConf.json").read_text())['ddconf']['protocols']]
-# 		return {"result":data, "error":None}
-# 	except Exception as e:
-# 		msg = f"ddconf.dashboard.fetch_protocols: Error: {str(e)}"
-# 		syslog.syslog(syslog.LOG_ERR, msg)
-# 		return { "result": None, "error": msg }
+def fetch_protocols(protocols) -> list:
+	
+	try:
+		data = [{"name":x.name, "link":x.link, "title":x.title} for x in protocols]
+		return {"result":data, "error":None}
+	except Exception as e:
+		msg = f"ddconf.dashboard.fetch_protocols: Error: {str(e)}"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		return { "result": None, "error": msg }
 
 
 def _statparse(data:str) -> dict:
