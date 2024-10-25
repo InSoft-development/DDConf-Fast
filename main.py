@@ -281,7 +281,7 @@ def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 			
 		elif REQ.method == "fetch_protocols":
 			
-			return [{"name":x.name, "link":x.link, "title":x.title} for x in DEFAULTS.ddcs.protocols]
+			return Dashboard.fetch_protocols(DEFAULTS.ddcs.protocols)
 			
 		elif REQ.method == 'fetch_status':
 			svc = next((i for i in DEFAULTS.ddcs.protocols if i.name == REQ.params), None)
