@@ -91,7 +91,7 @@ const dashboardSlice = createSlice({
         builder.addCase(fetchProtocols.fulfilled, (state, action) => {
             state.fetchProtocolsStatus = 'fulfilled';
             state.fetchProtocolsError = false;
-            state.protocols = action.payload.result;
+            state.protocols = action.payload;
         });
         builder.addCase(fetchProtocols.rejected, (state, action) => {
             state.fetchProtocolsStatus = 'rejected';

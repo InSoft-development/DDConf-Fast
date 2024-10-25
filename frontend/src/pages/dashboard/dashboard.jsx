@@ -56,9 +56,9 @@ const Dashboard = ({ headerTitle }) => {
                                 <LoadingOutlined className='ml-8' />
                             ) : (
                                 <>
-                                    {protocols.map((protocol, index) => (
-                                        <li key={index}>
-                                            <Link to='/#' className='text_type_main_default'>{protocol.name}</Link>
+                                    {protocols?.map( protocol => (
+                                        <li key={protocol.name}>
+                                            <Link to={`${protocol.link}`} className='text_type_main_default'>{protocol.title}</Link>
                                         </li>
                                     ))}
                                 </>
