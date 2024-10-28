@@ -19,10 +19,10 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 
 
-import pages.dd104 as DD104
-import pages.dashboard as Dashboard
-import pages.opcua as OPCUA
-import pages.network as Net
+# import pages.dd104 as DD104
+# import pages.dashboard as Dashboard
+# import pages.opcua as OPCUA
+# import pages.network as Net
 
 from models import Token, TokenData, User, POST, DDCSDefaults
 
@@ -31,15 +31,34 @@ from models import Token, TokenData, User, POST, DDCSDefaults
 BASE_DIR = Path(__file__).parent
 DEFAULTS = None
 
+FLAGS = {'dd104':False, 'opcua': False, 'dashboard':False, 'network':False}
+
 if Path('/etc/dd/DDConf.json').is_file():
 	DEFAULTS = DDCSDefaults.model_validate_json(Path('/etc/dd/DDConf.json').read_text())
 else:
 	syslog.syslog(syslog.LOG_CRIT, f"ddconf.main: ERROR: couldn't get the config, /etc/dd/DDConf.json doesn't exist! exiting.")
 	os._exit(os.EX_CONFIG)
 
-
-# for proto in DEFAULTS.protocols:
-# 	if 
+try:
+	import pages.dd104 as DD104
+	FLAGS['dd104'] = True
+except ImportError:
+	pass
+try:
+	import pages.dashboard as Dashboard
+	FLAGS['dashboard'] = True
+except ImportError:
+	pass
+try:
+	import pages.opcua as OPCUA
+	FLAGS['opcua'] = True
+except ImportError:
+	pass
+try:
+	import pages.network as Net
+	FLAGS['network'] = True
+except ImportError:
+	pass
 
 
 #Auth
@@ -73,36 +92,36 @@ class ConnectionManager:
 
 CManager = ConnectionManager()
 
-
-class SyslogFSHandler(FileSystemEventHandler):
-	
-	websocket = None
-	pid = None
-	last_modified = None
-	
-	def __init__(self, WS: WebSocket, PID: str):
-		self.last_modified = datetime.now()
-		self.websocket = WS
-		self.pid = PID
-	
-	async def on_modified(self, event):
-		if datetime.now() - self.last_modified < timedelta(seconds=1):
-			return
-		# elif not self.websocket or self.websocket.connected:
-		# 	return
-		else:
+if FLAGS['dd104']:
+	class SyslogFSHandler(FileSystemEventHandler):
+		
+		websocket = None
+		pid = None
+		last_modified = None
+		
+		def __init__(self, WS: WebSocket, PID: str):
 			self.last_modified = datetime.now()
+			self.websocket = WS
+			self.pid = PID
 		
-		data = DD104.get_logs(self.pid, 0)
-		if self.websocket and self.websocket.connected:
-			try:
-				payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
-				await CManager.send(json.dumps(payload), WS)
-			except Exception as e:
-				tb = traceback.format_exc().strip().split('\n')[1::]
-				syslog.syslog(syslog.LOG_ERR, f"ddconf.main.syslogfshandler: error occured, details: {tb}")
-		
-		# print(f'Event type: {event.event_type}  path : {event.src_path}')
+		async def on_modified(self, event):
+			if datetime.now() - self.last_modified < timedelta(seconds=1):
+				return
+			# elif not self.websocket or self.websocket.connected:
+			# 	return
+			else:
+				self.last_modified = datetime.now()
+			
+			data = DD104.get_logs(self.pid, 0)
+			if self.websocket and self.websocket.connected:
+				try:
+					payload={"result":data, "errors":None} if not 'error' in data else {"result":None, "errors":data['error']}
+					await CManager.send(json.dumps(payload), WS)
+				except Exception as e:
+					tb = traceback.format_exc().strip().split('\n')[1::]
+					syslog.syslog(syslog.LOG_ERR, f"ddconf.main.syslogfshandler: error occured, details: {tb}")
+			
+			# print(f'Event type: {event.event_type}  path : {event.src_path}')
 	
 
 def prime_observer(WS: WebSocket, PID: str) -> Observer: 
@@ -250,6 +269,8 @@ def greet():#token: Annotated[str, Depends(get_current_user)]):
 @app.get("/{_path}")
 def get_any(_path: str):#, token: Annotated[str, Depends(get_current_user)]):
 	msg = f"ddconf.main.get_any: GET request detected to /{_path}."
+	if not _path in [k for k, v in FLAGS.items() if v]:
+		msg = msg + f" Not configured, redirect to 404."
 	# if token:
 	# 	print(msg)
 	# 	syslog.syslog(syslog.LOG_INFO, msg)
@@ -261,213 +282,231 @@ def get_any(_path: str):#, token: Annotated[str, Depends(get_current_user)]):
 	# 	return RedirectResponse('/login', status_code=200)
 	print(msg)
 	syslog.syslog(syslog.LOG_INFO, msg)
-	return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200)
+	return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=200 if _path in [k for k, v in FLAGS.items() if v] else 404)
 
 
 @app.get("/login")
 def login():
 	pass#TODO
 
-#TODO defaults
+
 @app.post("/dashboard")
 def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
-	try:
-		data = {}
-		errs = None
-		if REQ.method == "fetch_initial":
-			
-			return Dashboard.fetch_initial()
-			
-		elif REQ.method == "fetch_net":
-			
-			return Dashboard.fetch_net()
-			
-		elif REQ.method == "fetch_protocols":
-			
-			return Dashboard.fetch_protocols(DEFAULTS.protocols)
-			
-		elif REQ.method == 'fetch_status':
-			svc = next((i for i in DEFAULTS.protocols if i.name == REQ.params), None)
-			if svc:
-				return Dashboard.fetch_status(svc)
-			else:
-				raise RuntimeError(f"{REQ.params} not found in config!")
+	if FLAGS['dashboard']:
 		
-	except Exception as e:
-		tb = traceback.format_exc().strip().split('\n')[1::]
-		msg = f"ddconf.main.dashboard_post: Error: {tb}"
-		syslog.syslog(syslog.LOG_CRIT, msg)
-		return {"result": None, "error": msg}
+		try:
+			data = {}
+			errs = None
+			if REQ.method == "fetch_initial":
+				
+				return Dashboard.fetch_initial()
+				
+			elif REQ.method == "fetch_net":
+				
+				return Dashboard.fetch_net()
+				
+			elif REQ.method == "fetch_protocols":
+				
+				return Dashboard.fetch_protocols(DEFAULTS.protocols)
+				
+			elif REQ.method == 'fetch_status':
+				svc = next((i for i in DEFAULTS.protocols if i.name == REQ.params), None)
+				if svc:
+					return Dashboard.fetch_status(svc)
+				else:
+					raise RuntimeError(f"{REQ.params} not found in config!")
+			
+		except Exception as e:
+			tb = traceback.format_exc().strip().split('\n')[1::]
+			msg = f"ddconf.main.dashboard_post: Error: {tb}"
+			syslog.syslog(syslog.LOG_CRIT, msg)
+			return {"result": None, "error": msg}
+			
+	else:
+		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=404)
 
 
 #TODO: indexes
 @app.post("/dd104")
 def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
-	try:
-		data = {} #just in case
-		errs = [] #just in case
+	if FLAGS['dd104']:
 		
-		if REQ.method == "fetch_initial":
+		try:
+			data = {} #just in case
+			errs = [] #just in case
 			
-			data = {}
-			data["active"] = DD104.get_active_ld()
-			data["loadout_names"] = DD104.list_ld()
-			
-			print(f"ddconf.dd104.fetch_initial: {data}")
-			
-		
-		elif REQ.method == "fetch_table":
-			
-			if DD104.get_active_ld():
-				data = DD104.get_processes(DD104.get_active_ld())
-				for item in data:
-					item['status'] = DD104.get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
-				print(f"ddconf.dd104.fetch_table({DD104.get_active_ld()}): {data}")
-			
-			else:
-				print("ddconf.dd104.fetch_table: there is no active loadout!")
-				data = None
-				errs = None
-			
-		
-		elif REQ.method == "process_handle":
-			
-			if REQ.params['op'] in ['start', 'stop', 'restart']:
-				if type(REQ.params['pid']) == list:
-					
-					data = []
-					errs = []
-					
-					for pid in REQ.params['pid']:
-						try:
-							data.append({"pid": pid, "status": DD104.process_handle(pid, REQ.params["op"])})
-						except Exception as e:
-							errs.append(f"pid: {pid}, err: {str(e)}")
+			if REQ.method == "fetch_initial":
 				
-				elif type(REQ.params['pid']) == str or type(REQ.params['pid']) == int:
+				data = {}
+				data["active"] = DD104.get_active_ld()
+				data["loadout_names"] = DD104.list_ld()
+				
+				print(f"ddconf.dd104.fetch_initial: {data}")
+				
+			
+			elif REQ.method == "fetch_table":
+				
+				if DD104.get_active_ld():
+					data = DD104.get_processes(DD104.get_active_ld())
+					for item in data:
+						item['status'] = DD104.get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
+					print(f"ddconf.dd104.fetch_table({DD104.get_active_ld()}): {data}")
+				
+				else:
+					print("ddconf.dd104.fetch_table: there is no active loadout!")
+					data = None
+					errs = None
+				
+			
+			elif REQ.method == "process_handle":
+				
+				if REQ.params['op'] in ['start', 'stop', 'restart']:
+					if type(REQ.params['pid']) == list:
+						
+						data = []
+						errs = []
+						
+						for pid in REQ.params['pid']:
+							try:
+								data.append({"pid": pid, "status": DD104.process_handle(pid, REQ.params["op"])})
+							except Exception as e:
+								errs.append(f"pid: {pid}, err: {str(e)}")
 					
-					data = {"pid": REQ.params['pid'], "status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
+					elif type(REQ.params['pid']) == str or type(REQ.params['pid']) == int:
+						
+						data = {"pid": REQ.params['pid'], "status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
+						
+					else:
+						raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
 					
 				else:
-					raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
+					raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
+			
+			elif REQ.method == "profile_save": 
 				
-			else:
-				raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
-		
-		elif REQ.method == "profile_save": 
-			
-			try:
-				data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
-			except Exception as e:
-				msg = f"ddconf.dd104.profile_save: Error: {str(e)}"
-				syslog.syslog(syslog.LOG_ERR, msg)
-				data = None
-				errs.append(msg)
-			
-		
-		elif REQ.method == "profile_apply": #TODO validation
-			
-			if REQ.params['name'] in DD104.list_ld():
 				try:
-					data = DD104.apply_ld(REQ.params['name'])
+					data = DD104.save_ld(REQ.params['name'], REQ.params['data'])
 				except Exception as e:
-					tb=traceback.format_exc().strip().split('\n')[1::]
-					msg = f"ddconf.dd104.profile_apply: Error: {str(e)}"
-					print(f"ddconf.dd104.profile_apply: Error: {tb}")
+					msg = f"ddconf.dd104.profile_save: Error: {str(e)}"
 					syslog.syslog(syslog.LOG_ERR, msg)
 					data = None
-					if type(errs) == list:
-						errs.append(msg)
-					elif type(errs) == type(None):
-						errs = [msg]
-			else:
-				errs = f"ddconf.dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
-				data = None
-		
-		elif REQ.method == "fetch_ld":
+					errs.append(msg)
+				
 			
-			if REQ.params['name']:
+			elif REQ.method == "profile_apply": #TODO validation
+				
 				if REQ.params['name'] in DD104.list_ld():
-					data = DD104.get_processes(REQ.params['name'])
-					print(f"ddconf.dd104.fetch_ld({REQ.params['name']}): {data}")
+					try:
+						data = DD104.apply_ld(REQ.params['name'])
+					except Exception as e:
+						tb=traceback.format_exc().strip().split('\n')[1::]
+						msg = f"ddconf.dd104.profile_apply: Error: {str(e)}"
+						print(f"ddconf.dd104.profile_apply: Error: {tb}")
+						syslog.syslog(syslog.LOG_ERR, msg)
+						data = None
+						if type(errs) == list:
+							errs.append(msg)
+						elif type(errs) == type(None):
+							errs = [msg]
 				else:
-					errs = f"ddconf.dd104.fetch_ld: incorrect ld name; data: {REQ.params['name']}\n"
+					errs = f"ddconf.dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
 					data = None
-			else:
-				errs = f"ddconf.dd104.fetch_ld: incorrect data: {REQ.params}\n"
-				data = None
+			
+			elif REQ.method == "fetch_ld":
+				
+				if REQ.params['name']:
+					if REQ.params['name'] in DD104.list_ld():
+						data = DD104.get_processes(REQ.params['name'])
+						print(f"ddconf.dd104.fetch_ld({REQ.params['name']}): {data}")
+					else:
+						errs = f"ddconf.dd104.fetch_ld: incorrect ld name; data: {REQ.params['name']}\n"
+						data = None
+				else:
+					errs = f"ddconf.dd104.fetch_ld: incorrect data: {REQ.params}\n"
+					data = None
+			
+			elif REQ.method == 'delete_ld':
+				
+				data = DD104.delete_ld(REQ.params['name'])
+				
+			elif REQ.method == 'fetch_logs':
+				
+				data = DD104.get_logs(REQ.params['pid'], REQ.params['length'])
+				if 'error' in data.keys():
+					errs = data['error']
+					data = None
+				
+			
+			
+		except Exception as e:
+			tb=traceback.format_exc().strip().split('\n')[1::]
+			syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.dd104_post: ERROR: {tb}")
+			print(f"ddconf.main.dd104_post: ERROR: {tb}")
+			return {"result":None, "error":str(e)}
+		else:
+			return {"result": data, "error":None if not errs else errs}
 		
-		elif REQ.method == 'delete_ld':
-			
-			data = DD104.delete_ld(REQ.params['name'])
-			
-		elif REQ.method == 'fetch_logs':
-			
-			data = DD104.get_logs(REQ.params['pid'], REQ.params['length'])
-			if 'error' in data.keys():
-				errs = data['error']
-				data = None
-			
-		
-		
-	except Exception as e:
-		tb=traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.dd104_post: ERROR: {tb}")
-		print(f"ddconf.main.dd104_post: ERROR: {tb}")
-		return {"result":None, "error":str(e)}
 	else:
-		return {"result": data, "error":None if not errs else errs}
+		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=404)
 
 
 @app.post('/opcua')
 def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]):
-	
-	data = {}
-	errs = []
-	
-	try:
-		proc = next(x.config for x in DEFAULTS.protocols if x.name=='opcua')
-		if REQ.method == 'post_ua':
-			data = OPCUA.make_file(REQ.params, f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
-		elif REQ.method == 'fetch_ua':
-			data = OPCUA.fetch_file(f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
+	if FLAGS['opcua']:
 		
+		data = {}
+		errs = []
 		
-	except Exception as e:
-		tb=traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_opcua: ERROR: {tb}")
-		print(f"ddconf.main.handle_opcua: ERROR: {tb}")
-		return {"result":None, "error":str(e)}
-	
-	return {"result": data, "error":None if not errs else errs}
+		try:
+			proc = next(x.config for x in DEFAULTS.protocols if x.name=='opcua')
+			if REQ.method == 'post_ua':
+				data = OPCUA.make_file(REQ.params, f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
+			elif REQ.method == 'fetch_ua':
+				data = OPCUA.fetch_file(f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
+			
+			
+		except Exception as e:
+			tb=traceback.format_exc().strip().split('\n')[1::]
+			syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_opcua: ERROR: {tb}")
+			print(f"ddconf.main.handle_opcua: ERROR: {tb}")
+			return {"result":None, "error":str(e)}
+		
+		return {"result": data, "error":None if not errs else errs}
+		
+	else:
+		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=404)
 
 
 @app.post('/network')
 def handle_network(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]):
-	
-	data = {}
-	errs = []
-	
-	try:
+	if FLAGS['network']:
 		
-		if REQ.method == 'list_devices':
-			data = Net.get_nics()
-		elif REQ.method == 'fetch_device':
-			data = Net.fetch_device(REQ.params['id'])
-		elif REQ.method == 'save_device':
-			return Net.save_device(REQ.params)
-		elif REQ.method == 'process_op':
-			data = Net.process_op(REQ.params['op'])
-		elif REQ.method == 'nic_op':
-			data = Net.nic_op(REQ.params['id'], REQ.params['op'])
-		elif REQ.method == 'netd_status':
-			data = Net.netd_status()
-	except Exception as e:
-		tb=traceback.format_exc().strip().split('\n')[1::]
-		syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_network: ERROR: {tb}")
-		print(f"ddconf.main.handle_network: ERROR: {tb}")
-		return {"result":None, "error":str(e)}
-	
-	return {"result": data, "error":None if not errs else errs}
+		data = {}
+		errs = []
+		
+		try:
+			
+			if REQ.method == 'list_devices':
+				data = Net.get_nics()
+			elif REQ.method == 'fetch_device':
+				data = Net.fetch_device(REQ.params['id'])
+			elif REQ.method == 'save_device':
+				return Net.save_device(REQ.params)
+			elif REQ.method == 'process_op':
+				data = Net.process_op(REQ.params['op'])
+			elif REQ.method == 'nic_op':
+				data = Net.nic_op(REQ.params['id'], REQ.params['op'])
+			elif REQ.method == 'netd_status':
+				data = Net.netd_status()
+		except Exception as e:
+			tb=traceback.format_exc().strip().split('\n')[1::]
+			syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_network: ERROR: {tb}")
+			print(f"ddconf.main.handle_network: ERROR: {tb}")
+			return {"result":None, "error":str(e)}
+		
+		return {"result": data, "error":None if not errs else errs}
+		
+	else:
+		return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=404)
 
 
