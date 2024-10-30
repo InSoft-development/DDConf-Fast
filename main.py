@@ -33,12 +33,6 @@ DEFAULTS = None
 
 FLAGS = {'dd104':False, 'opcua': False, 'dashboard':False, 'network':False}
 
-if Path('/etc/dd/DDConf.json').is_file():
-	DEFAULTS = DDCSDefaults.model_validate_json(Path('/etc/dd/DDConf.json').read_text())
-else:
-	syslog.syslog(syslog.LOG_CRIT, f"ddconf.main: ERROR: couldn't get the config, /etc/dd/DDConf.json doesn't exist! exiting.")
-	os._exit(os.EX_CONFIG)
-
 try:
 	import pages.dd104 as DD104
 	FLAGS['dd104'] = True
@@ -59,6 +53,13 @@ try:
 	FLAGS['network'] = True
 except ImportError:
 	pass
+
+
+if Path('/etc/dd/DDConf.json').is_file():
+	DEFAULTS = DDCSDefaults.model_validate_json(Path('/etc/dd/DDConf.json').read_text())
+else:
+	syslog.syslog(syslog.LOG_CRIT, f"ddconf.main: ERROR: couldn't get the config, /etc/dd/DDConf.json doesn't exist! exiting.")
+	os._exit(os.EX_CONFIG)
 
 
 #Auth
