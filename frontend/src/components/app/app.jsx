@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchInitial, fetchProtocols } from '../../services/slices/dashboard';
 import Layout from '../layout/layout';
-import { SignIn, Dd104, Dashboard, OpcUa, ProfileEditor, Network } from '../../pages';
+import { SignIn, Dd104, Dashboard, OpcUa, ProfileEditor, Network, PageNotFound } from '../../pages';
 import ProtectedRoute from '../../hoc/protected-route';
 
 const App = () => {
@@ -44,6 +44,7 @@ const App = () => {
                     }></Route>
                 </Route>
                 <Route path='/login' element={<SignIn />}></Route>
+                <Route path='/*' element={<PageNotFound/>}></Route>
             </Routes>
         </>
     );

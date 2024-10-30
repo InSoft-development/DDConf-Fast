@@ -4,6 +4,7 @@ import Network from './network/network';
 import OpcUa from './opc-ua/opc-ua';
 import ProfileEditor from './profile-editor/profile-editor';
 import SignIn from './sign-in/sign-in';
+import PageNotFound from './page-not-found/page-not-found';
 
 export {
     Dashboard,
@@ -11,5 +12,6 @@ export {
     Network,
     OpcUa,
     ProfileEditor,
-    SignIn
+    SignIn,
+    PageNotFound
 };
