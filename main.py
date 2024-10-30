@@ -315,6 +315,9 @@ def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 					return Dashboard.fetch_status(svc)
 				else:
 					raise RuntimeError(f"{REQ.params} not found in config!")
+			else: 
+				
+				return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=403)
 			
 		except Exception as e:
 			tb = traceback.format_exc().strip().split('\n')[1::]
@@ -436,7 +439,9 @@ def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -
 					errs = data['error']
 					data = None
 				
-			
+			else: 
+				
+				return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=403)
 			
 		except Exception as e:
 			tb=traceback.format_exc().strip().split('\n')[1::]
@@ -463,7 +468,8 @@ def handle_opcua(REQ: POST):#, token: Annotated[str, Depends(get_current_user)])
 				data = OPCUA.make_file(REQ.params, f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
 			elif REQ.method == 'fetch_ua':
 				data = OPCUA.fetch_file(f"{proc.confdir}ddOPCUA{'server' if DEFAULTS.mode == 'rx' else 'client'}.ini")
-			
+			else: 
+				return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=403)
 			
 		except Exception as e:
 			tb=traceback.format_exc().strip().split('\n')[1::]
@@ -498,6 +504,8 @@ def handle_network(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 				data = Net.nic_op(REQ.params['id'], REQ.params['op'])
 			elif REQ.method == 'netd_status':
 				data = Net.netd_status()
+			else: 
+				return HTMLResponse(content=Path("./client/index.html").read_text(), status_code=403)
 		except Exception as e:
 			tb=traceback.format_exc().strip().split('\n')[1::]
 			syslog.syslog(syslog.LOG_CRIT, f"ddconf.main.handle_network: ERROR: {tb}")
