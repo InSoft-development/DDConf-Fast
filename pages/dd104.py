@@ -367,11 +367,11 @@ def fetch_table() -> dict:
 	
 	errs = []
 	try:
-		if DD104.get_active_ld():
-			data = DD104.get_processes(DD104.get_active_ld())
+		if get_active_ld():
+			data = get_processes(get_active_ld())
 			for item in data:
-				item['status'] = DD104.get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
-			print(f"ddconf.dd104.fetch_table({DD104.get_active_ld()}): {data}")
+				item['status'] = get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
+			print(f"ddconf.dd104.fetch_table({get_active_ld()}): {data}")
 		
 		else:
 			print("ddconf.dd104.fetch_table: there is no active loadout!")
@@ -392,13 +392,13 @@ def procwork(req: dict) -> dict:
 			if type(req['pid']) == list:
 				for pid in req['pid']:
 					try:
-						data.append({"pid": pid, "status": DD104.process_handle(pid, req["op"])})
+						data.append({"pid": pid, "status": process_handle(pid, req["op"])})
 					except Exception as e:
 						errs.append(f"pid: {pid}, err: {str(e)}")
 			
 			elif type(req['pid']) == str or type(req['pid']) == int:
 				
-				data = {"pid": req['pid'], "status": DD104.process_handle(req['pid'], req["op"])}
+				data = {"pid": req['pid'], "status": process_handle(req['pid'], req["op"])}
 				
 			else:
 				raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(req['pid'])}.")
@@ -417,8 +417,8 @@ def profile_apply(name: str):
 	errs = []
 	
 	try:
-		if name in DD104.list_ld():
-			data = DD104.apply_ld(name)
+		if name in list_ld():
+			data = apply_ld(name)
 		else:
 			errs = f"ddconf.dd104.profile_apply: incorrect ld name; data: {name}"
 			data = None
@@ -444,8 +444,8 @@ def fetch_ld(name: str) -> dict:
 	
 	try:
 		if name:
-			if name in DD104.list_ld():
-				data = DD104.get_processes(name)
+			if name in list_ld():
+				data = get_processes(name)
 				print(f"ddconf.dd104.fetch_ld({name}): {data}")
 			else:
 				errs = f"ddconf.dd104.fetch_ld: incorrect ld name; data: {name}\n"

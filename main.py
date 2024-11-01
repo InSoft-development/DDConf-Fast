@@ -420,7 +420,7 @@ def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -
 				
 				if 'pid' in REQ.params and 'op' in REQ.params:
 					return DD104.procwork(**REQ.params)
-				else 
+				else: 
 					raise ValueError(f"ddconf.dd104.process_handle: malformed data received: {REQ.params}")
 			
 			elif REQ.method == "profile_save": 
