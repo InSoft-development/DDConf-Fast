@@ -66,7 +66,6 @@ def rm_services():
 
 def delete_ld(name: str):
 	
-	data = {}
 	errs = [] 
 	try:
 		if name.split('.')[-1] == 'loadout':
@@ -247,7 +246,10 @@ def get_processes(LD_ID: str) -> list:
 	ID = LD_ID if '.loadout' in LD_ID else LD_ID+'.loadout'
 	if ID in loadouts:
 		data = json.loads((Path(DEFAULTS.loadoutdir)/ID).read_text())
+		c = 0
 		for i in data:
+			c += 1
+			i['id'] = c
 			if 'main' not in i or not i['main']:
 				if 'second' in i and i['second']:
 					i['main'] = i['second']
@@ -258,6 +260,7 @@ def get_processes(LD_ID: str) -> list:
 				i['second'] = None
 			if 'comment' not in i or not i['comment']:
 				i['comment'] = None
+			
 		return data
 	else:
 		return None
@@ -362,7 +365,6 @@ def fetch_initial() -> dict:
 
 def fetch_table() -> dict:
 	
-	data= {}
 	errs = []
 	try:
 		if DD104.get_active_ld():
