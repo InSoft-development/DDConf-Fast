@@ -1,4 +1,4 @@
-import json, syslog, traceback, datetime, os, jwt, importlib.util
+import json, syslog, traceback, datetime, os, jwt 
 from typing import Union, Annotated
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, Request, HTTPException, status, Form, WebSocket
@@ -401,56 +401,27 @@ def dashboard_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)
 def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -> dict:
 	if FLAGS['dd104']:
 		
+		data = {} #just in case
+		errs = [] #just in case
+		
 		try:
-			data = {} #just in case
-			errs = [] #just in case
 			
 			if REQ.method == "fetch_initial":
 				
-				data = {}
-				data["active"] = DD104.get_active_ld()
-				data["loadout_names"] = DD104.list_ld()
-				
-				print(f"ddconf.dd104.fetch_initial: {data}")
+				return DD104.fetch_initial()
 				
 			
 			elif REQ.method == "fetch_table":
 				
-				if DD104.get_active_ld():
-					data = DD104.get_processes(DD104.get_active_ld())
-					for item in data:
-						item['status'] = DD104.get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
-					print(f"ddconf.dd104.fetch_table({DD104.get_active_ld()}): {data}")
-				
-				else:
-					print("ddconf.dd104.fetch_table: there is no active loadout!")
-					data = None
-					errs = None
+				return DD104.fetch_table()
 				
 			
 			elif REQ.method == "process_handle":
 				
-				if REQ.params['op'] in ['start', 'stop', 'restart']:
-					if type(REQ.params['pid']) == list:
-						
-						data = []
-						errs = []
-						
-						for pid in REQ.params['pid']:
-							try:
-								data.append({"pid": pid, "status": DD104.process_handle(pid, REQ.params["op"])})
-							except Exception as e:
-								errs.append(f"pid: {pid}, err: {str(e)}")
-					
-					elif type(REQ.params['pid']) == str or type(REQ.params['pid']) == int:
-						
-						data = {"pid": REQ.params['pid'], "status": DD104.process_handle(REQ.params['pid'], REQ.params["op"])}
-						
-					else:
-						raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(REQ.params['pid'])}.")
-					
-				else:
-					raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {REQ.params['op']};")
+				if 'pid' in REQ.params and 'op' in REQ.params:
+					return DD104.procwork(**REQ.params)
+				else 
+					raise ValueError(f"ddconf.dd104.process_handle: malformed data received: {REQ.params}")
 			
 			elif REQ.method == "profile_save": 
 				
@@ -465,46 +436,19 @@ def dd104_post(REQ: POST):#, token: Annotated[str, Depends(get_current_user)]) -
 			
 			elif REQ.method == "profile_apply": #TODO validation
 				
-				if REQ.params['name'] in DD104.list_ld():
-					try:
-						data = DD104.apply_ld(REQ.params['name'])
-					except Exception as e:
-						tb=traceback.format_exc().strip().split('\n')[1::]
-						msg = f"ddconf.dd104.profile_apply: Error: {str(e)}"
-						print(f"ddconf.dd104.profile_apply: Error: {tb}")
-						syslog.syslog(syslog.LOG_ERR, msg)
-						data = None
-						if type(errs) == list:
-							errs.append(msg)
-						elif type(errs) == type(None):
-							errs = [msg]
-				else:
-					errs = f"ddconf.dd104.profile_apply: incorrect ld name; data: {REQ.params['name']}"
-					data = None
+				return DD104.profile_apply(REQ.params['name'])
 			
 			elif REQ.method == "fetch_ld":
 				
-				if REQ.params['name']:
-					if REQ.params['name'] in DD104.list_ld():
-						data = DD104.get_processes(REQ.params['name'])
-						print(f"ddconf.dd104.fetch_ld({REQ.params['name']}): {data}")
-					else:
-						errs = f"ddconf.dd104.fetch_ld: incorrect ld name; data: {REQ.params['name']}\n"
-						data = None
-				else:
-					errs = f"ddconf.dd104.fetch_ld: incorrect data: {REQ.params}\n"
-					data = None
+				return DD104.fetch_ld(REQ.params['name'])
 			
 			elif REQ.method == 'delete_ld':
 				
-				data = DD104.delete_ld(REQ.params['name'])
+				return DD104.delete_ld(REQ.params['name'])
 				
 			elif REQ.method == 'fetch_logs':
 				
-				data = DD104.get_logs(REQ.params['pid'], REQ.params['length'])
-				if 'error' in data.keys():
-					errs = data['error']
-					data = None
+				return DD104.get_logs(REQ.params['pid'], REQ.params['length'])
 				
 			else: 
 				
