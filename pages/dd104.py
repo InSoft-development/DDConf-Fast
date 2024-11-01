@@ -43,7 +43,7 @@ def rm_inis():
 			print(f"ddconf.dd104.rm_inis: {str(dest/ini)} file was removed")
 	except Exception as e:
 		syslog.syslog(syslog.LOG_CRIT, f"ddconf.dd104.rm_inis: Error while removing existing inis from {dest}:  {str(e)}")
-		print(f"ddconf.dd104.rm_inis: Error while removing existing inis from {dest}:  {traceback.print_exception(e)}\n")
+		print(f"ddconf.dd104.rm_inis: Error while removing existing inis from {dest}:  {traceback.format_exception(e)}\n")
 
 
 def rm_services():
@@ -65,6 +65,9 @@ def rm_services():
 		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
 
 def delete_ld(name: str):
+	
+	data = {}
+	errs = [] 
 	try:
 		if name.split('.')[-1] == 'loadout':
 			name = '.'.join(name.split('.')[:-1:])
@@ -79,14 +82,19 @@ def delete_ld(name: str):
 		else:
 			raise ValueError(f"ddconf.dd104.delete_ld: loadout name {name} is invalid.")
 	except ValueError as v:
-		raise v
+		msg = f'ddconf.dd104.delete_ld: incorrect value received: {traceback.format_exception(v)}'
+		#DEBUG
+		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
+		syslog.syslog(syslog.LOG_ERR, msg)
+		errs.append(msg)
 	except Exception as e:
 		msg = f"ddconf.dd104.delete_ld: couldn't remove loadout file {str(Path(DEFAULTS.loadoutdir)/f'{name}.loadout')}."
 		#DEBUG
 		Path("/home/txhost/.EOUTS/dd104").write_text(traceback.format_exception(e))
-		raise RuntimeError(e)
-	else:
-		return "success"
+		syslog.syslog(syslog.LOG_ERR, msg)
+		errs.append(msg)
+	
+	return {'result': data if not errs else None, "error": errs if errs else None}
 
 #TODO
 def create_inis(data: list):
@@ -334,8 +342,117 @@ def get_logs(PID: str, LEN: int) -> dict:
 	except Exception as e:
 		syslog.syslog(syslog.LOG_ERR, f"ddconf.dd104.get_logs: {str(e)}")
 		print(f"ddconf.dd104.get_logs: {traceback.print_exception(e)}")
-		return {'error':f"ddconf.dd104.get_logs: error handling {PID} {traceback.print_exception(e)}"}
+		return {'result': None, 'error':f"ddconf.dd104.get_logs: error handling {PID} {traceback.print_exception(e)}"}
 	else:
-		return {"pid": PID, "logs":LOGS}
+		return {'result': {"pid": PID, "logs":LOGS}, 'error': None}
 
 
+def fetch_initial() -> dict:
+	data = {}
+	errs = []
+	try:
+		data = {"active": get_active_ld(), "loadout_names": list_ld()}
+		print(f"ddconf.dd104.fetch_initial: {data}")
+	except Exception as e:
+		data = None
+		errs.append(traceback.format_exception(e))
+	
+	return {'result': data if not errs else None, "error": errs if errs else None}
+
+
+def fetch_table() -> dict:
+	
+	data= {}
+	errs = []
+	try:
+		if DD104.get_active_ld():
+			data = DD104.get_processes(DD104.get_active_ld())
+			for item in data:
+				item['status'] = DD104.get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
+			print(f"ddconf.dd104.fetch_table({DD104.get_active_ld()}): {data}")
+		
+		else:
+			print("ddconf.dd104.fetch_table: there is no active loadout!")
+			data = None
+			errs = None
+	except Exception as e:
+		data = None
+		errs.append(traceback.format_exception(e))
+	return {'result': data if not errs else None, "error": errs if errs else None}
+
+
+def procwork(req: dict) -> dict:
+	
+	data = []
+	errs = []
+	try:
+		if req['op'] in ['start', 'stop', 'restart']:
+			if type(req['pid']) == list:
+				for pid in req['pid']:
+					try:
+						data.append({"pid": pid, "status": DD104.process_handle(pid, req["op"])})
+					except Exception as e:
+						errs.append(f"pid: {pid}, err: {str(e)}")
+			
+			elif type(req['pid']) == str or type(req['pid']) == int:
+				
+				data = {"pid": req['pid'], "status": DD104.process_handle(req['pid'], req["op"])}
+				
+			else:
+				raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(req['pid'])}.")
+		else:
+			raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {req['op']};")
+	except Exception as e:
+		data = None
+		print(traceback.format_exception(e))
+		errs.append(traceback.format_exception(e))
+	return {'result': data if not errs else None, "error": errs if errs else None}
+
+
+def profile_apply(name: str):
+	
+	data = {}
+	errs = []
+	
+	try:
+		if name in DD104.list_ld():
+			data = DD104.apply_ld(name)
+		else:
+			errs = f"ddconf.dd104.profile_apply: incorrect ld name; data: {name}"
+			data = None
+		
+	except Exception as e:
+		tb=traceback.format_exc().strip().split('\n')[1::]
+		msg = f"ddconf.dd104.profile_apply: Error: {str(e)}"
+		print(f"ddconf.dd104.profile_apply: Error: {tb}")
+		syslog.syslog(syslog.LOG_ERR, msg)
+		data = None
+		if type(errs) == list:
+			errs.append(msg)
+		elif type(errs) == type(None):
+			errs = [msg]
+	
+	return {'result': data if not errs else None, "error": errs if errs else None}
+
+
+def fetch_ld(name: str) -> dict:
+	
+	data = {}
+	errs = []
+	
+	try:
+		if name:
+			if name in DD104.list_ld():
+				data = DD104.get_processes(name)
+				print(f"ddconf.dd104.fetch_ld({name}): {data}")
+			else:
+				errs = f"ddconf.dd104.fetch_ld: incorrect ld name; data: {name}\n"
+				data = None
+		else:
+			errs = f"ddconf.dd104.fetch_ld: incorrect data: {REQ.params}\n"
+			data = None
+	except Exception as e:
+		data = None
+		print(traceback.format_exception(e))
+		errs.append(traceback.format_exception(e))
+	return {'result': data if not errs else None, "error": errs if errs else None}
