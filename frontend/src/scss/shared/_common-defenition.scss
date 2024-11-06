@@ -4,9 +4,9 @@ $layout-external-indentation: 40px;
 
 $layout-min-width: 1024px;
 
-$header-summary-height: 185px;
 $header-upline-height: 40px;
-$header-body-height: calc(#{$header-summary-height} - $header-upline-height);
+$header-body-height: 145px;
+$header-summary-height: calc($header-upline-height + $header-body-height);
 
 $opcua-server-width: 760px;
 

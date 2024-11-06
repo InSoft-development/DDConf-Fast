@@ -2,7 +2,7 @@
 
 .dashboardPage{
     margin: 30px 0;
-    height: calc(100vh - $header-summary-height - 60px);
+    height: calc(100vh - ($header-summary-height + 60px));
     overflow-y: scroll;
 }
 

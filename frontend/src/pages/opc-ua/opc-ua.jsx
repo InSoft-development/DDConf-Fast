@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
-import OpcServer from '../../components/opc-server/opc-server';
+import { LoadingOutlined } from '@ant-design/icons';
+
 import Restore from '../../components/opc-server/restore/restore';
-import { getOpcUaForm, SET_DEFAULT_SLICE_STATE } from '../../services/actions/opc-ua';
+import OpcServer from '../../components/opc-server/opc-server';
+import { fetchUa, postUa, clearSlice } from '../../services/slices/opcua';
 import AppHeader from '../../components/app-header/app-header';
 
 import styles from './opc-ua.module.scss';
@@ -11,7 +13,13 @@ import styles from './opc-ua.module.scss';
 const OpcUa = ({ headerTitle }) => {
 
     const dispatch = useDispatch();
-    const { form } = useSelector(store => store.opcua);
+    const {
+        form,
+        fetchUaStatus,
+        fetchUaError,
+        postUaStatus,
+        postUaError
+    } = useSelector(store => store.opcua);
 
     const methods = useForm({
         shouldUnregister: true,
@@ -35,7 +43,6 @@ const OpcUa = ({ headerTitle }) => {
     })
 
     const addServer = (e) => {
-        // e.preventDefault();
         append({
             url1: '',
             url2_exists: false,
@@ -54,20 +61,24 @@ const OpcUa = ({ headerTitle }) => {
     }
 
     const onSubmit = (data) => {
-        console.log(data);
+        dispatch(postUa({form: data}));
     }
 
+    const isButtonsDisabled = 
+        fetchUaStatus === 'pending' ||
+        postUaStatus === 'pending';
+
+
     useEffect(() => {
-        dispatch(getOpcUaForm())
+        dispatch(fetchUa())
 
-        return () => dispatch({ type: SET_DEFAULT_SLICE_STATE });
-
+        return () => dispatch(clearSlice());
         // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
         methods.reset(form)
-    }, [methods, form])
+    }, [methods, form]) 
 
     return (
         <>
@@ -76,18 +87,36 @@ const OpcUa = ({ headerTitle }) => {
                 <div className={styles.opcUa}>
                     <FormProvider {...methods}>
                         <form onSubmit={methods.handleSubmit(onSubmit)}>
-                            <Restore/>
-                            {fields.map((field, index) => (
-                                <OpcServer
-                                    key={field.id}
-                                    id={index}
-                                    removeServer={removeServer}
-                                />
-                            ))}
+                            {!fetchUaError &&
+                                fetchUaStatus === 'pending' ? (
+                                <LoadingOutlined className='ml-8' />
+                            ) : (
+                                Object.keys(form).length && (
+                                    <>
+                                        <Restore />
+                                        {fields.map((field, index) => (
+                                            <OpcServer
+                                                key={field.id}
+                                                id={index}
+                                                removeServer={removeServer}
+                                            />
+                                        ))}
+                                    </>
+                                )
+                            )
+                            }
+
                             <footer className={styles.footer}>
                                 <div className='wrapper'>
-                                    <button type='button' onClick={addServer} className='btn-green mr-10'>Добавить сервер</button>
-                                    <button type='submit' className='btn-green'>Отправить</button>
+                                    <button type='button'
+                                        className='btn-green mr-10'
+                                        onClick={addServer}
+                                        disabled={isButtonsDisabled}
+                                    >Добавить сервер</button>
+                                    <button type='submit'
+                                        className='btn-green'
+                                        disabled={isButtonsDisabled}
+                                    >Отправить</button>
                                 </div>
                             </footer>
                         </form>

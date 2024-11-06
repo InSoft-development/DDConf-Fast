@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { request } from '../api';
-import checkResponce from '../../utils/checkResponce';
 
 const initialState = {
     serial: null,
