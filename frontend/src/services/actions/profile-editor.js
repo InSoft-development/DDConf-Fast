@@ -1,5 +1,4 @@
 import { request } from '../api';
-import { checkResponce } from '../../utils/checkResponce';
 import { notification } from 'antd';
 import {store} from '../store';
 
@@ -38,7 +37,6 @@ export const SET_NEW_SELECTED_PROFILE_VALUE = 'profile-editor/SET_NEW_SELECTED_P
 export const initialize = (option, cb = null) => (dispatch) => {
     dispatch({ type: GET_PROFILES_REQUEST });
     request('dd104', 'fetch_initial')
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: GET_PROFILES_REQUEST_SUCCESS, payload: res.result })
             dispatch({type: SET_NEW_SELECTED_PROFILE_VALUE, payload: {
@@ -58,7 +56,6 @@ export const initialize = (option, cb = null) => (dispatch) => {
 export const getProfiles = (cb = null) => (dispatch) => {
     dispatch({ type: GET_PROFILES_REQUEST });
     request('dd104', 'fetch_initial')
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: GET_PROFILES_REQUEST_SUCCESS, payload: res.result })
 
@@ -76,7 +73,6 @@ export const getTableByProfileName = (cb = null) => (dispatch) => {
     request('dd104', 'fetch_ld', {
         name: store.getState().profileEditor.selectedProfile
     })
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({
                 type: GET_TABLE_BY_PROFILE_NAME_SUCCESS,
@@ -115,7 +111,6 @@ export const saveProfile = (profileData, cb = null) => (dispatch) => {
     };
 
     request('dd104', 'profile_save', newProfileData)
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: SAVE_PROFILE_SUCCESS})
 
@@ -139,7 +134,6 @@ export const profileApply = (profileName, cb = null) => (dispatch) => {
     request('dd104', 'profile_apply', {
         name: profileName
     })
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: APPLY_PROFILE_SUCCESS})
         
@@ -162,7 +156,6 @@ export const deleteProfile = (profileName, cb= null) => (dispatch) => {
     request('dd104', 'delete_ld', {
         name: profileName
     })
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: DELETE_PROFILE_SUCCESS})
 

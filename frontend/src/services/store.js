@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import { modalsReducer } from './reducers/modals';
 import {profileReducer} from './reducers/profile';
 import dashboardSlice from './slices/dashboard';
-import { opcuaReducer } from './reducers/opc-ua';
+import opcuaSlice from './slices/opcua';
 import { profileEditorReducer } from './reducers/profile-editor';
 import { networkReducer } from './reducers/network';
 
@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     profile: profileReducer,
     modals: modalsReducer,
     dashboard: dashboardSlice,
-    opcua: opcuaReducer,
+    opcua: opcuaSlice,
     profileEditor: profileEditorReducer,
     network: networkReducer
 });

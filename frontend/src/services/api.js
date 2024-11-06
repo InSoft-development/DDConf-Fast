@@ -1,15 +1,24 @@
+import checkResponce from '../utils/checkResponce';
 
-const BASE_URL = process.env.REACT_APP_API || window.location.origin;
+const baseUrl = process.env.REACT_APP_API || window.location.origin;
 
-export const request = (endpoint, method, params = null) => {
+export const request = async (endpoint, method, params = null) => {
+    try{
+        const bodyStructure = {method, params};
 
-    const bodyStructure = {method, params};
+        const responce = await fetch(`${baseUrl}/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bodyStructure)
+        })
 
-    return fetch(`${BASE_URL}/${endpoint}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyStructure)
-    })
+        const data = await checkResponce(responce);
+
+        return data;
+
+    }catch(error){
+        throw new Error(error.message);
+    }
 }

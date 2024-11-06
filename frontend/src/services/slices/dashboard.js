@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { request } from '../api';
-import { checkResponce } from '../../utils/checkResponce';
+import checkResponce from '../../utils/checkResponce';
 
 const initialState = {
-    serial: '',
-    license: '',
+    serial: null,
+    license: null,
     protocols: [],
     network: [],
 
@@ -21,11 +21,10 @@ const fetchInitial = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try{
             const responce = await request('dashboard', 'fetch_initial');
-            const data = await checkResponce(responce);
     
-            return data;
-        }catch(error){
-            rejectWithValue(error);
+            return responce;
+        }catch(error){           
+            return rejectWithValue(error.message);
         }
     }
 );
@@ -34,12 +33,11 @@ const fetchProtocols = createAsyncThunk(
     'dashbord/fetchProtocols',
     async (_, { rejectWithValue }) => {
         try{
-            const responce = await request('dashboard', 'fetch_protocols');
-            const data = await checkResponce(responce);
+            const data = await request('dashboard', 'fetch_protocols');
     
             return data;
         }catch(error){
-            rejectWithValue(error);
+            return rejectWithValue(error.message);
         }
     }
 );
@@ -48,12 +46,11 @@ const fetchNetwork = createAsyncThunk(
     'dashboard/fetchNetwork',
     async (_, { rejectWithValue }) => {
         try {
-            const responce = await request('dashboard', 'fetch_net');
-            const data = await checkResponce(responce);
+            const data = await request('dashboard', 'fetch_net');
 
             return data;
         } catch (error) {
-            rejectWithValue(error)
+            return rejectWithValue(error.message)
         }
     }
 );
@@ -79,7 +76,7 @@ const dashboardSlice = createSlice({
             state.serial = action.payload.result.serial;
             state.license = action.payload.result.license;
         });
-        builder.addCase(fetchInitial.rejected, (state, action) => {
+        builder.addCase(fetchInitial.rejected, (state, action) => {          
             state.fetchInitialStatus = 'rejected';
             state.fetchInitialError = action.payload;
         });
@@ -91,7 +88,7 @@ const dashboardSlice = createSlice({
         builder.addCase(fetchProtocols.fulfilled, (state, action) => {
             state.fetchProtocolsStatus = 'fulfilled';
             state.fetchProtocolsError = false;
-            state.protocols = action.payload;
+            state.protocols = action.payload.result;
         });
         builder.addCase(fetchProtocols.rejected, (state, action) => {
             state.fetchProtocolsStatus = 'rejected';
@@ -103,7 +100,7 @@ const dashboardSlice = createSlice({
             state.fetchNetworkError = false;
         });
         builder.addCase(fetchNetwork.fulfilled, (state, action) => {
-            state.fetchNetworkStatus = 'fulfielled';
+            state.fetchNetworkStatus = 'fulfilled';
             state.fetchNetworkError = false;
             state.network = action.payload.result.map((net, i) => {
                 return {

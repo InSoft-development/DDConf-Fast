@@ -1,5 +1,4 @@
 import { request } from '../api';
-import { checkResponce } from '../../utils/checkResponce';
 
 // initial request dd104 (get active profile, list of profiles)
 export const PROFILE_REQUEST = 'profile/PROFILE_REQUEST';
@@ -30,7 +29,6 @@ export const SET_DEFAULT_SLICE_STATE = 'profile/SET_DEFAULT_SLICE_STATE';
 export const getProfiles = (cb = null) => (dispatch) => {
     dispatch({ type: PROFILE_REQUEST });
     request('dd104', 'fetch_initial')
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: PROFILE_REQUEST_SUCCESS, payload: res.result })
             
@@ -47,7 +45,6 @@ export const getProfiles = (cb = null) => (dispatch) => {
 export const getActiveTable = () => (dispatch) => {
     dispatch({type: GET_ACTIVE_TABLE});
     request('dd104', 'fetch_table')
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: GET_ACTIVE_TABLE_SUCCESS, payload: res.result})
         })
@@ -61,7 +58,6 @@ export const changeProfile = (profileName, cb = null) => (dispatch) => {
     request('dd104','profile_apply', {
         name: profileName
     })
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({type: CHANGE_PROFILE_SUCCESS})
         
@@ -81,7 +77,6 @@ export const changeProсess = (actionIndex, processId) => (dispatch) => {
         pid: processId,
         op: actionIndex
     })
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: CHANGE_PROCESS_STATUS_SUCCESS, payload: res.result })
         })

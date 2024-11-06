@@ -1,9 +1,12 @@
-export const checkResponce = (res) => {
-
-    if(!res.ok){
-        return Promise.reject(res)
+const checkResponce = async (res) => {
+    try{
+        if(!res.ok){
+            await Promise.reject(new Error(`HTTP Status: ${res.status}`))
+        }
+        return await res.json()
+    }catch(error){      
+        throw new Error(error.message);
     }
-    
-    return res.json()
-
 }
+
+export default checkResponce;

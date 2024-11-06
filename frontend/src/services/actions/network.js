@@ -1,4 +1,3 @@
-import { checkResponce } from '../../utils/checkResponce';
 import { request } from '../../services/api';
 
 export const GET_DEVICES_LIST = 'network/GET_DEVICES_LIST';
@@ -18,7 +17,6 @@ export const SET_DEFAULT_SLICE_STATE = 'network/SET_DEFAULT_SLICE_STATE';
 export const getDevices = () => (dispatch) => {
     dispatch({type: GET_DEVICES_LIST});
     request('network', 'list_devices')
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({
                 type: GET_DEVICES_LIST_SUCCESS,
@@ -40,7 +38,6 @@ export const getDeviceFeatures = (id) => (dispatch) => {
     request('network', 'fetch_device', {
             id: id
         })
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({
                 type: GET_NETWORK_DEVICE_SUCCESS,
@@ -57,7 +54,6 @@ export const saveDeviceFeatures = (data) => (dispatch) => {
     request('network', 'save_device', {
         ...data
     })
-        .then(res => checkResponce(res))
         .then(res => {
             dispatch({ type: SEND_DEVICE_FEATURES_SUCCESS })
         })
