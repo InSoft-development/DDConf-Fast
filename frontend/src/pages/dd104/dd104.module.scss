@@ -1,14 +1,15 @@
 @import '../../scss/shared/common-defenition';
 
 .dd104Page{
-    padding-top: 10px;
+    height: $content-height-width-footer;
+    margin: $content-margin 0;
 }
 
 .header{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 32px;
+    margin-bottom: 15px;
     height: 65px;
     width: 100%;
 }

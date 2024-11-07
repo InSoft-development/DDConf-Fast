@@ -1,13 +1,18 @@
 
 $layout-width: 1280px;
+$layout-min-width: 1024px;
 $layout-external-indentation: 40px;
 
-$layout-min-width: 1024px;
 
 $header-upline-height: 40px;
 $header-body-height: 145px;
 $header-summary-height: calc($header-upline-height + $header-body-height);
 
-$opcua-server-width: 760px;
+$content-margin: 20px;
+$content-height: calc(100vh - (2 * $content-margin + $header-summary-height));
 
 $footer-height: 76px;
+
+$content-height-width-footer: calc(100vh - (2 * $content-margin + $header-summary-height) - $footer-height);
+
+$opcua-server-width: 760px;

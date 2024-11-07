@@ -13,6 +13,10 @@ html {
     margin-right: calc(-1 * (100vw - 100%));
 }
 
+#root{
+    overflow: hidden;
+}
+
 .wrapper {
     max-width: $layout-width;
     min-width: $layout-min-width;

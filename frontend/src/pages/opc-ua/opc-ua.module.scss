@@ -1,9 +1,9 @@
 @import "../../scss/shared/common-defenition";
 
 .opcUa{
-    height: calc(100vh - ($header-summary-height + $footer-height));
+    height: $content-height-width-footer;
+    margin: $content-margin 0;
     overflow-y: scroll;
-    margin-top: 30px;
 }
 
 .footer{

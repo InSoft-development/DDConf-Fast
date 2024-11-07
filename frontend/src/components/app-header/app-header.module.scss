@@ -12,21 +12,19 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: -1;
     background-color: $green;
 }
 
-.downLine{
+.middleLine{
     width: 100vw;
     height: $header-body-height;
     background-color: $gray-300;
     position: fixed;
     top: $header-upline-height;
     left: 0;
-    z-index: -1;
 }
 
-.header > h6{
+.upLine > h6{
     width: 100%;
     height: $header-upline-height;
     display: flex;
@@ -35,11 +33,11 @@
     color: #fff;
 }
 
-.header > h4{
+.middleLine > h4{
+    width: 100%;
+    height: $header-body-height;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 100%;
-    height: $header-body-height;
     text-wrap: nowrap;
 }
