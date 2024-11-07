@@ -1,7 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { MenuOutlined } from '@ant-design/icons';
-import { OPEN_SIDEBAR } from '../../services/actions/modals';
+
+import { openSidebar } from '../../services/slices/modals';
+
 import styles from './app-header.module.scss';
 
 const AppHeader = ({ title }) => {
@@ -9,7 +11,7 @@ const AppHeader = ({ title }) => {
     const dispatch = useDispatch();
 
     const onMenuClickHandler = () => {
-        dispatch({ type: OPEN_SIDEBAR });
+        dispatch(openSidebar());
     }
 
     return (

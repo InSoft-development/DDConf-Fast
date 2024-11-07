@@ -7,7 +7,8 @@ import {
     ApartmentOutlined,
     ApiOutlined
 } from '@ant-design/icons';
-import { CLOSE_SIDEBAR } from '../../services/actions/modals';
+
+import { closeSidebar } from '../../services/slices/modals';
 
 import styles from './sidebar.module.scss';
 
@@ -18,7 +19,7 @@ const Sidebar = () => {
     const { protocols } = useSelector(state => state.dashboard);
 
     const onCloseHandler = () => {
-        dispatch({ type: CLOSE_SIDEBAR });
+        dispatch(closeSidebar());
     }
 
     return (

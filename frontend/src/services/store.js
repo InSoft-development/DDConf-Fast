@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 
-import { modalsReducer } from './reducers/modals';
+import modalsReducer from './slices/modals';
 import {profileReducer} from './reducers/profile';
 import dashboardSlice from './slices/dashboard';
 import opcuaSlice from './slices/opcua';
