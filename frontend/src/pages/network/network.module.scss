@@ -1,10 +1,8 @@
 @import '../../scss/shared/common-defenition';
 
 .networkPage {
-    width: 1080px;
-    height: calc( 100vh - ($header-summary-height + $footer-height));
-    padding-right: 20px;
-    margin: 20px 0;
+    height: $content-height-width-footer;
+    margin: $content-margin 0;
     overflow-y: scroll;
 }
 

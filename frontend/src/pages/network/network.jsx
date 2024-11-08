@@ -1,62 +1,52 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AppHeader from "../../components/app-header/app-header";
-import { LoadingOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
-import { getDevices, getDeviceFeatures, saveDeviceFeatures, SET_DEFAULT_SLICE_STATE } from "../../services/actions/network";
-import { useForm, useWatch, Controller } from "react-hook-form";
+import { LoadingOutlined } from "@ant-design/icons";
+import { useForm, Controller } from "react-hook-form";
+
+import useEffectSkipMount from '../../hooks/useEffectSkipMount';
+import AppHeader from "../../components/app-header/app-header";
 import Input from "../../components/input/input";
 import DeviceInfo from "../../components/network/device-info";
+import { 
+	fetchListDevices, 
+	changeSelectedDevice, 
+	fetchDevice, 
+	saveDevice, 
+	clearSlice
+} from '../../services/slices/network';
 
 import styles from "./network.module.scss";
 
 const Network = ({ headerTitle }) => {
 	const dispatch = useDispatch();
 	const { control, handleSubmit, reset } = useForm();
-	const {
-		device,
-		deviceFeaturesRequest,
-		listDevices,
-		devicesListRequest,
-	} = useSelector((store) => store.network);
-
-	const watchProtocolValue = useWatch({
-		control,
-		name: 'protocol',
-	})
+	const { listDevices, selectedDeviceName, device } = useSelector((store) => store.network);
 
 	useEffect(() => {
-		dispatch(getDevices());
+		dispatch(fetchListDevices());
 
-		return () => dispatch({ type: SET_DEFAULT_SLICE_STATE })
+		return () => dispatch(clearSlice());
 		// eslint-disable-next-line
 	}, []);
 
+	useEffectSkipMount(() => {
+		dispatch(fetchDevice({id: selectedDeviceName}));
+	}, [selectedDeviceName]);
+
 	useEffect(() => {
 		reset(device);
-	}, [reset, device]);
+		// eslint-disable-next-line
+	}, [device])
 
 	const onSubmit = (data) => {
-		const newData = {
+		const device = {
 			id: data.device,
-			ipv4: [{
-				...data.ipv4[0]
-			}],
-			protocol: data.protocol
+			ipv4: data.ipv4,
+			protocol: data.protocol,
 		}
-		dispatch(saveDeviceFeatures(newData))
+		dispatch(saveDevice({device}))
 	};
-
-	const changeDevice = (e) => {
-		const selectedDevice = e.target.value;
-		dispatch(getDeviceFeatures(selectedDevice));
-	};
-
-	const hasDevice = device !== null;
-	const isFormUploading = deviceFeaturesRequest;
-	const isFormDisabled =
-		isFormUploading ||
-		!hasDevice
 
 	return (
 		<>
@@ -75,10 +65,8 @@ const Network = ({ headerTitle }) => {
 							name={"devices"}
 							defaultValue={"Не выбран"}
 							className={"input"}
-							loading={devicesListRequest}
 							loadingIcon={<LoadingOutlined />}
-							disabled={devicesListRequest}
-							onChange={changeDevice}
+							onChange={e => dispatch(changeSelectedDevice(e.target.value))}
 						/>
 					</div>
 					<div className={styles.row}>
@@ -110,8 +98,6 @@ const Network = ({ headerTitle }) => {
 												value: "dynamic",
 											},
 										]}
-										disabled={isFormDisabled}
-										loading={isFormUploading}
 										loadingIcon={<LoadingOutlined />}
 									/>
 								)}
@@ -135,8 +121,6 @@ const Network = ({ headerTitle }) => {
 										onChange={onChange}
 										placeholder="Введите адрес"
 										className='input'
-										disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
-										loading={isFormUploading}
 										loadingIcon={<LoadingOutlined />}
 									/>
 								)}
@@ -160,8 +144,6 @@ const Network = ({ headerTitle }) => {
 										onChange={onChange}
 										placeholder="Введите маску"
 										className='input'
-										disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
-										loading={isFormUploading}
 										loadingIcon={<LoadingOutlined />}
 									/>
 								)}
@@ -184,8 +166,6 @@ const Network = ({ headerTitle }) => {
 										onChange={onChange}
 										placeholder="Введите шлюз"
 										className='input'
-										disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
-										loading={isFormUploading}
 										loadingIcon={<LoadingOutlined />}
 									/>
 								)}
@@ -209,8 +189,6 @@ const Network = ({ headerTitle }) => {
 										onChange={onChange}
 										placeholder="Введите диапазон широковешания"
 										className='input'
-										disabled={isFormDisabled || watchProtocolValue === 'dynamic'}
-										loading={isFormUploading}
 										loadingIcon={<LoadingOutlined />}
 									/>
 								)}

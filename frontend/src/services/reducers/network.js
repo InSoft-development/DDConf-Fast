@@ -14,7 +14,6 @@ import {
 
 const initialState = {
     listDevices: [],
-    selectedDevice: null,
     device: null,
 
     devicesListRequest: false,
