@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Flex } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, PlayCircleFilled, PauseCircleFilled, ReloadOutlined } from "@ant-design/icons";
 import { useForm, Controller } from "react-hook-form";
 
 import useEffectSkipMount from '../../hooks/useEffectSkipMount';
 import AppHeader from "../../components/app-header/app-header";
 import Input from "../../components/input/input";
 import DeviceInfo from "../../components/network/device-info";
-import { 
-	fetchListDevices, 
-	changeSelectedDevice, 
-	fetchDevice, 
-	saveDevice, 
+import {
+	fetchListDevices,
+	changeSelectedDevice,
+	fetchDevice,
+	saveDevice,
+	fetchDeviceCondition,
+	changeDeviceCondition,
 	clearSlice
 } from '../../services/slices/network';
 
@@ -21,17 +23,25 @@ import styles from "./network.module.scss";
 const Network = ({ headerTitle }) => {
 	const dispatch = useDispatch();
 	const { control, handleSubmit, reset } = useForm();
-	const { listDevices, selectedDeviceName, device } = useSelector((store) => store.network);
+	const { 
+		listDevices,
+		selectedDeviceName,
+		device,
+		deviceCondition,
+		featchDeviceConditionStatus,
+		featchDeviceConditionError
+	} = useSelector((store) => store.network);
 
 	useEffect(() => {
 		dispatch(fetchListDevices());
+		dispatch(fetchDeviceCondition());
 
 		return () => dispatch(clearSlice());
 		// eslint-disable-next-line
 	}, []);
 
 	useEffectSkipMount(() => {
-		dispatch(fetchDevice({id: selectedDeviceName}));
+		dispatch(fetchDevice({selectedDeviceName}));
 	}, [selectedDeviceName]);
 
 	useEffect(() => {
@@ -45,7 +55,9 @@ const Network = ({ headerTitle }) => {
 			ipv4: data.ipv4,
 			protocol: data.protocol,
 		}
-		dispatch(saveDevice({device}))
+		console.log(device);
+		
+		// dispatch(saveDevice({ device }))
 	};
 
 	return (
@@ -196,10 +208,35 @@ const Network = ({ headerTitle }) => {
 						</div>
 						<footer className={styles.footer}>
 							<div className="wrapper">
-								<Flex align="center">
+								<Flex align="center" justify="space-between">
 									<button type="submit" className="btn-green">
 										Отправить
 									</button>
+									<Flex align="center" justify="flex-end">
+										<div className={`text_type_main_default mr-6 ${styles.processStatus}`}>
+											<span className="mr-4">Статус процесса:</span>
+											{
+												!featchDeviceConditionError && (
+													featchDeviceConditionStatus === 'pending' ? (
+														<LoadingOutlined style={{fontSize: 16}}/>
+													) : (
+														deviceCondition && (
+															<span>{deviceCondition}</span>
+														)
+													)
+												)
+											}
+										</div>
+										<button type="button" className="btn-green mr-6">
+											<PlayCircleFilled style={{fontSize: 18}}/>
+										</button>
+										<button type="button" className="btn-green mr-6">
+											<PauseCircleFilled  style={{fontSize: 18}}/>
+										</button>
+										<button type="button" className="btn-red">
+											<ReloadOutlined  style={{fontSize: 18}}/>
+										</button>
+									</Flex>
 								</Flex>
 							</div>
 						</footer>

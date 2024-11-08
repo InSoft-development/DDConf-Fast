@@ -5,6 +5,7 @@ const initialState = {
     listDevices: [],
     selectedDeviceName: null,
     device: null,
+    deviceCondition: null,
 
     fetchListDevicesStatus: false,
     fetchListDevicesError: false,
@@ -14,6 +15,12 @@ const initialState = {
 
     saveDeviceStatus: false,
     saveDeviceError: false,
+
+    featchDeviceConditionStatus: false,
+    featchDeviceConditionError: false,
+
+    changeDeviceConditionStatus: false,
+    changeDeviceConditionError: false,
 };
 
 const fetchListDevices = createAsyncThunk(
@@ -33,10 +40,10 @@ const fetchListDevices = createAsyncThunk(
 
 const fetchDevice = createAsyncThunk(
     'network/fetchDevice',
-    async ({device}, {rejectWithValue}) => {
+    async ({selectedDeviceName}, {rejectWithValue}) => {
         try{
             const responce = await request('network', 'fetch_device', {
-                id: device
+                id: selectedDeviceName
             });
             
             return responce.result;
@@ -57,6 +64,46 @@ const saveDevice = createAsyncThunk(
             return responce.result;
         }catch(error){
             return rejectWithValue(error.message)
+        }
+    }
+);
+
+const fetchDeviceCondition = createAsyncThunk(
+    'network/fecthNetworkDeviceStatus',
+    async (_, { rejectWithValue }) => {
+        try{
+            const responce = await request('network', 'netd_status');
+
+            const netStatus = responce.result;
+
+            if(typeof netStatus === 'number'){
+                switch(netStatus){
+                    case 0: {return 'остановлен'}
+                    case 1: {return 'запущен'}
+                    case 2: {return 'запускается'}
+                    case -1: {return 'ошибка'}
+                    case -2: {return 'крит. ошибка'}
+                    default: {return netStatus}
+                }
+            }
+
+        }catch(error){
+            return rejectWithValue(error.message)
+        }
+    }
+);
+
+const changeDeviceCondition = createAsyncThunk(
+    'network/changeDeviceCondition',
+    async ({operation}, { rejectWithValue }) => {
+        try{
+            const responce = await request('network', 'process_op', {
+                op: operation,
+            });
+
+            return responce.result;
+        }catch(error){
+            return rejectWithValue;
         }
     }
 );
@@ -112,10 +159,35 @@ const networkSlice = createSlice({
         builder.addCase(saveDevice.rejected, (state, action) => {
             state.saveDeviceStatus = 'rejected';
             state.saveDeviceError = action.payload;
+        });
+        builder.addCase(fetchDeviceCondition.pending, state => {
+            state.featchDeviceConditionStatus = 'pending';
+            state.featchDeviceConditionError = false;
+        });
+        builder.addCase(fetchDeviceCondition.fulfilled, (state, action) => {
+            state.featchDeviceConditionStatus = 'fulfilled';
+            state.featchDeviceConditionError = false;
+            state.deviceCondition = action.payload;
+        });
+        builder.addCase(fetchDeviceCondition.rejected, (state, action) => {
+            state.featchDeviceConditionStatus = 'rejected';
+            state.featchDeviceConditionError = action.payload;
+        });
+        builder.addCase(changeDeviceCondition.pending, state => {
+            state.changeDeviceConditionStatus = 'pending';
+            state.changeDeviceConditionError = false;
+        });
+        builder.addCase(changeDeviceCondition.fulfilled, state => {
+            state.changeDeviceConditionStatus = 'fulfilled';
+            state.changeDeviceConditionError = false;
+        })
+        builder.addCase(changeDeviceCondition.rejected, (state, action) => {
+            state.changeDeviceConditionStatus = 'rejected';
+            state.changeDeviceConditionError = action.payload;
         })
     }
 });
 
-export { fetchListDevices, fetchDevice, saveDevice };
+export { fetchListDevices, fetchDevice, saveDevice, fetchDeviceCondition, changeDeviceCondition};
 export const { changeSelectedDevice, clearSlice } = networkSlice.actions;
 export default networkSlice.reducer;
