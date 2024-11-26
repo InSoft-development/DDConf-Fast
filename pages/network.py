@@ -174,6 +174,7 @@ def nic_op(_id: str, op: str):
 	except Exception as e:
 		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
 		raise e
+	return 'success'
 
 
 def process_op(op: str):
@@ -186,6 +187,7 @@ def process_op(op: str):
 	except Exception as e:
 		Path('/home/txhost/.EOUTS/network').write_text(traceback.format_exception(e))
 		raise e
+	return 'success'
 
 
 def _statparse(data:str) -> dict:
