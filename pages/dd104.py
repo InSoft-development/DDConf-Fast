@@ -369,8 +369,12 @@ def fetch_table() -> dict:
 	try:
 		if get_active_ld():
 			data = get_processes(get_active_ld())
+			i = 0
 			for item in data:
-				item['status'] = get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
+				i+=1
+				item['status'] = get_status(i) #get_status(data.index(item)+1) #WARNING this assumes there are no duplicate entries, but there's no check for that in ld creation, beware
+				item['id'] = i
+			
 			print(f"ddconf.dd104.fetch_table({get_active_ld()}): {data}")
 		
 		else:
