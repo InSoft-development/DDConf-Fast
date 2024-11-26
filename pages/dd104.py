@@ -99,7 +99,7 @@ def delete_ld(name: str):
 def create_inis(data: list):
 	#gets loadout contents, creates an appropriate amount of inis
 	try:
-		COUNT = 0
+		COUNT = 1
 		for proc in data:
 			
 			if proc['main'] or proc['second']:
@@ -127,7 +127,7 @@ def create_inis(data: list):
 def create_services(count:int):
 	try:
 		
-		for i in range(0, count): #why was this +2 ??? and didn't change in develop!!!
+		for i in range(1, count+1): #why was this +2 ??? and didn't change in develop!!!
 			msg = f"[Unit]\nDescription=dd104client\nAfter=hasplmd.service\n[Service]\nKillMode=mixed\nExecStartPre=/bin/sleep 5\nExecStart=/opt/dd/{'dd104client/dd104client' if _mode=='tx' else 'dd104server/dd104server'} -c {DEFAULTS.confdir}dd104{'client' if _mode=='tx' else 'server'}{i}.ini\nRestart=always\nUser=dd\nGroup=dd\n\n[Install]\nWantedBy=multi-user.target"
 			
 			_ = Path(f'/etc/systemd/system/{"dd104client" if _mode=="tx" else "dd104server"}{i}.service').write_text(msg)
