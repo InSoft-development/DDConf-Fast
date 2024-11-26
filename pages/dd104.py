@@ -112,7 +112,7 @@ def create_inis(data: list):
 				
 				(Path(DEFAULTS.confdir)/f"dd104client{COUNT}.ini").write_text(msg)
 				syslog.syslog(syslog.LOG_INFO, f'ddconf.dd104.create_inis: Created a file at {(str(Path(DEFAULTS.confdir)/"dd104client")+str(COUNT)+".ini")}. ')
-				print(f'ddconf.dd104.create_inis: Created a file at {(str(Path(DEFAULTS.confdir)/"dd104client")+str(COUNT)+".ini")}. ')
+				print(f'ddconf.dd104.create_inis: Created a file at {Path(DEFAULTS.confdir)/"dd104client"}{COUNT}.ini . ')
 				
 			else:
 				raise ValueError(f"process {COUNT} data is invalid ({proc})")
@@ -387,27 +387,27 @@ def fetch_table() -> dict:
 	return {'result': data if not errs else None, "error": errs if errs else None}
 
 
-def procwork(req: dict) -> dict:
+def procwork(pid: int, op: str) -> dict:
 	
 	data = []
 	errs = []
 	try:
-		if req['op'] in ['start', 'stop', 'restart']:
-			if type(req['pid']) == list:
-				for pid in req['pid']:
+		if op in ['start', 'stop', 'restart']:
+			if type(pid) == list:
+				for _pid in pid:
 					try:
-						data.append({"pid": pid, "status": process_handle(pid, req["op"])})
+						data.append({"pid": _pid, "status": process_handle(_pid, op)})
 					except Exception as e:
-						errs.append(f"pid: {pid}, err: {str(e)}")
+						errs.append(f"pid: {_pid}, err: {str(e)}")
 			
-			elif type(req['pid']) == str or type(req['pid']) == int:
+			elif type(pid) == str or type(pid) == int:
 				
-				data = {"pid": req['pid'], "status": process_handle(req['pid'], req["op"])}
+				data = {"pid": pid, "status": process_handle(pid, op)}
 				
 			else:
-				raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(req['pid'])}.")
+				raise TypeError(f"ddconf.dd104.process_handle: \"pid\" field must be str or list, got {type(pid)}.")
 		else:
-			raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {req['op']};")
+			raise ValueError(f"ddconf.dd104.process_handle: incorrect operation keyword - {op};")
 	except Exception as e:
 		data = None
 		print(traceback.format_exception(e))
