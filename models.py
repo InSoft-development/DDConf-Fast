@@ -50,13 +50,17 @@ class OPCUADefaults(BaseModel):
 	confdir: str | Path
 
 
+class FileTransferDefaults(BaseModel):
+	confdir: str | Path
+
+
 class ProcDefaults(BaseModel):
 	name: str
 	title: str
 	link: str
 	service: str 
 	bin: str
-	config: DD104Defaults | OPCUADefaults
+	config: DD104Defaults | OPCUADefaults | FileTransferDefaults
 
 
 class DDCSDefaults(BaseModel):
@@ -64,11 +68,4 @@ class DDCSDefaults(BaseModel):
 	port: str | int
 	mode: str
 	protocols: List[ProcDefaults]
-
-
-# class MainDefaults(BaseModel):
-# 	
-# 	opcua: Optional[OPCUADefaults] = None
-# 	dd104: Optional[DD104Defaults] = None
-# 	ddcs: DDCSDefaults
 

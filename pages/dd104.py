@@ -1,7 +1,6 @@
 import syslog, subprocess, time, tarfile, json, traceback
 from shutil import move, copy2, unpack_archive, make_archive
 from pathlib import Path
-from random import randrange
 from os.path import exists, sep, isdir, isfile, join
 from os import W_OK, R_OK, access, makedirs, listdir
 from time import sleep 
@@ -172,7 +171,7 @@ def get_status(PID: int) -> int:
 	except Exception as e:
 		syslog.syslog(syslog.LOG_WARNING, f"ddconf.dd104.status: {str(e)}")
 		return -2
-	# return randrange(-2, 3)
+	
 
 
 def validate_ld_data(data: list) -> bool:
